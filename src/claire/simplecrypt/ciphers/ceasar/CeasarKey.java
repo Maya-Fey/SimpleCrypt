@@ -3,9 +3,9 @@ package claire.simplecrypt.ciphers.ceasar;
 import java.io.IOException;
 
 import claire.simplecrypt.standards.ISecret;
-import claire.util.crypto.rng.IRNG;
 import claire.util.io.Factory;
 import claire.util.memory.Bits;
+import claire.util.standards.IRandom;
 import claire.util.standards.io.IIncomingStream;
 import claire.util.standards.io.IOutgoingStream;
 
@@ -61,9 +61,9 @@ public class CeasarKey
 		return factory;
 	}
 	
-	public static CeasarKey random(char[] alphabet, IRNG rand)
+	public static CeasarKey random(char[] alphabet, IRandom rand)
 	{
-		return new CeasarKey(alphabet, 1 + rand.nextInt(alphabet.length - 1));
+		return new CeasarKey(alphabet, 1 + rand.nextIntGood(alphabet.length - 1));
 	}
 	
 	private static final CeasarKeyFactory factory = new CeasarKeyFactory();

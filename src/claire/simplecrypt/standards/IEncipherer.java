@@ -4,7 +4,7 @@ public interface IEncipherer<Key>
 	   extends ICipherer<Key> {
 	
 	void encipher(char[] plaintext, int start, int len);
-	void encipher(char[] plaintext, int start0, char[] ciphertex, int start1, int lent);
+	void encipher(char[] plaintext, int start0, char[] ciphertext, int start1, int len);
 	
 	default void encipher(char[] plaintext)
 	{

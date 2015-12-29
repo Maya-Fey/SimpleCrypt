@@ -4,9 +4,10 @@ import java.io.IOException;
 import java.util.Arrays;
 
 import claire.simplecrypt.standards.ISecret;
-import claire.util.crypto.rng.IRNG;
+import claire.util.crypto.rng.RandUtils;
 import claire.util.io.Factory;
 import claire.util.memory.Bits;
+import claire.util.standards.IRandom;
 import claire.util.standards.io.IIncomingStream;
 import claire.util.standards.io.IOutgoingStream;
 
@@ -65,11 +66,10 @@ public class MultiCeasarKey
 		return factory;
 	}
 	
-	public static MultiCeasarKey random(char[] alphabet, int size, IRNG rand)
+	public static MultiCeasarKey random(char[] alphabet, int size, IRandom rand)
 	{
 		int[] arr = new int[size];
-		for(int i = 0; i < size; i++)
-			arr[i] = 1 + rand.nextInt(alphabet.length - 1);
+		RandUtils.fillArr(arr, rand);
 		return new MultiCeasarKey(alphabet, arr);
 	}
 	
