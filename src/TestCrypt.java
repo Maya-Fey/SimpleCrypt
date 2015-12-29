@@ -1,5 +1,5 @@
-import claire.simplecrypt.ciphers.ceasar.MultiIteratorCeasar;
-import claire.simplecrypt.ciphers.ceasar.MultiIteratorCeasarKey;
+import claire.simplecrypt.ciphers.ceasar.MultiCeasarKey;
+import claire.simplecrypt.ciphers.ceasar.MultiIterativeCeasar;
 import claire.simplecrypt.data.Alphabet;
 import claire.simplecrypt.standards.ICipher;
 import claire.util.crypto.rng.primitive.FastXorShift;
@@ -11,8 +11,8 @@ public final class TestCrypt {
 	public static void main(String[] args)
 	{
 		IRandom rng = new FastXorShift(2312312);
-		MultiIteratorCeasarKey key = MultiIteratorCeasarKey.random(Alphabet.ADVANCED, 4, rng);
-		ICipher<?> cipher = new MultiIteratorCeasar(key);
+		MultiCeasarKey key = new MultiCeasarKey(Alphabet.ADVANCED, "Spies");
+		ICipher<?> cipher = new MultiIterativeCeasar(key);
 		char[] text = "If P = NP, then the entire universe is highly likely to explode in 12 minutes - Samantha Carter".toCharArray();
 		System.out.println(text);
 		cipher.encipher(text);
