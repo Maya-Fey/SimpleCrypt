@@ -17,6 +17,20 @@ public class MultiCeasarKey
 	private char[] alphabet;
 	private int[] key;
 	
+	public MultiCeasarKey(char[] alphabet, String key)
+	{
+		this.alphabet = alphabet;
+		this.key = new int[key.length()];
+		for(int i = 0; i < key.length(); i++) {
+			char c = key.charAt(i);
+			for(int j = 0; j <= alphabet.length; j++)
+				if(c == alphabet[j]) {
+					this.key[i] = j;
+					break;
+				}
+		}
+	}
+	
 	public MultiCeasarKey(char[] alphabet, int[] key)
 	{
 		this.alphabet = alphabet;
