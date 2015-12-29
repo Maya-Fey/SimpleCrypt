@@ -1,22 +1,31 @@
 package claire.simplecrypt.data;
 
-public final class Alphabet {
+import java.io.IOException;
+
+import claire.util.io.Factory;
+import claire.util.memory.Bits;
+import claire.util.standards.IPersistable;
+import claire.util.standards.io.IIncomingStream;
+import claire.util.standards.io.IOutgoingStream;
+
+public final class Alphabet
+			 implements IPersistable<Alphabet> {
 	
-	public static final char[] SIMPLEAB = new char[] 
+	private static final char[] ASIMPLEAB = new char[] 
 		{
 			'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K',
 			'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V',
 			'W', 'X', 'Y', 'Z'
 		};
 	
-	public static final char[] SPACEDAB = new char[]
+	private static final char[] ASPACEDAB = new char[]
 		{
 			' ', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 
 			'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 
 			'V', 'W', 'X', 'Y', 'Z'
 		};
 	
-	public static final char[] SPACEDLAB = new char[]
+	private static final char[] ASPACEDLAB = new char[]
 		{
 			' ', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 
 			'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 
@@ -25,7 +34,7 @@ public final class Alphabet {
 			'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
 		};
 	
-	public static final char[] SPACEDANUM = new char[]
+	private static final char[] ASPACEDANUM = new char[]
 		{
 			' ', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 
 			'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 
@@ -33,7 +42,7 @@ public final class Alphabet {
 			'6', '7', '8', '9'
 		};
 	
-	public static final char[] SPACEDAPUNC = new char[]
+	private static final char[] ASPACEDAPUNC = new char[]
 		{
 			' ', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 
 			'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 
@@ -41,7 +50,7 @@ public final class Alphabet {
 			'/', '"', '\'', ':'
 		};
 	
-	public static final char[] SPACEDLANUM = new char[]
+	private static final char[] ASPACEDLANUM = new char[]
 		{
 			' ', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 
 			'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 
@@ -51,7 +60,7 @@ public final class Alphabet {
 			'2', '3', '4', '5', '6', '7', '8', '9'
 		};
 	
-	public static final char[] SPACEDLAPUNC = new char[]
+	private static final char[] ASPACEDLAPUNC = new char[]
 		{
 			' ', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 
 			'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 
@@ -61,7 +70,7 @@ public final class Alphabet {
 			'?', '!', '(', ')', '/', '"', '\'', ':'
 		};
 	
-	public static final char[] SPACEDLANUMPUNC = new char[]
+	private static final char[] ASPACEDLANUMPUNC = new char[]
 		{
 			' ', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 
 			'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 
@@ -72,7 +81,7 @@ public final class Alphabet {
 			'!', '(', ')', '/',  '"', '\'', ':', '-'
 		};
 
-	public static final char[] ADVANCED = new char[]
+	private static final char[] AADVANCED = new char[]
 		{
 			' ', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 
 			'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 
@@ -82,6 +91,103 @@ public final class Alphabet {
 			'2', '3', '4', '5', '6', '7', '8', '9', '.', ',', '?', 
 			'!', '(', ')', '/', '"', '\'', ':', '-', '>', '<', '%', 
 			'$', '[', ']', '^', '&', '*', '+', '=',
+		};	
+
+	public static final Alphabet SIMPLEAB        = new Alphabet(ASIMPLEAB);
+	public static final Alphabet SPACEDAB        = new Alphabet(ASPACEDAB);
+	public static final Alphabet SPACEDLAB       = new Alphabet(ASPACEDLAB);
+	public static final Alphabet SPACEDANUM      = new Alphabet(ASPACEDANUM);
+	public static final Alphabet SPACEDAPUNC     = new Alphabet(ASPACEDAPUNC);
+	public static final Alphabet SPACEDLANUM     = new Alphabet(ASPACEDLANUM);
+	public static final Alphabet SPACEDLAPUNC    = new Alphabet(ASPACEDLAPUNC);
+	public static final Alphabet SPACEDLANUMPUNC = new Alphabet(ASPACEDLANUMPUNC);
+	public static final Alphabet ADVANCED        = new Alphabet(AADVANCED);
+	
+	public static final Alphabet[] alphabets = new Alphabet[]
+		{
+			SIMPLEAB,
+			SPACEDAB,
+			SPACEDLAB,
+			SPACEDANUM,
+			SPACEDAPUNC,
+			SPACEDLANUM,
+			SPACEDLAPUNC,
+			SPACEDLANUMPUNC,
+			ADVANCED
 		};
+	
+	private static int CTR = 0;
+	
+	private int ID;
+	private char[] chars;
+	
+	private Alphabet(char[] arr)
+	{
+		this.chars = arr;
+		this.ID = CTR++;
+	}
+	
+	public int getID()
+	{
+		return this.ID;
+	}
+	
+	public int getLen()
+	{
+		return chars.length;
+	}
+	
+	public char[] getChars()
+	{
+		return this.chars;
+	}
+	
+	public void export(IOutgoingStream stream) throws IOException
+	{
+		stream.writeInt(ID);
+	}
+
+	public void export(byte[] bytes, int offset)
+	{
+		Bits.intToBytes(ID, bytes, offset);
+	}
+
+	public int exportSize()
+	{
+		return 4;
+	}
+
+	public Factory<Alphabet> factory()
+	{
+		return factory;
+	}
+	
+	public static final AlphabetFactory factory = new AlphabetFactory();
+	
+	public static final class AlphabetFactory extends Factory<Alphabet>
+	{
+
+		protected AlphabetFactory() 
+		{
+			super(Alphabet.class);
+		}
+
+		public Alphabet resurrect(byte[] data, int start) throws InstantiationException
+		{
+			return fromID(Bits.intFromBytes(data, start));
+		}
+
+		public Alphabet resurrect(IIncomingStream stream) throws InstantiationException, IOException
+		{
+			return fromID(stream.readInt());
+		}
+		
+	}
+	
+	public static Alphabet fromID(int id)
+	{
+		return alphabets[id];
+	}
+
 
 }

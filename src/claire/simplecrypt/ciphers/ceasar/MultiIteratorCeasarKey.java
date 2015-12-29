@@ -3,8 +3,10 @@ package claire.simplecrypt.ciphers.ceasar;
 import java.io.IOException;
 import java.util.Arrays;
 
+import claire.simplecrypt.data.Alphabet;
 import claire.simplecrypt.standards.ISecret;
 import claire.util.io.Factory;
+import claire.util.io.IOUtils;
 import claire.util.memory.Bits;
 import claire.util.standards.IRandom;
 import claire.util.standards.io.IIncomingStream;
@@ -13,26 +15,27 @@ import claire.util.standards.io.IOutgoingStream;
 public class MultiIteratorCeasarKey
 	   implements ISecret<MultiIteratorCeasarKey> {
 
-	private char[] alphabet;
+	private Alphabet alphabet;
 	private int[] key;
 	private int iterator;
 	
-	public MultiIteratorCeasarKey(char[] alphabet, String key, int iterator)
+	public MultiIteratorCeasarKey(Alphabet alphabet, String key, int iterator)
 	{
 		this.alphabet = alphabet;
 		this.iterator = iterator;
 		this.key = new int[key.length()];
+		char[] chars = alphabet.getChars();
 		for(int i = 0; i < key.length(); i++) {
 			char c = key.charAt(i);
-			for(int j = 0; j <= alphabet.length; j++)
-				if(c == alphabet[j]) {
+			for(int j = 0; j <= chars.length; j++)
+				if(c == chars[j]) {
 					this.key[i] = j;
 					break;
 				}
 		}
 	}
 	
-	public MultiIteratorCeasarKey(char[] alphabet, int[] key, int iterator)
+	public MultiIteratorCeasarKey(Alphabet alphabet, int[] key, int iterator)
 	{
 		this.alphabet = alphabet;
 		this.key = key;
@@ -51,7 +54,7 @@ public class MultiIteratorCeasarKey
 	
 	public char[] getAlphabet()
 	{
-		return this.alphabet;
+		return this.alphabet.getChars();
 	}
 
 	public void destroy()
@@ -63,25 +66,21 @@ public class MultiIteratorCeasarKey
 
 	public void export(IOutgoingStream stream) throws IOException
 	{
-		stream.writeInt(alphabet.length);
-		stream.writeChars(alphabet);
-		stream.writeInt(key.length);
-		stream.writeInts(key);
+		stream.persist(alphabet);
+		stream.writeIntArr(key);
 		stream.writeInt(iterator);
 	}
 
 	public void export(byte[] bytes, int offset)
 	{
-		Bits.intToBytes(alphabet.length, bytes, offset); offset += 4;
-		Bits.charsToBytes(alphabet, 0, bytes, offset); offset += alphabet.length * 2;
-		Bits.intToBytes(key.length, bytes, offset); offset += 4; 
-		Bits.intsToBytes(key, 0, bytes, offset); offset += (key.length * 4);
+		alphabet.export(bytes, offset); offset += 4;
+		offset = IOUtils.writeArr(key, bytes, offset);
 		Bits.intToBytes(iterator, bytes, offset);
 	}
 
 	public int exportSize()
 	{
-		return 12 + (alphabet.length * 2) + (key.length * 4);
+		return 12 + (key.length * 4);
 	}
 
 	public Factory<MultiIteratorCeasarKey> factory()
@@ -89,12 +88,13 @@ public class MultiIteratorCeasarKey
 		return factory;
 	}
 	
-	public static MultiIteratorCeasarKey random(char[] alphabet, int size, IRandom rand)
+	public static MultiIteratorCeasarKey random(Alphabet alphabet, int size, IRandom rand)
 	{
+		final int len = alphabet.getLen();
 		int[] arr = new int[size];
 		for(int i = 0; i < size; i++)
-			arr[i] = rand.nextIntFast(alphabet.length);
-		return new MultiIteratorCeasarKey(alphabet, arr, 1 + rand.nextIntFast(alphabet.length - 1));
+			arr[i] = rand.nextIntFast(len);
+		return new MultiIteratorCeasarKey(alphabet, arr, 1 + rand.nextIntFast(len - 1));
 	}
 	
 	private static final MultiCeasarKeyFactory factory = new MultiCeasarKeyFactory();
@@ -109,19 +109,15 @@ public class MultiIteratorCeasarKey
 
 		public MultiIteratorCeasarKey resurrect(byte[] data, int start) throws InstantiationException
 		{
-			char[] ab = new char[Bits.intFromBytes(data, start)]; start += 4;
-			Bits.bytesToChars(data, start, ab, 0); start += ab.length * 2;
-			int[] key = new int[Bits.intFromBytes(data, start)]; start += 4;
-			Bits.bytesToInts(data, start, key, 0); start += key.length * 4;
+			Alphabet ab = Alphabet.fromID(Bits.intFromBytes(data, start)); start += 4;
+			int[] key = IOUtils.readIntArr(data, start); start += key.length * 4 + 4;
 			return new MultiIteratorCeasarKey(ab, key, Bits.intFromBytes(data, start));
 		}
 		
 		public MultiIteratorCeasarKey resurrect(IIncomingStream stream) throws InstantiationException, IOException
 		{
-			char[] ab = new char[stream.readInt()];
-			stream.readChars(ab);
-			int[] key = new int[stream.readInt()];
-			stream.readInts(key);
+			Alphabet ab = stream.resurrect(Alphabet.factory);
+			int[] key = stream.readIntArr();
 			return new MultiIteratorCeasarKey(ab, key, stream.readInt());
 		}
 		

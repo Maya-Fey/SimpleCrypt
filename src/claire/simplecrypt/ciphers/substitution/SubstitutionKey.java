@@ -3,6 +3,7 @@ package claire.simplecrypt.ciphers.substitution;
 import java.io.IOException;
 import java.util.Arrays;
 
+import claire.simplecrypt.data.Alphabet;
 import claire.simplecrypt.standards.ISecret;
 import claire.util.crypto.rng.RandUtils;
 import claire.util.io.Factory;
@@ -17,16 +18,17 @@ public class SubstitutionKey
 	
 	private char[] key;
 	private char[] inv;
-	private char[] alphabet;
 	
-	public SubstitutionKey(char[] key, char[] alphabet)
+	private Alphabet alphabet;
+	
+	public SubstitutionKey(char[] key, Alphabet alphabet)
 	{
 		this.alphabet = alphabet;
 		this.key = key;
-		this.inv = getInv(key, alphabet);
+		this.inv = getInv(key, alphabet.getChars());
 	}
 	
-	protected SubstitutionKey(char[] key, char[] inv, char[] alphabet)
+	protected SubstitutionKey(char[] key, char[] inv, Alphabet alphabet)
 	{
 		this.alphabet = alphabet;
 		this.key = key;
@@ -45,7 +47,7 @@ public class SubstitutionKey
 
 	public char[] getAlphabet()
 	{
-		return this.alphabet;
+		return this.alphabet.getChars();
 	}
 
 	public void destroy()
@@ -61,19 +63,19 @@ public class SubstitutionKey
 	{
 		stream.writeCharArr(key);
 		stream.writeCharArr(inv);
-		stream.writeCharArr(alphabet);
+		stream.persist(alphabet);
 	}
 
 	public void export(byte[] bytes, int offset)
 	{
 		offset = IOUtils.writeArr(key, bytes, offset);
 		offset = IOUtils.writeArr(inv, bytes, offset);
-		IOUtils.writeArr(alphabet, bytes, offset);
+		alphabet.export(bytes, offset);
 	}
 	
 	public int exportSize()
 	{
-		return alphabet.length * 6 + 12;
+		return alphabet.getLen() * 4 + 12;
 	}
 
 	public Factory<SubstitutionKey> factory()
@@ -99,7 +101,7 @@ public class SubstitutionKey
 			start += size;
 			char[] inv = IOUtils.readCharArr(data, start);
 			start += size;
-			char[] alphabet = IOUtils.readCharArr(data, start);
+			Alphabet alphabet = Alphabet.factory.resurrect(data, start);
 			return new SubstitutionKey(key, inv, alphabet);
 		}
 
@@ -107,7 +109,7 @@ public class SubstitutionKey
 		{
 			char[] key = stream.readCharArr();
 			char[] inv = stream.readCharArr();
-			char[] alphabet = stream.readCharArr();
+			Alphabet alphabet = stream.resurrect(Alphabet.factory);
 			return new SubstitutionKey(key, inv, alphabet);
 		}
 		
@@ -126,11 +128,11 @@ public class SubstitutionKey
 		return inv;
 	}
 	
-	public static final SubstitutionKey random(char[] alphabet, IRandom rng)
+	public static final SubstitutionKey random(Alphabet alphabet, IRandom rng)
 	{
-		char[] key = ArrayUtil.copy(alphabet);
+		char[] key = ArrayUtil.copy(alphabet.getChars());
 		RandUtils.randomize(key, rng);
-		char[] inv = getInv(key, alphabet);
+		char[] inv = getInv(key, alphabet.getChars());
 		return new SubstitutionKey(key, inv, alphabet);
 	}
 
