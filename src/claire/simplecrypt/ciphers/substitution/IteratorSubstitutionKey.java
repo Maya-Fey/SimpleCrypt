@@ -9,21 +9,29 @@ import claire.simplecrypt.standards.NamespaceKey;
 import claire.util.crypto.rng.RandUtils;
 import claire.util.io.Factory;
 import claire.util.io.IOUtils;
+import claire.util.memory.Bits;
 import claire.util.memory.util.ArrayUtil;
 import claire.util.standards.IRandom;
 import claire.util.standards.io.IIncomingStream;
 import claire.util.standards.io.IOutgoingStream;
 
-public class SubstitutionKey 
-	   implements ISecret<SubstitutionKey> {
+public class IteratorSubstitutionKey 
+	   implements ISecret<IteratorSubstitutionKey> {
 	
+	private int iterator;
 	private char[] key;	
 	private Alphabet alphabet;
 	
-	public SubstitutionKey(char[] key, Alphabet alphabet)
+	public IteratorSubstitutionKey(char[] key, int iterator, Alphabet alphabet)
 	{
 		this.alphabet = alphabet;
+		this.iterator = iterator;
 		this.key = key;
+	}
+	
+	int getIterator()
+	{
+		return this.iterator;
 	}
 	
 	char[] getKey()
@@ -40,15 +48,16 @@ public class SubstitutionKey
 	{
 		Arrays.fill(key, (char) 0);
 		key = null;
+		iterator = 0;
 		alphabet = null;
 	}
 	
 	public int NAMESPACE()
 	{
-		return NamespaceKey.SUBSTITUTIONKEY;
+		return NamespaceKey.ITERATORSUBSTITUTIONKEY;
 	}
 	
-	public boolean sameAs(SubstitutionKey obj)
+	public boolean sameAs(IteratorSubstitutionKey obj)
 	{
 		return this.alphabet.getID() == obj.alphabet.getID() && ArrayUtil.equals(this.key, obj.key);
 	}
@@ -56,70 +65,61 @@ public class SubstitutionKey
 	public void export(IOutgoingStream stream) throws IOException
 	{
 		stream.writeCharArr(key);
+		stream.writeInt(iterator);
 		stream.persist(alphabet);
 	}
 
 	public void export(byte[] bytes, int offset)
 	{
 		offset = IOUtils.writeArr(key, bytes, offset);
+		Bits.intToBytes(iterator, bytes, offset); offset += 4;
 		alphabet.export(bytes, offset);
 	}
 	
 	public int exportSize()
 	{
-		return alphabet.getLen() * 2 + 8;
+		return alphabet.getLen() * 2 + 12;
 	}
 
-	public Factory<SubstitutionKey> factory()
+	public Factory<IteratorSubstitutionKey> factory()
 	{
 		return factory;
 	}
 	
-	private static final Factory<SubstitutionKey> factory = new SubstitutionKeyFactory();
+	private static final Factory<IteratorSubstitutionKey> factory = new SubstitutionKeyFactory();
 	
-	private static final class SubstitutionKeyFactory extends Factory<SubstitutionKey>
+	private static final class SubstitutionKeyFactory extends Factory<IteratorSubstitutionKey>
 	{
 
 		protected SubstitutionKeyFactory()
 		{
-			super(SubstitutionKey.class);
+			super(IteratorSubstitutionKey.class);
 		}
 
-		public SubstitutionKey resurrect(byte[] data, int start) throws InstantiationException
+		public IteratorSubstitutionKey resurrect(byte[] data, int start) throws InstantiationException
 		{
 			char[] key = IOUtils.readCharArr(data, start);
 			start += key.length * 2 + 4;
+			int iterator = Bits.intFromBytes(data, start); start += 4;
 			Alphabet alphabet = Alphabet.factory.resurrect(data, start);
-			return new SubstitutionKey(key, alphabet);
+			return new IteratorSubstitutionKey(key, iterator, alphabet);
 		}
 
-		public SubstitutionKey resurrect(IIncomingStream stream) throws InstantiationException, IOException
+		public IteratorSubstitutionKey resurrect(IIncomingStream stream) throws InstantiationException, IOException
 		{
 			char[] key = stream.readCharArr();
+			int iterator = stream.readInt();
 			Alphabet alphabet = stream.resurrect(Alphabet.factory);
-			return new SubstitutionKey(key, alphabet);
+			return new IteratorSubstitutionKey(key, iterator, alphabet);
 		}
 		
 	}
 	
-	public static final char[] getInv(final char[] key, final char[] alphabet)
-	{
-		char[] inv = new char[key.length];
-		for(int i = 0; i < key.length; i++) {
-			for(int j = 0; j < key.length; j++)
-				if(alphabet[i] == key[j]) {
-					inv[i] = alphabet[j];
-					break;
-				}
-		}
-		return inv;
-	}
-	
-	public static final SubstitutionKey random(Alphabet alphabet, IRandom rng)
+	public static final IteratorSubstitutionKey random(Alphabet alphabet, IRandom rng)
 	{
 		char[] key = ArrayUtil.copy(alphabet.getChars());
 		RandUtils.randomize(key, rng);
-		return new SubstitutionKey(key, alphabet);
+		return new IteratorSubstitutionKey(key, 1 + rng.nextIntGood(key.length - 1), alphabet);
 	}
 
 }

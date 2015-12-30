@@ -37,10 +37,7 @@ final class PersistTest {
 					fails++;
 					Log.err.println("Encountered InstantiationException while resurrecting from raw bytes for " + sec.getClass().getSimpleName());
 				}
-				if(bytes.length != sec.exportSize()) {
-					fails++;
-					Log.err.println("Export size reported by " + sec.getClass().getSimpleName() + " is different then actual size");
-				}
+				
 				
 				/*
 				 * Raw bytes with offset
@@ -56,6 +53,17 @@ final class PersistTest {
 				} catch (InstantiationException e) {
 					fails++;
 					Log.err.println("Encountered InstantiationException while resurrecting from raw bytes with offset for " + sec.getClass().getSimpleName());
+				}
+				
+				boolean fail = true;
+				try {
+					sec.export(bytes, 21);
+				} catch(ArrayIndexOutOfBoundsException e) {
+					fail = false;
+				}
+				if(fail) {
+					fails++;
+					Log.err.println("Export size reported by " + sec.getClass().getSimpleName() + " is different then actual size");
 				}
 				
 				/*
@@ -85,6 +93,7 @@ final class PersistTest {
 			} catch(Exception e) {
 				fails++;
 				Log.err.println("Unexpected exception while testing " + sec.getClass().getSimpleName());
+				Log.err.println(e.getClass().getSimpleName() + ": " + e.getMessage());
 			}
 		}
 		return fails;

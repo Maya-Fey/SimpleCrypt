@@ -12,7 +12,7 @@ public final class TestCrypt {
 	public static void main(String[] args)
 	{
 		Test.runTests();
-		IRandom rng = new FastXorShift(2312312);
+		IRandom rng = new FastXorShift(2312313);
 		SubstitutionKey key = SubstitutionKey.random(Alphabet.ADVANCED, rng);
 		ICipher<?> cipher = new IterativeSubstitution(key);
 		char[] text = "If P = NP, then the entire universe is highly likely to explode in 12 minutes - Samantha Carter".toCharArray();

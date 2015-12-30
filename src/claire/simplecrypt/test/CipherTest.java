@@ -33,6 +33,7 @@ final class CipherTest {
 						Log.err.println("In-Place enciphering gives different results then copy enciphering for " + cip.getClass().getSimpleName());
 						Log.err.println(s1);
 						Log.err.println(s2);
+						break;
 					}
 				}
 				char[] s3 = new char[80];

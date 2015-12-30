@@ -11,6 +11,8 @@ import claire.simplecrypt.ciphers.ceasar.MultiIterativeCeasar;
 import claire.simplecrypt.ciphers.ceasar.MultiIteratorCeasar;
 import claire.simplecrypt.ciphers.ceasar.MultiIteratorCeasarKey;
 import claire.simplecrypt.ciphers.substitution.IterativeSubstitution;
+import claire.simplecrypt.ciphers.substitution.IteratorSubstitution;
+import claire.simplecrypt.ciphers.substitution.IteratorSubstitutionKey;
 import claire.simplecrypt.ciphers.substitution.SubstitutionCipher;
 import claire.simplecrypt.ciphers.substitution.SubstitutionKey;
 import claire.simplecrypt.data.Alphabet;
@@ -33,7 +35,8 @@ public final class Test {
 			new MultiIterativeCeasar(MultiCeasarKey.random(Alphabet.ADVANCED, 8, rng)),
 			new MultiIteratorCeasar(MultiIteratorCeasarKey.random(Alphabet.ADVANCED, 8, rng)),
 			new SubstitutionCipher(SubstitutionKey.random(Alphabet.ADVANCED, rng)),
-			new IterativeSubstitution(SubstitutionKey.random(Alphabet.ADVANCED, rng))
+			new IterativeSubstitution(SubstitutionKey.random(Alphabet.ADVANCED, rng)),
+			new IteratorSubstitution(IteratorSubstitutionKey.random(Alphabet.ADVANCED, rng))
 		};
 	
 	static ISecret<?>[] keys = new ISecret<?>[ciphers.length];
