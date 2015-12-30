@@ -14,6 +14,8 @@ import claire.simplecrypt.ciphers.substitution.IterativeSubstitution;
 import claire.simplecrypt.ciphers.substitution.IteratorSubstitution;
 import claire.simplecrypt.ciphers.substitution.IteratorSubstitutionKey;
 import claire.simplecrypt.ciphers.substitution.MultiIterativeSubstitution;
+import claire.simplecrypt.ciphers.substitution.MultiIteratorSubstitution;
+import claire.simplecrypt.ciphers.substitution.MultiIteratorSubstitutionKey;
 import claire.simplecrypt.ciphers.substitution.MultiSubstitution;
 import claire.simplecrypt.ciphers.substitution.MultiSubstitutionKey;
 import claire.simplecrypt.ciphers.substitution.SubstitutionCipher;
@@ -41,7 +43,8 @@ public final class Test {
 			new IterativeSubstitution(SubstitutionKey.random(Alphabet.ADVANCED, rng)),
 			new IteratorSubstitution(IteratorSubstitutionKey.random(Alphabet.ADVANCED, rng)),
 			new MultiSubstitution(MultiSubstitutionKey.random(Alphabet.ADVANCED, 8, rng)),
-			new MultiIterativeSubstitution(MultiSubstitutionKey.random(Alphabet.ADVANCED, 8, rng))
+			new MultiIterativeSubstitution(MultiSubstitutionKey.random(Alphabet.ADVANCED, 8, rng)),
+			new MultiIteratorSubstitution(MultiIteratorSubstitutionKey.random(Alphabet.ADVANCED, 8, rng))
 		};
 	
 	static ISecret<?>[] keys = new ISecret<?>[ciphers.length];
