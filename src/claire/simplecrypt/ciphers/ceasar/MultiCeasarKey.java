@@ -5,10 +5,11 @@ import java.util.Arrays;
 
 import claire.simplecrypt.data.Alphabet;
 import claire.simplecrypt.standards.ISecret;
-import claire.util.crypto.rng.RandUtils;
+import claire.simplecrypt.standards.NamespaceKey;
 import claire.util.io.Factory;
 import claire.util.io.IOUtils;
 import claire.util.memory.Bits;
+import claire.util.memory.util.ArrayUtil;
 import claire.util.standards.IRandom;
 import claire.util.standards.io.IIncomingStream;
 import claire.util.standards.io.IOutgoingStream;
@@ -56,6 +57,16 @@ public class MultiCeasarKey
 		Arrays.fill(key, 0);
 		this.key = null;
 	}
+	
+	public int NAMESPACE()
+	{
+		return NamespaceKey.MULTICEASARKEY;
+	}
+	
+	public boolean sameAs(MultiCeasarKey obj)
+	{
+		return this.alphabet.getID() == obj.alphabet.getID() && ArrayUtil.equals(this.key, obj.key);
+	}
 
 	public void export(IOutgoingStream stream) throws IOException
 	{
@@ -82,7 +93,8 @@ public class MultiCeasarKey
 	public static MultiCeasarKey random(Alphabet alphabet, int size, IRandom rand)
 	{
 		int[] arr = new int[size];
-		RandUtils.fillArr(arr, rand);
+		for(int i = 0; i < size; i++)
+			arr[i] = rand.nextIntGood(alphabet.getLen());
 		return new MultiCeasarKey(alphabet, arr);
 	}
 	

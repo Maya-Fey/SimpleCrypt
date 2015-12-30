@@ -5,6 +5,7 @@ import java.util.Arrays;
 
 import claire.simplecrypt.data.Alphabet;
 import claire.simplecrypt.standards.ISecret;
+import claire.simplecrypt.standards.NamespaceKey;
 import claire.util.crypto.rng.RandUtils;
 import claire.util.io.Factory;
 import claire.util.io.IOUtils;
@@ -59,6 +60,16 @@ public class SubstitutionKey
 		alphabet = null;
 	}
 	
+	public int NAMESPACE()
+	{
+		return NamespaceKey.SUBSTITUTIONKEY;
+	}
+	
+	public boolean sameAs(SubstitutionKey obj)
+	{
+		return this.alphabet.getID() == obj.alphabet.getID() && ArrayUtil.equals(this.key, obj.key);
+	}
+	
 	public void export(IOutgoingStream stream) throws IOException
 	{
 		stream.writeCharArr(key);
@@ -95,7 +106,6 @@ public class SubstitutionKey
 
 		public SubstitutionKey resurrect(byte[] data, int start) throws InstantiationException
 		{
-			
 			char[] key = IOUtils.readCharArr(data, start);
 			int size = key.length * 2 + 4;
 			start += size;

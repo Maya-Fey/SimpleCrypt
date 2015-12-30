@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import claire.simplecrypt.data.Alphabet;
 import claire.simplecrypt.standards.ISecret;
+import claire.simplecrypt.standards.NamespaceKey;
 import claire.util.io.Factory;
 import claire.util.memory.Bits;
 import claire.util.standards.IRandom;
@@ -46,6 +47,16 @@ public class IteratorCeasarKey
 		this.iterator = 0;
 	}
 
+	public int NAMESPACE()
+	{
+		return NamespaceKey.ITERATORCEASARKEY;
+	}
+
+	public boolean sameAs(IteratorCeasarKey obj)
+	{
+		return (this.key == obj.key && this.iterator == obj.iterator) && this.alphabet.getID() == obj.alphabet.getID();
+	}
+	
 	public void export(IOutgoingStream stream) throws IOException
 	{
 		stream.persist(alphabet);

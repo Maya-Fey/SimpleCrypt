@@ -64,7 +64,7 @@ public class SubstitutionCipher
 			final char c = ciphertext[start0++];
 			for(int i = 0; i < alphabet.length; i++)
 				if(c == alphabet[i]) {
-					ciphertext[start1] = inv[i];
+					plaintext[start1] = inv[i];
 					break;
 				}
 			start1++;

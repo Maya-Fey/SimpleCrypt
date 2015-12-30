@@ -5,9 +5,11 @@ import java.util.Arrays;
 
 import claire.simplecrypt.data.Alphabet;
 import claire.simplecrypt.standards.ISecret;
+import claire.simplecrypt.standards.NamespaceKey;
 import claire.util.io.Factory;
 import claire.util.io.IOUtils;
 import claire.util.memory.Bits;
+import claire.util.memory.util.ArrayUtil;
 import claire.util.standards.IRandom;
 import claire.util.standards.io.IIncomingStream;
 import claire.util.standards.io.IOutgoingStream;
@@ -62,6 +64,16 @@ public class MultiIteratorCeasarKey
 		this.alphabet = null;
 		Arrays.fill(key, 0);
 		this.key = null;
+	}
+	
+	public int NAMESPACE()
+	{
+		return NamespaceKey.MULTIITERATORCEASARKEY;
+	}
+	
+	public boolean sameAs(MultiIteratorCeasarKey obj)
+	{
+		return (this.alphabet.getID() == obj.alphabet.getID() && this.iterator == obj.iterator) && ArrayUtil.equals(this.key, obj.key);
 	}
 
 	public void export(IOutgoingStream stream) throws IOException

@@ -1,6 +1,6 @@
 package claire.simplecrypt.standards;
 
-public interface ICipherer<Key> {
+public interface ICipherer<Key extends ISecret<Key>> {
 
 	void reset();
 	void setKey(Key key);

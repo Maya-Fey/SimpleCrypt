@@ -1,6 +1,6 @@
 package claire.simplecrypt.standards;
 
-public interface IEncipherer<Key> 
+public interface IEncipherer<Key extends ISecret<Key>> 
 	   extends ICipherer<Key> {
 	
 	void encipher(char[] plaintext, int start, int len);
