@@ -2,15 +2,18 @@ package claire.simplecrypt.ciphers.substitution;
 
 import claire.simplecrypt.standards.ICipher;
 
-public class SubstitutionCipher 
+public class IterativeSubstitution 
 	   implements ICipher<SubstitutionKey> {
 
 	private char[] key;
 	private char[] alphabet;
 	
+	private int eshift = 0;
+	private int dshift = 0;
+	
 	private SubstitutionKey master;
 	
-	public SubstitutionCipher(SubstitutionKey key)
+	public IterativeSubstitution(SubstitutionKey key)
 	{
 		this.key = key.getKey();
 		this.alphabet = key.getAlphabet();
@@ -23,7 +26,10 @@ public class SubstitutionCipher
 			final char c = plaintext[start];
 			for(int i = 0; i < alphabet.length; i++)
 				if(c == alphabet[i]) {
-					plaintext[start] = key[i];
+					i += eshift++;
+					if(eshift == alphabet.length)
+						eshift = 0;
+					plaintext[start] = key[i >= alphabet.length ? i - alphabet.length : i];
 					break;
 				}
 			start++;
@@ -36,7 +42,10 @@ public class SubstitutionCipher
 			final char c = plaintext[start0++];
 			for(int i = 0; i < alphabet.length; i++)
 				if(c == alphabet[i]) {
-					ciphertext[start1] = key[i];
+					i += eshift++;
+					if(eshift == alphabet.length)
+						eshift = 0;
+					ciphertext[start1] = key[i >= alphabet.length ? i - alphabet.length : i];
 					break;
 				}
 			start1++;
@@ -49,7 +58,10 @@ public class SubstitutionCipher
 			final char c = ciphertext[start];
 			for(int i = 0; i < alphabet.length; i++)
 				if(c == key[i]) {
-					ciphertext[start] = alphabet[i];
+					i -= dshift++;
+					if(dshift == alphabet.length)
+						dshift = 0;
+					ciphertext[start] = alphabet[i < 0 ? i + alphabet.length : i];
 					break;
 				}
 			start++;
@@ -62,20 +74,29 @@ public class SubstitutionCipher
 			final char c = ciphertext[start0++];
 			for(int i = 0; i < alphabet.length; i++)
 				if(c == key[i]) {
-					plaintext[start1] = alphabet[i];
+					i -= dshift++;
+					if(dshift == alphabet.length)
+						dshift = 0;
+					plaintext[start1] = alphabet[i < 0 ? i + alphabet.length : i];
 					break;
 				}
 			start1++;
 		}
 	}
 
-	public void reset() {}
+	public void reset() 
+	{
+		eshift = 0;
+		dshift = 0;
+	}
 
 	public void setKey(SubstitutionKey key)
 	{
 		this.key = key.getKey();
 		this.alphabet = key.getAlphabet();
 		this.master = key;
+		eshift = 0;
+		dshift = 0;
 	}
 
 	public void destroy()
@@ -83,6 +104,8 @@ public class SubstitutionCipher
 		this.key = null;
 		this.alphabet = null;
 		this.key = null;
+		eshift = 0;
+		dshift = 0;
 	}
 
 	public SubstitutionKey getKey()
