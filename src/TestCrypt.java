@@ -1,5 +1,5 @@
-import claire.simplecrypt.ciphers.substitution.IterativeSubstitution;
-import claire.simplecrypt.ciphers.substitution.SubstitutionKey;
+import claire.simplecrypt.ciphers.substitution.MultiSubstitution;
+import claire.simplecrypt.ciphers.substitution.MultiSubstitutionKey;
 import claire.simplecrypt.data.Alphabet;
 import claire.simplecrypt.standards.ICipher;
 import claire.simplecrypt.test.Test;
@@ -13,8 +13,8 @@ public final class TestCrypt {
 	{
 		Test.runTests();
 		IRandom rng = new FastXorShift(2312313);
-		SubstitutionKey key = SubstitutionKey.random(Alphabet.ADVANCED, rng);
-		ICipher<?> cipher = new IterativeSubstitution(key);
+		MultiSubstitutionKey key = MultiSubstitutionKey.random(Alphabet.ADVANCED, 8, rng);
+		ICipher<?> cipher = new MultiSubstitution(key);
 		char[] text = "If P = NP, then the entire universe is highly likely to explode in 12 minutes - Samantha Carter".toCharArray();
 		System.out.println(text);
 		cipher.encipher(text);

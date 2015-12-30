@@ -8,4 +8,5 @@ public final class NamespaceKey {
 	public static final int MULTIITERATORCEASARKEY = 10003;
 	public static final int SUBSTITUTIONKEY = 10004;
 	public static final int ITERATORSUBSTITUTIONKEY = 10005;
+	public static final int MULTISUBSTITUTIONKEY = 10006;
 }
