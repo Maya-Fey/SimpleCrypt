@@ -67,6 +67,7 @@ public class AffineCipher
 					break;
 			int n = ((j - add) * inv) % alphabet.length;
 			n = n < 0 ? n + alphabet.length : n;
+			start0++;
 			plaintext[start1++] = alphabet[n];
 		}
 	}
