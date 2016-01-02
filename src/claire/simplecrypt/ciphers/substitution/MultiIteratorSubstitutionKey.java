@@ -53,7 +53,7 @@ public class MultiIteratorSubstitutionKey
 	
 	public int NAMESPACE()
 	{
-		return NamespaceKey.MULTISUBSTITUTIONKEY;
+		return NamespaceKey.MULTIITERATORSUBSTITUTIONKEY;
 	}
 	
 	public boolean sameAs(MultiIteratorSubstitutionKey obj)

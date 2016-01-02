@@ -53,6 +53,7 @@ public class AffineKey
 		this.alphabet = null;
 		this.key = 0;
 		this.mul = 0;
+		this.inv = 0;
 	}
 	
 	public int NAMESPACE()

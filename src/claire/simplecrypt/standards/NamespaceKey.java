@@ -9,5 +9,8 @@ public final class NamespaceKey {
 	public static final int SUBSTITUTIONKEY = 10004;
 	public static final int ITERATORSUBSTITUTIONKEY = 10005;
 	public static final int MULTISUBSTITUTIONKEY = 10006;
-	public static final int AFFINEKEY = 10007;
+	public static final int MULTIITERATORSUBSTITUTIONKEY = 10007;
+	public static final int AFFINEKEY = 10008;
+	public static final int ITERATORAFFINEKEY = 10009;
+	public static final int MULTIAFFINEKEY = 10010;
 }

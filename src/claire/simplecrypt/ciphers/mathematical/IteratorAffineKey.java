@@ -60,11 +60,13 @@ public class IteratorAffineKey
 		this.alphabet = null;
 		this.key = 0;
 		this.mul = 0;
+		this.inv = 0;
+		this.iterator = 0;
 	}
 	
 	public int NAMESPACE()
 	{
-		return NamespaceKey.AFFINEKEY;
+		return NamespaceKey.ITERATORAFFINEKEY;
 	}
 
 	public boolean sameAs(IteratorAffineKey obj)
