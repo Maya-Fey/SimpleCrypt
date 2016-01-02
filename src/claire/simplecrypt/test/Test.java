@@ -12,6 +12,9 @@ import claire.simplecrypt.ciphers.ceasar.MultiIteratorCeasar;
 import claire.simplecrypt.ciphers.ceasar.MultiIteratorCeasarKey;
 import claire.simplecrypt.ciphers.mathematical.AffineCipher;
 import claire.simplecrypt.ciphers.mathematical.AffineKey;
+import claire.simplecrypt.ciphers.mathematical.IterativeAffine;
+import claire.simplecrypt.ciphers.mathematical.IteratorAffine;
+import claire.simplecrypt.ciphers.mathematical.IteratorAffineKey;
 import claire.simplecrypt.ciphers.substitution.IterativeSubstitution;
 import claire.simplecrypt.ciphers.substitution.IteratorSubstitution;
 import claire.simplecrypt.ciphers.substitution.IteratorSubstitutionKey;
@@ -47,8 +50,9 @@ public final class Test {
 			new MultiSubstitution(MultiSubstitutionKey.random(Alphabet.ADVANCED, 8, rng)),
 			new MultiIterativeSubstitution(MultiSubstitutionKey.random(Alphabet.ADVANCED, 8, rng)),
 			new MultiIteratorSubstitution(MultiIteratorSubstitutionKey.random(Alphabet.ADVANCED, 8, rng)),
-			new AffineCipher(AffineKey.random(Alphabet.ADVANCED, rng))
-		
+			new AffineCipher(AffineKey.random(Alphabet.ADVANCED, rng)),
+			new IterativeAffine(AffineKey.random(Alphabet.ADVANCED, rng)),
+			new IteratorAffine(IteratorAffineKey.random(Alphabet.ADVANCED, rng))
 		};
 	
 	static ISecret<?>[] keys = new ISecret<?>[ciphers.length];
