@@ -17,6 +17,7 @@ import claire.simplecrypt.ciphers.mathematical.IteratorAffine;
 import claire.simplecrypt.ciphers.mathematical.IteratorAffineKey;
 import claire.simplecrypt.ciphers.mathematical.MultiAffine;
 import claire.simplecrypt.ciphers.mathematical.MultiAffineKey;
+import claire.simplecrypt.ciphers.mathematical.MultiIterativeAffine;
 import claire.simplecrypt.ciphers.substitution.IterativeSubstitution;
 import claire.simplecrypt.ciphers.substitution.IteratorSubstitution;
 import claire.simplecrypt.ciphers.substitution.IteratorSubstitutionKey;
@@ -55,7 +56,8 @@ public final class Test {
 			new AffineCipher(AffineKey.random(Alphabet.ADVANCED, rng)),
 			new IterativeAffine(AffineKey.random(Alphabet.ADVANCED, rng)),
 			new IteratorAffine(IteratorAffineKey.random(Alphabet.ADVANCED, rng)),
-			new MultiAffine(MultiAffineKey.random(Alphabet.ADVANCED, 8, rng))
+			new MultiAffine(MultiAffineKey.random(Alphabet.ADVANCED, 8, rng)),
+			new MultiIterativeAffine(MultiAffineKey.random(Alphabet.ADVANCED, 8, rng))
 		};
 	
 	static ISecret<?>[] keys = new ISecret<?>[ciphers.length];
