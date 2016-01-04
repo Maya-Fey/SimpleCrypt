@@ -142,6 +142,24 @@ public final class Alphabet
 		return this.chars;
 	}
 	
+	public void convertTo(char[] chars, byte[] rep, int start, int len)
+	{
+		while(len-- > 0) {
+			for(int i = 0; i < this.chars.length; i++) {
+				if(this.chars[i] == chars[start]) {
+					rep[start] = (byte) i;
+				}
+			}
+			start++;
+		}
+	}
+	
+	public void convertFrom(byte[] rep, char[] chars, int start, int len)
+	{
+		while(len-- > 0) 
+			chars[start] = this.chars[rep[start++]];
+	}
+	
 	public void export(IOutgoingStream stream) throws IOException
 	{
 		stream.writeInt(ID);
