@@ -3,17 +3,18 @@ package claire.simplecrypt.standards;
 public interface IEncipherer<Key extends ISecret<Key>> 
 	   extends ICipherer<Key> {
 	
-	void encipher(char[] plaintext, int start, int len);
-	void encipher(char[] plaintext, int start0, char[] ciphertext, int start1, int len);
+	void encipher(byte[] plaintext, int start, int len);
+	void encipher(byte[] plaintext, int start0, byte[] ciphertext, int start1, int len);
+	int ciphertextSize(int plain);
 	
-	default void encipher(char[] plaintext)
+	default void encipher(byte[] plaintext)
 	{
 		encipher(plaintext, 0, plaintext.length);
 	}
 	
-	default char[] encipher_copy(char[] plaintext)
+	default byte[] encipher_copy(byte[] plaintext)
 	{
-		char[] ciphertext = new char[plaintext.length];
+		byte[] ciphertext = new byte[plaintext.length];
 		encipher(plaintext, 0, ciphertext, 0, plaintext.length);
 		return ciphertext;
 	}

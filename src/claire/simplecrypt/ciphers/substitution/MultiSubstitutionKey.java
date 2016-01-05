@@ -17,30 +17,47 @@ import claire.util.standards.io.IOutgoingStream;
 public class MultiSubstitutionKey 
 	   implements ISecret<MultiSubstitutionKey> {
 	
-	private char[][] key;	
+	private byte[][] key;	
+	private byte[][] inv;	
 	private Alphabet alphabet;
 	
-	public MultiSubstitutionKey(char[][] key, Alphabet alphabet)
+	public MultiSubstitutionKey(byte[][] key, Alphabet alphabet)
 	{
 		this.alphabet = alphabet;
 		this.key = key;
+		this.inv = new byte[key.length][];
+		for(int i = 0; i < key.length; i++)
+			inv[i] = SubstitutionKey.getInv(key[i]);
 	}
 	
-	char[][] getKey()
+	public MultiSubstitutionKey(byte[][] key, byte[][] inv, Alphabet alphabet)
+	{
+		this.alphabet = alphabet;
+		this.key = key;
+		this.inv = inv;
+	}
+	
+	byte[][] getKey()
 	{
 		return this.key;
 	}
 	
-	public char[] getAlphabet()
+	byte[][] getInv()
 	{
-		return this.alphabet.getChars();
+		return this.inv;
+	}
+	
+	public Alphabet getAlphabet()
+	{
+		return this.alphabet;
 	}
 
 	public void destroy()
 	{
-		for(char[] c : key)
-			Arrays.fill(c, (char) 0);
-		key = null;
+		for(byte[] c : key)
+			Arrays.fill(c, (byte) 0);
+		for(byte[] c : inv)
+			Arrays.fill(c, (byte) 0);
 		alphabet = null;
 	}
 	
@@ -63,8 +80,10 @@ public class MultiSubstitutionKey
 	{
 		stream.writeInt(key.length);
 		stream.writeInt(key[0].length);
-		for(char[] c : key)
-			stream.writeChars(c);
+		for(byte[] c : key)
+			stream.writeBytes(c);
+		for(byte[] c : inv)
+			stream.writeBytes(c);
 		stream.persist(alphabet);
 	}
 
@@ -72,10 +91,14 @@ public class MultiSubstitutionKey
 	{
 		Bits.intToBytes(key.length, bytes, offset); offset += 4;
 		Bits.intToBytes(key[0].length, bytes, offset); offset += 4;
-		final int size = key[0].length * 2;
+		final int size = key[0].length;
 		final int len = key[0].length;
-		for(char[] c : key) {
-			Bits.charsToBytes(c, 0, bytes, offset, len);
+		for(byte[] c : key) {
+			System.arraycopy(c, 0, bytes, offset, len);
+			offset += size;
+		}
+		for(byte[] c : inv) {
+			System.arraycopy(c, 0, bytes, offset, len);
 			offset += size;
 		}
 		alphabet.export(bytes, offset);
@@ -105,23 +128,32 @@ public class MultiSubstitutionKey
 		{
 			int s1 = Bits.intFromBytes(data, start); start += 4;
 			int s2 = Bits.intFromBytes(data, start); start += 4;
-			int size = s2 * 2;
-			char[][] key = new char[s1][s2];
-			for(char[] c : key) {
-				Bits.bytesToChars(data, start, c, 0, s2);
-				start += size;
+			byte[][] key = new byte[s1][s2];
+			byte[][] inv = new byte[s1][s2];
+			for(byte[] c : key) {
+				System.arraycopy(data, start, c, 0, s2);
+				start += s2;
+			}
+			for(byte[] c : inv) {
+				System.arraycopy(data, start, c, 0, s2);
+				start += s2;
 			}
 			Alphabet alphabet = Alphabet.factory.resurrect(data, start);
-			return new MultiSubstitutionKey(key, alphabet);
+			return new MultiSubstitutionKey(key, inv, alphabet);
 		}
 
 		public MultiSubstitutionKey resurrect(IIncomingStream stream) throws InstantiationException, IOException
 		{
-			char[][] key = new char[stream.readInt()][stream.readInt()];
-			for(char[] c : key)
-				stream.readChars(c);
+			int s1 = stream.readInt();
+			int s2 = stream.readInt();
+			byte[][] key = new byte[s1][s2];
+			byte[][] inv = new byte[s1][s2];
+			for(byte[] c : key)
+				stream.readBytes(c);
+			for(byte[] c : inv)
+				stream.readBytes(c);
 			Alphabet alphabet = stream.resurrect(Alphabet.factory);
-			return new MultiSubstitutionKey(key, alphabet);
+			return new MultiSubstitutionKey(key, inv, alphabet);
 		}
 		
 	}
@@ -141,11 +173,12 @@ public class MultiSubstitutionKey
 	
 	public static final MultiSubstitutionKey random(Alphabet alphabet, int size, IRandom rng)
 	{
-		final char[] ab = alphabet.getChars();
-		char[][] key = new char[size][alphabet.getLen()];
-		for(char[] c : key) {
-			System.arraycopy(ab, 0, c, 0, ab.length);
-			RandUtils.randomize(c, rng);
+		byte[][] key = new byte[size][alphabet.getLen()];
+		for(int i = 0; i < size; i++) {
+			byte[] arr = key[i];
+			for(int j = 0; j < arr.length; j++)
+				arr[j] = (byte) j;
+			RandUtils.randomize(arr, rng);
 		}
 		return new MultiSubstitutionKey(key, alphabet);
 	}

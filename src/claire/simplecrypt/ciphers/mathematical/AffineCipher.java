@@ -1,15 +1,16 @@
 package claire.simplecrypt.ciphers.mathematical;
 
+import claire.simplecrypt.data.Alphabet;
 import claire.simplecrypt.standards.ICipher;
 
 public class AffineCipher 
 	   implements ICipher<AffineKey> {
 	
 	private AffineKey key;
+	private Alphabet alphabet;
 	private int add;
 	private int mul;
 	private int inv;
-	private char[] alphabet;
 	
 	public AffineCipher(AffineKey key)
 	{
@@ -20,55 +21,47 @@ public class AffineCipher
 		this.alphabet = key.getAlphabet();
 	}
 
-	public void encipher(char[] plaintext, int start, int len)
+	public void encipher(byte[] plaintext, int start, int len)
 	{
 		while(len-- > 0) {
-			int j = 0;
-			for(; j <= alphabet.length; j++)
-				if(alphabet[j] == plaintext[start])
-					break;
-			int n = ((j * mul) + add) % alphabet.length;
-			plaintext[start++] = alphabet[n >= alphabet.length ? n % alphabet.length : n];
+			int n = (plaintext[start] * mul) + add;
+			if(n >= alphabet.getLen())
+				n %= alphabet.getLen();
+			plaintext[start++] = (byte) n;
 		}
 	}
 
-	public void encipher(char[] plaintext, int start0, char[] ciphertext, int start1, int len)
+	public void encipher(byte[] plaintext, int start0, byte[] ciphertext, int start1, int len)
 	{
 		while(len-- > 0) {
-			int j = 0;
-			for(; j <= alphabet.length; j++)
-				if(alphabet[j] == plaintext[start0])
-					break;
-			int n = ((j * mul) + add) % alphabet.length;
-			start0++;
-			ciphertext[start1++] = alphabet[n >= alphabet.length ? n % alphabet.length : n];
+			int n = (plaintext[start0++] * mul) + add;
+			if(n >= alphabet.getLen())
+				n %= alphabet.getLen();
+			ciphertext[start1++] = (byte) n;
 		}
 	}
 
-	public void decipher(char[] ciphertext, int start, int len)
+	public void decipher(byte[] ciphertext, int start, int len)
 	{
 		while(len-- > 0) {
-			int j = 0;
-			for(; j <= alphabet.length; j++)
-				if(alphabet[j] == ciphertext[start])
-					break;
-			int n = ((j - add) * inv) % alphabet.length;
-			n = n < 0 ? n + alphabet.length : n;
-			ciphertext[start++] = alphabet[n];
+			int n = (ciphertext[start] - add);
+			if(n < 0)
+				n += alphabet.getLen();
+			n *= inv;
+			n %= alphabet.getLen();
+			ciphertext[start++] = (byte) n;
 		}
 	}
 
-	public void decipher(char[] ciphertext, int start0, char[] plaintext, int start1, int len)
+	public void decipher(byte[] ciphertext, int start0, byte[] plaintext, int start1, int len)
 	{
 		while(len-- > 0) {
-			int j = 0;
-			for(; j <= alphabet.length; j++)
-				if(alphabet[j] == ciphertext[start0])
-					break;
-			int n = ((j - add) * inv) % alphabet.length;
-			n = n < 0 ? n + alphabet.length : n;
-			start0++;
-			plaintext[start1++] = alphabet[n];
+			int n = (ciphertext[start0++] - add) * inv;
+			if(n < 0)
+				n += alphabet.getLen();
+			n *= inv;
+			n %= alphabet.getLen();
+			plaintext[start1++] = (byte) n;
 		}
 	}
 	
@@ -94,6 +87,21 @@ public class AffineCipher
 	public AffineKey getKey()
 	{
 		return this.key;
+	}
+	
+	public int ciphertextSize(int plain)
+	{
+		return plain;
+	}
+
+	public int plaintextSize(int cipher)
+	{
+		return cipher;
+	}
+
+	public Alphabet getAlphabet()
+	{
+		return alphabet;
 	}
 
 }

@@ -2,28 +2,12 @@ package claire.simplecrypt.test;
 
 import claire.simplecrypt.ciphers.ceasar.CeasarCipher;
 import claire.simplecrypt.ciphers.ceasar.CeasarKey;
-import claire.simplecrypt.ciphers.ceasar.IterativeCeasar;
-import claire.simplecrypt.ciphers.ceasar.IteratorCeasar;
-import claire.simplecrypt.ciphers.ceasar.IteratorCeasarKey;
 import claire.simplecrypt.ciphers.ceasar.MultiCeasar;
 import claire.simplecrypt.ciphers.ceasar.MultiCeasarKey;
-import claire.simplecrypt.ciphers.ceasar.MultiIterativeCeasar;
-import claire.simplecrypt.ciphers.ceasar.MultiIteratorCeasar;
-import claire.simplecrypt.ciphers.ceasar.MultiIteratorCeasarKey;
 import claire.simplecrypt.ciphers.mathematical.AffineCipher;
 import claire.simplecrypt.ciphers.mathematical.AffineKey;
-import claire.simplecrypt.ciphers.mathematical.IterativeAffine;
-import claire.simplecrypt.ciphers.mathematical.IteratorAffine;
-import claire.simplecrypt.ciphers.mathematical.IteratorAffineKey;
 import claire.simplecrypt.ciphers.mathematical.MultiAffine;
 import claire.simplecrypt.ciphers.mathematical.MultiAffineKey;
-import claire.simplecrypt.ciphers.mathematical.MultiIterativeAffine;
-import claire.simplecrypt.ciphers.substitution.IterativeSubstitution;
-import claire.simplecrypt.ciphers.substitution.IteratorSubstitution;
-import claire.simplecrypt.ciphers.substitution.IteratorSubstitutionKey;
-import claire.simplecrypt.ciphers.substitution.MultiIterativeSubstitution;
-import claire.simplecrypt.ciphers.substitution.MultiIteratorSubstitution;
-import claire.simplecrypt.ciphers.substitution.MultiIteratorSubstitutionKey;
 import claire.simplecrypt.ciphers.substitution.MultiSubstitution;
 import claire.simplecrypt.ciphers.substitution.MultiSubstitutionKey;
 import claire.simplecrypt.ciphers.substitution.SubstitutionCipher;
@@ -42,22 +26,11 @@ public final class Test {
 	static ICipher<?>[] ciphers = new ICipher<?>[]
 		{
 			new CeasarCipher(CeasarKey.random(Alphabet.ADVANCED, rng)),
-			new IterativeCeasar(CeasarKey.random(Alphabet.ADVANCED, rng)),
-			new IteratorCeasar(IteratorCeasarKey.random(Alphabet.ADVANCED, rng)),
 			new MultiCeasar(MultiCeasarKey.random(Alphabet.ADVANCED, 8, rng)),
-			new MultiIterativeCeasar(MultiCeasarKey.random(Alphabet.ADVANCED, 8, rng)),
-			new MultiIteratorCeasar(MultiIteratorCeasarKey.random(Alphabet.ADVANCED, 8, rng)),
 			new SubstitutionCipher(SubstitutionKey.random(Alphabet.ADVANCED, rng)),
-			new IterativeSubstitution(SubstitutionKey.random(Alphabet.ADVANCED, rng)),
-			new IteratorSubstitution(IteratorSubstitutionKey.random(Alphabet.ADVANCED, rng)),
 			new MultiSubstitution(MultiSubstitutionKey.random(Alphabet.ADVANCED, 8, rng)),
-			new MultiIterativeSubstitution(MultiSubstitutionKey.random(Alphabet.ADVANCED, 8, rng)),
-			new MultiIteratorSubstitution(MultiIteratorSubstitutionKey.random(Alphabet.ADVANCED, 8, rng)),
 			new AffineCipher(AffineKey.random(Alphabet.ADVANCED, rng)),
-			new IterativeAffine(AffineKey.random(Alphabet.ADVANCED, rng)),
-			new IteratorAffine(IteratorAffineKey.random(Alphabet.ADVANCED, rng)),
 			new MultiAffine(MultiAffineKey.random(Alphabet.ADVANCED, 8, rng)),
-			new MultiIterativeAffine(MultiAffineKey.random(Alphabet.ADVANCED, 8, rng))
 		};
 	
 	static ISecret<?>[] keys = new ISecret<?>[ciphers.length];

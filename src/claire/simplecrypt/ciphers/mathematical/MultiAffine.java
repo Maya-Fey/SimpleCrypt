@@ -1,17 +1,19 @@
 package claire.simplecrypt.ciphers.mathematical;
 
+import claire.simplecrypt.data.Alphabet;
 import claire.simplecrypt.standards.ICipher;
 
 public class MultiAffine 
 	   implements ICipher<MultiAffineKey> {
 	
 	private MultiAffineKey key;
+	private Alphabet alphabet;
 	private int epos = 0;
 	private int dpos = 0;
 	private int[] add;
 	private int[] mul;
 	private int[] inv;
-	private char[] alphabet;
+	
 	
 	public MultiAffine(MultiAffineKey key)
 	{
@@ -22,63 +24,55 @@ public class MultiAffine
 		this.alphabet = key.getAlphabet();
 	}
 
-	public void encipher(char[] plaintext, int start, int len)
+	public void encipher(byte[] plaintext, int start, int len)
 	{
 		while(len-- > 0) {
-			int j = 0;
-			for(; j <= alphabet.length; j++)
-				if(alphabet[j] == plaintext[start])
-					break;
-			int n = ((j * mul[epos]) + add[epos++]) % alphabet.length;
+			int n = (plaintext[start] * mul[epos]) + add[epos++];
+			if(n >= alphabet.getLen())
+				n %= alphabet.getLen();
 			if(epos == add.length)
 				epos = 0;
-			plaintext[start++] = alphabet[n >= alphabet.length ? n % alphabet.length : n];
+			plaintext[start++] = (byte) n;
 		}
 	}
 
-	public void encipher(char[] plaintext, int start0, char[] ciphertext, int start1, int len)
+	public void encipher(byte[] plaintext, int start0, byte[] ciphertext, int start1, int len)
 	{
 		while(len-- > 0) {
-			int j = 0;
-			for(; j <= alphabet.length; j++)
-				if(alphabet[j] == plaintext[start0])
-					break;
-			int n = ((j * mul[epos]) + add[epos++]) % alphabet.length;
+			int n = (plaintext[start0++] * mul[epos]) + add[epos++];
+			if(n >= alphabet.getLen())
+				n %= alphabet.getLen();
 			if(epos == add.length)
 				epos = 0;
-			start0++;
-			ciphertext[start1++] = alphabet[n >= alphabet.length ? n % alphabet.length : n];
+			ciphertext[start1++] = (byte) n;
 		}
 	}
 
-	public void decipher(char[] ciphertext, int start, int len)
+	public void decipher(byte[] ciphertext, int start, int len)
 	{
 		while(len-- > 0) {
-			int j = 0;
-			for(; j <= alphabet.length; j++)
-				if(alphabet[j] == ciphertext[start])
-					break;
-			int n = ((j - add[dpos]) * inv[dpos++]) % alphabet.length;
+			int n = (ciphertext[start] - add[dpos]);
+			if(n < 0)
+				n += alphabet.getLen();
+			n *= inv[dpos++];
+			n %= alphabet.getLen();
 			if(dpos == add.length)
 				dpos = 0;
-			n = n < 0 ? n + alphabet.length : n;
-			ciphertext[start++] = alphabet[n];
+			ciphertext[start++] = (byte) n;
 		}
 	}
 
-	public void decipher(char[] ciphertext, int start0, char[] plaintext, int start1, int len)
+	public void decipher(byte[] ciphertext, int start0, byte[] plaintext, int start1, int len)
 	{
 		while(len-- > 0) {
-			int j = 0;
-			for(; j <= alphabet.length; j++)
-				if(alphabet[j] == ciphertext[start0])
-					break;
-			int n = ((j - add[dpos]) * inv[dpos++]) % alphabet.length;
+			int n = (ciphertext[start0++] - add[dpos]);
+			if(n < 0)
+				n += alphabet.getLen();
+			n *= inv[dpos++];
+			n %= alphabet.getLen();
 			if(dpos == add.length)
 				dpos = 0;
-			n = n < 0 ? n + alphabet.length : n;
-			start0++;
-			plaintext[start1++] = alphabet[n];
+			plaintext[start1++] = (byte) n;
 		}
 	}
 	
@@ -112,6 +106,21 @@ public class MultiAffine
 	public MultiAffineKey getKey()
 	{
 		return this.key;
+	}
+	
+	public int ciphertextSize(int plain)
+	{
+		return plain;
+	}
+
+	public int plaintextSize(int cipher)
+	{
+		return cipher;
+	}
+
+	public Alphabet getAlphabet()
+	{
+		return alphabet;
 	}
 
 }

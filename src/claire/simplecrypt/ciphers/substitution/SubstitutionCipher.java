@@ -1,72 +1,47 @@
 package claire.simplecrypt.ciphers.substitution;
 
+import claire.simplecrypt.data.Alphabet;
 import claire.simplecrypt.standards.ICipher;
 
 public class SubstitutionCipher 
 	   implements ICipher<SubstitutionKey> {
 
-	private char[] key;
-	private char[] alphabet;
+	private byte[] key;
+	private byte[] inv;
 	
+	private Alphabet alphabet;
 	private SubstitutionKey master;
 	
 	public SubstitutionCipher(SubstitutionKey key)
 	{
 		this.key = key.getKey();
+		this.inv = key.getInv();
 		this.alphabet = key.getAlphabet();
 		this.master = key;
 	}
 	
-	public void encipher(char[] plaintext, int start, int len)
+	public void encipher(byte[] plaintext, int start, int len)
 	{
-		while(len-- > 0) {
-			final char c = plaintext[start];
-			for(int i = 0; i < alphabet.length; i++)
-				if(c == alphabet[i]) {
-					plaintext[start] = key[i];
-					break;
-				}
-			start++;
-		}
+		while(len-- > 0) 
+			plaintext[start] = key[plaintext[start++]];
 	}
 
-	public void encipher(char[] plaintext, int start0, char[] ciphertext, int start1, int len)
+	public void encipher(byte[] plaintext, int start0, byte[] ciphertext, int start1, int len)
 	{
-		while(len-- > 0) {
-			final char c = plaintext[start0++];
-			for(int i = 0; i < alphabet.length; i++)
-				if(c == alphabet[i]) {
-					ciphertext[start1] = key[i];
-					break;
-				}
-			start1++;
-		}
+		while(len-- > 0) 
+			ciphertext[start1++] = key[plaintext[start0++]];
 	}
 	
-	public void decipher(char[] ciphertext, int start, int len)
+	public void decipher(byte[] ciphertext, int start, int len)
 	{
-		while(len-- > 0) {
-			final char c = ciphertext[start];
-			for(int i = 0; i < alphabet.length; i++)
-				if(c == key[i]) {
-					ciphertext[start] = alphabet[i];
-					break;
-				}
-			start++;
-		}
+		while(len-- > 0) 
+			ciphertext[start] = inv[ciphertext[start++]];
 	}
 
-	public void decipher(char[] ciphertext, int start0, char[] plaintext, int start1, int len)
+	public void decipher(byte[] ciphertext, int start0, byte[] plaintext, int start1, int len)
 	{
-		while(len-- > 0) {
-			final char c = ciphertext[start0++];
-			for(int i = 0; i < alphabet.length; i++)
-				if(c == key[i]) {
-					plaintext[start1] = alphabet[i];
-					break;
-				}
-			start1++;
-		}
+		while(len-- > 0) 
+			plaintext[start1++] = inv[ciphertext[start0++]];
 	}
 
 	public void reset() {}
@@ -74,6 +49,7 @@ public class SubstitutionCipher
 	public void setKey(SubstitutionKey key)
 	{
 		this.key = key.getKey();
+		this.inv = key.getInv();
 		this.alphabet = key.getAlphabet();
 		this.master = key;
 	}
@@ -81,6 +57,7 @@ public class SubstitutionCipher
 	public void destroy()
 	{
 		this.key = null;
+		this.inv = null;
 		this.alphabet = null;
 		this.key = null;
 	}
@@ -88,6 +65,21 @@ public class SubstitutionCipher
 	public SubstitutionKey getKey()
 	{
 		return this.master;
+	}
+	
+	public int ciphertextSize(int plain)
+	{
+		return plain;
+	}
+
+	public int plaintextSize(int cipher)
+	{
+		return cipher;
+	}
+
+	public Alphabet getAlphabet()
+	{
+		return alphabet;
 	}
 
 }

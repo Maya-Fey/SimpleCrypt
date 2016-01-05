@@ -46,9 +46,9 @@ public class MultiAffineKey
 		return this.key;
 	}
 	
-	public char[] getAlphabet()
+	public Alphabet getAlphabet()
 	{
-		return this.alphabet.getChars();
+		return this.alphabet;
 	}
 
 	public void destroy()

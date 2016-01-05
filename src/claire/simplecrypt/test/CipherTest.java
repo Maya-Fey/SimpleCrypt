@@ -1,10 +1,14 @@
 package claire.simplecrypt.test;
 
+import claire.simplecrypt.coders.SimpleCoder;
+import claire.simplecrypt.data.Alphabet;
 import claire.simplecrypt.standards.ICipher;
 import claire.util.logging.Log;
 import claire.util.memory.util.ArrayUtil;
 
 final class CipherTest {
+	
+	private static final SimpleCoder coder = new SimpleCoder(Test.ciphers[0], 80);
 	
 	public static final int runTest()
 	{
@@ -15,18 +19,23 @@ final class CipherTest {
 		for(int i = 0; i < Test.ciphers.length; i++)
 		{
 			ICipher<?> cip = Test.ciphers[i];
+			coder.setCipher(cip);
 			Log.info.println("Testing " + cip.getClass().getSimpleName());
 			try {
 				char[] plain = new char[80];
-				char[] ab = cip.getKey().getAlphabet();
+				char[] ab = cip.getKey().getAlphabet().getChars();
+				if(cip.getKey().getAlphabet().getID() != Alphabet.ADVANCED.getID()) {
+					fails++;
+					Log.err.println("Cipher key did not report correct alphabet.");
+				}
 				for(int j = 0; j < 80; j++) 
 					plain[j] = ab[Test.rng.nextIntFast(ab.length)];
 				
 				char[] s1 = ArrayUtil.copy(plain);
 				char[] s2 = new char[80];
-				cip.encipher(s1, 20, 60);
+				coder.encode(s1, 20, 60);
 				cip.reset();
-				cip.encipher(plain, 20, s2, 20, 60);
+				coder.encode(plain, 20, s2, 20, 60);
 				for(int j = 20; j < 80; j++) {
 					if(s1[j] != s2[j]) {
 						fails++;
@@ -37,9 +46,9 @@ final class CipherTest {
 					}
 				}
 				char[] s3 = new char[80];
-				cip.decipher(s1, 20, 60);
+				coder.decode(s1, 20, 60);
 				cip.reset();
-				cip.decipher(s2, 20, s3, 20, 60);
+				coder.decode(s2, 20, s3, 20, 60);
 				for(int j = 20; j < 80; j++) {
 					if(s1[j] != s3[j]) {
 						fails++;

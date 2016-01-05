@@ -17,28 +17,42 @@ import claire.util.standards.io.IOutgoingStream;
 public class SubstitutionKey 
 	   implements ISecret<SubstitutionKey> {
 	
-	private char[] key;	
+	private byte[] key;	
+	private byte[] inv;
 	private Alphabet alphabet;
 	
-	public SubstitutionKey(char[] key, Alphabet alphabet)
+	public SubstitutionKey(byte[] key, Alphabet alphabet)
 	{
 		this.alphabet = alphabet;
 		this.key = key;
+		this.inv = getInv(key);
 	}
 	
-	char[] getKey()
+	public SubstitutionKey(byte[] key, byte[] inv, Alphabet alphabet)
+	{
+		this.alphabet = alphabet;
+		this.key = key;
+		this.inv = inv;
+	}
+	
+	byte[] getKey()
 	{
 		return this.key;
 	}
 	
-	public char[] getAlphabet()
+	byte[] getInv()
 	{
-		return this.alphabet.getChars();
+		return this.inv;
+	}
+	
+	public Alphabet getAlphabet()
+	{
+		return this.alphabet;
 	}
 
 	public void destroy()
 	{
-		Arrays.fill(key, (char) 0);
+		Arrays.fill(key, (byte) 0);
 		key = null;
 		alphabet = null;
 	}
@@ -55,19 +69,21 @@ public class SubstitutionKey
 	
 	public void export(IOutgoingStream stream) throws IOException
 	{
-		stream.writeCharArr(key);
+		stream.writeByteArr(key);
+		stream.writeByteArr(inv);
 		stream.persist(alphabet);
 	}
 
 	public void export(byte[] bytes, int offset)
 	{
 		offset = IOUtils.writeArr(key, bytes, offset);
+		offset = IOUtils.writeArr(inv, bytes, offset);
 		alphabet.export(bytes, offset);
 	}
 	
 	public int exportSize()
 	{
-		return alphabet.getLen() * 2 + 8;
+		return alphabet.getLen() * 2 + 12;
 	}
 
 	public Factory<SubstitutionKey> factory()
@@ -87,37 +103,38 @@ public class SubstitutionKey
 
 		public SubstitutionKey resurrect(byte[] data, int start) throws InstantiationException
 		{
-			char[] key = IOUtils.readCharArr(data, start);
-			start += key.length * 2 + 4;
+			byte[] key = IOUtils.readByteArr(data, start);
+			start += key.length + 4;
+			byte[] inv = IOUtils.readByteArr(data, start);
+			start += key.length + 4;
 			Alphabet alphabet = Alphabet.factory.resurrect(data, start);
-			return new SubstitutionKey(key, alphabet);
+			return new SubstitutionKey(key, inv, alphabet);
 		}
 
 		public SubstitutionKey resurrect(IIncomingStream stream) throws InstantiationException, IOException
 		{
-			char[] key = stream.readCharArr();
+			byte[] key = stream.readByteArr();
+			byte[] inv = stream.readByteArr();
 			Alphabet alphabet = stream.resurrect(Alphabet.factory);
-			return new SubstitutionKey(key, alphabet);
+			return new SubstitutionKey(key, inv, alphabet);
 		}
 		
 	}
 	
-	public static final char[] getInv(final char[] key, final char[] alphabet)
+	public static final byte[] getInv(final byte[] key)
 	{
-		char[] inv = new char[key.length];
+		byte[] inv = new byte[key.length];
 		for(int i = 0; i < key.length; i++) {
-			for(int j = 0; j < key.length; j++)
-				if(alphabet[i] == key[j]) {
-					inv[i] = alphabet[j];
-					break;
-				}
+			inv[key[i]] = (byte) i;
 		}
 		return inv;
 	}
 	
 	public static final SubstitutionKey random(Alphabet alphabet, IRandom rng)
 	{
-		char[] key = ArrayUtil.copy(alphabet.getChars());
+		byte[] key = new byte[alphabet.getLen()];
+		for(int i = 0; i < key.length; i++)
+			key[i] = (byte) i;
 		RandUtils.randomize(key, rng);
 		return new SubstitutionKey(key, alphabet);
 	}

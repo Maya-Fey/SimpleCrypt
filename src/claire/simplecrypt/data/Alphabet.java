@@ -118,8 +118,8 @@ public final class Alphabet
 	
 	private static int CTR = 0;
 	
-	private int ID;
-	private char[] chars;
+	private final int ID;
+	private final char[] chars;
 	
 	private Alphabet(char[] arr)
 	{
@@ -142,22 +142,36 @@ public final class Alphabet
 		return this.chars;
 	}
 	
-	public void convertTo(char[] chars, byte[] rep, int start, int len)
+	public byte convertTo(char in)
+	{
+		for(int i = 0; i < this.chars.length; i++)
+			if(chars[i] == in)
+				return (byte) i;
+		return -1;
+	}
+	
+	public void convertTo(char[] chars, int start0, byte[] rep, int start1, int len)
 	{
 		while(len-- > 0) {
-			for(int i = 0; i < this.chars.length; i++) {
-				if(this.chars[i] == chars[start]) {
-					rep[start] = (byte) i;
+			for(int i = 0; i <= this.chars.length; i++) {
+				if(this.chars[i] == chars[start0]) {
+					rep[start1++] = (byte) i;
+					break;
 				}
 			}
-			start++;
+			start0++;
 		}
 	}
 	
-	public void convertFrom(byte[] rep, char[] chars, int start, int len)
+	public char convertFrom(byte in)
+	{
+		return chars[in];
+	}
+	
+	public void convertFrom(byte[] rep, int start0, char[] chars, int start1, int len)
 	{
 		while(len-- > 0) 
-			chars[start] = this.chars[rep[start++]];
+			chars[start1++] = this.chars[rep[start0++]];
 	}
 	
 	public void export(IOutgoingStream stream) throws IOException
