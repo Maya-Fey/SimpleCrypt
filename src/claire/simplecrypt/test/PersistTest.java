@@ -27,10 +27,8 @@ final class PersistTest {
 				 * Raw bytes
 				 */
 				byte[] bytes = sec.export();
-				
 				try {
 					ISecret<?> cmp = factory.resurrect(bytes);
-					Log.warn.println("We got this far");
 					if(!cmp.equals(sec)) {
 						fails++;
 						Log.err.println("When ressurrecting from raw bytes instances of " + sec.getClass().getSimpleName() + " are not equal.");

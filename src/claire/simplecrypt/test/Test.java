@@ -4,6 +4,8 @@ import claire.simplecrypt.ciphers.ceasar.CeasarCipher;
 import claire.simplecrypt.ciphers.ceasar.CeasarKey;
 import claire.simplecrypt.ciphers.ceasar.MultiCeasar;
 import claire.simplecrypt.ciphers.ceasar.MultiCeasarKey;
+import claire.simplecrypt.ciphers.iterative.IterativeCipher;
+import claire.simplecrypt.ciphers.iterative.IteratorKey;
 import claire.simplecrypt.ciphers.mathematical.AffineCipher;
 import claire.simplecrypt.ciphers.mathematical.AffineKey;
 import claire.simplecrypt.ciphers.mathematical.MultiAffine;
@@ -31,6 +33,7 @@ public final class Test {
 			new MultiSubstitution(MultiSubstitutionKey.random(Alphabet.ADVANCED, 8, rng)),
 			new AffineCipher(AffineKey.random(Alphabet.ADVANCED, rng)),
 			new MultiAffine(MultiAffineKey.random(Alphabet.ADVANCED, 8, rng)),
+			new IterativeCipher(IteratorKey.random(Alphabet.ADVANCED, rng))
 		};
 	
 	static ISecret<?>[] keys = new ISecret<?>[ciphers.length];
