@@ -1,4 +1,4 @@
-import claire.simplecrypt.ciphers.iterative.MultiIterative;
+import claire.simplecrypt.ciphers.iterative.MultiIterator;
 import claire.simplecrypt.ciphers.iterative.MultiIteratorKey;
 import claire.simplecrypt.coders.SimpleCoder;
 import claire.simplecrypt.data.Alphabet;
@@ -16,7 +16,7 @@ public final class TestCrypt {
 		Test.runTests();
 		IRandom rng = new FastXorShift(2312313);
 		MultiIteratorKey key = MultiIteratorKey.random(Alphabet.ADVANCED, 8, rng);
-		ICipher<?> cipher = new MultiIterative(key);
+		ICipher<?> cipher = new MultiIterator(key);
 		ICharCoder coder = new SimpleCoder(cipher, 1000);
 		char[] text = "If P = NP, then the entire universe is highly likely to explode in 12 minutes - Samantha Carter".toCharArray();
 		System.out.println(text);
