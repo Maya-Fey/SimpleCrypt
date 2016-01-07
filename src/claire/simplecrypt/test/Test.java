@@ -1,5 +1,7 @@
 package claire.simplecrypt.test;
 
+import claire.simplecrypt.ciphers.autokey.AutoKeyCipher;
+import claire.simplecrypt.ciphers.autokey.AutoKeyKey;
 import claire.simplecrypt.ciphers.ceasar.CeasarCipher;
 import claire.simplecrypt.ciphers.ceasar.CeasarKey;
 import claire.simplecrypt.ciphers.ceasar.MultiCeasar;
@@ -40,7 +42,8 @@ public final class Test {
 			new IterativeCipher(IteratorKey.random(Alphabet.ADVANCED, rng)),
 			new IteratorCipher(IteratorKey.random(Alphabet.ADVANCED, rng)),
 			new MultiIterative(MultiIteratorKey.random(Alphabet.ADVANCED, 8, rng)),
-			new MultiIterator(MultiIteratorKey.random(Alphabet.ADVANCED, 8, rng))
+			new MultiIterator(MultiIteratorKey.random(Alphabet.ADVANCED, 8, rng)),
+			new AutoKeyCipher(AutoKeyKey.random(Alphabet.ADVANCED, 8, rng))
 		};
 	
 	static ISecret<?>[] keys = new ISecret<?>[ciphers.length];
