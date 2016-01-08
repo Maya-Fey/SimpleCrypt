@@ -82,7 +82,7 @@ public class IgnoreCoder
 		if(pos != 0) {
 			int x = cipher.plaintextSize(pos);
 			cipher.decipher(buffer, 0, pos);
-			ab.convertFrom(buffer, 0, plaintext, start1, x);
+			ab.convertFrom(buffer, 0, codetext, start1, x);
 		}
 	}
 
@@ -145,7 +145,7 @@ public class IgnoreCoder
 		if(pos != 0) {
 			int x = cipher.ciphertextSize(pos);
 			cipher.encipher(buffer, 0, pos);
-			ab.convertFrom(buffer, 0, plaintext, start1, x);
+			ab.convertFrom(buffer, 0, codetext, start1, x);
 		}
 	}
  

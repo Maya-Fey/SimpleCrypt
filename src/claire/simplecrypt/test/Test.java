@@ -20,7 +20,10 @@ import claire.simplecrypt.ciphers.substitution.MultiSubstitution;
 import claire.simplecrypt.ciphers.substitution.MultiSubstitutionKey;
 import claire.simplecrypt.ciphers.substitution.SubstitutionCipher;
 import claire.simplecrypt.ciphers.substitution.SubstitutionKey;
+import claire.simplecrypt.coders.IgnoreCoder;
+import claire.simplecrypt.coders.SimpleCoder;
 import claire.simplecrypt.data.Alphabet;
+import claire.simplecrypt.standards.ICharCoder;
 import claire.simplecrypt.standards.ICipher;
 import claire.simplecrypt.standards.ISecret;
 import claire.util.crypto.rng.primitive.JRandom;
@@ -28,6 +31,8 @@ import claire.util.logging.Log;
 import claire.util.standards.IRandom;
 
 public final class Test {
+	
+	static final ICipher<?> scipher = new AutoKeyCipher(new AutoKeyKey(Alphabet.SIMPLELAB, "KILT"));
 	
 	static final IRandom rng = new JRandom();
 	
@@ -46,6 +51,12 @@ public final class Test {
 			new AutoKeyCipher(AutoKeyKey.random(Alphabet.ADVANCED, 8, rng))
 		};
 	
+	static ICharCoder[] coders = new ICharCoder[]
+		{
+			new SimpleCoder(scipher, 1000),
+			new IgnoreCoder(scipher, 1000)
+		};
+	
 	static ISecret<?>[] keys = new ISecret<?>[ciphers.length];
 	
 	static 
@@ -60,6 +71,7 @@ public final class Test {
 		Log.info.println("Running tests...");
 		fails += PersistTest.runTest();
 		fails += CipherTest.runTest();
+		fails += CoderTest.runTest();
 		if(fails > 0)
 			Log.crit.println(fails + " regressions detected!");
 		else
