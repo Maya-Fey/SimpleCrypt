@@ -18,6 +18,15 @@ public final class Alphabet
 			'W', 'X', 'Y', 'Z'
 		};
 	
+	private static final char[] ASIMPLELAB = new char[]
+		{
+			'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 
+			'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 
+			'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 
+			'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 
+			's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
+		};
+	
 	private static final char[] ASPACEDAB = new char[]
 		{
 			' ', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 
@@ -94,6 +103,7 @@ public final class Alphabet
 		};	
 
 	public static final Alphabet SIMPLEAB        = new Alphabet(ASIMPLEAB);
+	public static final Alphabet SIMPLELAB       = new Alphabet(ASIMPLELAB);
 	public static final Alphabet SPACEDAB        = new Alphabet(ASPACEDAB);
 	public static final Alphabet SPACEDLAB       = new Alphabet(ASPACEDLAB);
 	public static final Alphabet SPACEDANUM      = new Alphabet(ASPACEDANUM);
@@ -106,6 +116,7 @@ public final class Alphabet
 	public static final Alphabet[] alphabets = new Alphabet[]
 		{
 			SIMPLEAB,
+			SIMPLELAB,
 			SPACEDAB,
 			SPACEDLAB,
 			SPACEDANUM,
@@ -159,6 +170,20 @@ public final class Alphabet
 					break;
 				}
 			}
+			start0++;
+		}
+	}
+	public void convertToUnsafe(char[] chars, int start0, byte[] rep, int start1, int len)
+	{
+		while(len-- > 0) {
+			byte v = -1;
+			for(int i = 0; i < this.chars.length; i++) {
+				if(this.chars[i] == chars[start0]) {
+					v = (byte) i;
+					break;
+				}
+			}
+			rep[start1++] = v;
 			start0++;
 		}
 	}

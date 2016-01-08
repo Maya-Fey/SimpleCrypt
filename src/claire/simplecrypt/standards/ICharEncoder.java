@@ -14,7 +14,7 @@ public interface ICharEncoder {
 	
 	default char[] encode_copy(char[] plaintext)
 	{
-		char[] codetext = new char[plaintext.length];
+		char[] codetext = new char[getEncipherer().ciphertextSize(plaintext.length)];
 		encode(plaintext, 0, codetext, 0, plaintext.length);
 		return codetext;
 	}

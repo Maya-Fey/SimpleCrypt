@@ -32,25 +32,31 @@ public class IgnoreCoder
 	{
 		if(temp == null || len > temp.length)
 			temp = new char[len];
-		int pos = 0,
-			start1 = start;
+		System.arraycopy(plaintext, start, temp, 0, len);
+		int i = 0,
+			pos = 0;
 		while(len-- > 0) 
 		{
-			byte to = ab.convertTo(temp[start++]);
-			if(to == -1) 
+			byte coded = ab.convertTo(temp[i]);
+			if(coded == -1) {
 				if(pos != 0) {
+					int x = cipher.plaintextSize(pos);
 					cipher.decipher(buffer, 0, pos);
-					ab.convertFrom(buffer, 0, plaintext, start1, pos);
-					start1 += pos;
-				} else
-					start1++;
-			else
-				buffer[pos++] = to;
+					ab.convertFrom(buffer, 0, plaintext, start, x);
+					start += x;
+					pos = 0;
+				}
+				plaintext[start++] = temp[i];
+			} else {
+				buffer[pos++] = coded;
+			}
+			i++;
 		}
 		if(pos != 0) {
+			int x = cipher.plaintextSize(pos);
 			cipher.decipher(buffer, 0, pos);
-			ab.convertFrom(buffer, 0, plaintext, start1, pos);
-		} 
+			ab.convertFrom(buffer, 0, plaintext, start, x);
+		}
 	}
 
 	public void decode(char[] plaintext, int start0, char[] codetext, int start1, int len)
@@ -58,21 +64,26 @@ public class IgnoreCoder
 		int pos = 0;
 		while(len-- > 0) 
 		{
-			byte to = ab.convertTo(plaintext[start0++]);
-			if(to == -1) 
+			byte coded = ab.convertTo(plaintext[start0]);
+			if(coded == -1) {
 				if(pos != 0) {
+					int x = cipher.plaintextSize(pos);
 					cipher.decipher(buffer, 0, pos);
-					ab.convertFrom(buffer, 0, codetext, start1, pos);
-					start1 += pos;
-				} else
-					start1++;
-			else
-				buffer[pos++] = to;
+					ab.convertFrom(buffer, 0, codetext, start1, x);
+					start1 += x;
+					pos = 0;
+				}
+				codetext[start1++] = plaintext[start0];
+			} else {
+				buffer[pos++] = coded;
+			}
+			start0++;
 		}
 		if(pos != 0) {
+			int x = cipher.plaintextSize(pos);
 			cipher.decipher(buffer, 0, pos);
-			ab.convertFrom(buffer, 0, codetext, start1, pos);
-		} 
+			ab.convertFrom(buffer, 0, plaintext, start1, x);
+		}
 	}
 
 	public IDecipherer<?> getDecipherer()
@@ -82,25 +93,33 @@ public class IgnoreCoder
 
 	public void encode(char[] plaintext, int start, int len)
 	{
-		int pos = 0,
-			start1 = start;
+		if(temp == null || len > temp.length)
+			temp = new char[len];
+		System.arraycopy(plaintext, start, temp, 0, len);
+		int i = 0,
+			pos = 0;
 		while(len-- > 0) 
 		{
-			byte to = ab.convertTo(plaintext[start++]);
-			if(to == -1) 
+			byte coded = ab.convertTo(temp[i]);
+			if(coded == -1) {
 				if(pos != 0) {
+					int x = cipher.ciphertextSize(pos);
 					cipher.encipher(buffer, 0, pos);
-					ab.convertFrom(buffer, 0, plaintext, start1, pos);
-					start1 += pos;
-				} else
-					start1++;
-			else
-				buffer[pos++] = to;
+					ab.convertFrom(buffer, 0, plaintext, start, x);
+					start += x;
+					pos = 0;
+				}
+				plaintext[start++] = temp[i];
+			} else {
+				buffer[pos++] = coded;
+			}
+			i++;
 		}
 		if(pos != 0) {
+			int x = cipher.ciphertextSize(pos);
 			cipher.encipher(buffer, 0, pos);
-			ab.convertFrom(buffer, 0, plaintext, start1, pos);
-		} 
+			ab.convertFrom(buffer, 0, plaintext, start, x);
+		}
 	}
 	
 	public void encode(char[] plaintext, int start0, char[] codetext, int start1, int len)
@@ -108,21 +127,26 @@ public class IgnoreCoder
 		int pos = 0;
 		while(len-- > 0) 
 		{
-			byte to = ab.convertTo(plaintext[start0++]);
-			if(to == -1) 
+			byte coded = ab.convertTo(plaintext[start0]);
+			if(coded == -1) {
 				if(pos != 0) {
+					int x = cipher.ciphertextSize(pos);
 					cipher.encipher(buffer, 0, pos);
-					ab.convertFrom(buffer, 0, codetext, start1, pos);
-					start1 += pos;
-				} else
-					start1++;
-			else
-				buffer[pos++] = to;
+					ab.convertFrom(buffer, 0, codetext, start1, x);
+					start1 += x;
+					pos = 0;
+				}
+				codetext[start1++] = plaintext[start0];
+			} else {
+				buffer[pos++] = coded;
+			}
+			start0++;
 		}
 		if(pos != 0) {
+			int x = cipher.ciphertextSize(pos);
 			cipher.encipher(buffer, 0, pos);
-			ab.convertFrom(buffer, 0, codetext, start1, pos);
-		} 
+			ab.convertFrom(buffer, 0, plaintext, start1, x);
+		}
 	}
  
 	public IEncipherer<?> getEncipherer()
