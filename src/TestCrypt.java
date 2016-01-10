@@ -11,7 +11,7 @@ import claire.util.standards.IRandom;
 public final class TestCrypt {
 
 	//If P = NP, then the entire universe is highly likely to explode in 12 minutes - Samantha Carter
-	public static void main(String[] args)
+	public static void main(String[] args) throws Exception
 	{
 		Test.runTests();
 		IRandom rng = new FastXorShift(2312313);
