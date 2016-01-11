@@ -4,11 +4,9 @@ import java.lang.reflect.InvocationTargetException;
 
 import claire.simplecrypt.ciphers.ceasar.CeasarCipher;
 import claire.simplecrypt.ciphers.ceasar.CeasarKey;
-import claire.simplecrypt.data.Alphabet;
 import claire.simplecrypt.standards.ICipher;
 import claire.simplecrypt.standards.ISecret;
 import claire.util.logging.Log;
-import claire.util.standards.IPersistable;
 
 public final class CipherRegistry {
 	
@@ -26,6 +24,7 @@ public final class CipherRegistry {
 	
 	static {
 		try {
+			args[0] = CeasarKey.class;
 			factories[0] = new CipherFactory<CeasarCipher, CeasarKey>(CeasarCipher.class.getConstructor(args));
 		} catch (Exception e) {
 			Log.err.println("Error: Problem instantiating Cipher Factories. Cipher Registry cannot be initialized.");
