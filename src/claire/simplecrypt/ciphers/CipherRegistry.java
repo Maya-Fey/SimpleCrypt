@@ -12,6 +12,7 @@ public final class CipherRegistry {
 	
 	private static final Class<?>[] args = new Class<?>[] 
 		{
+		
 			ISecret.class
 		};
 

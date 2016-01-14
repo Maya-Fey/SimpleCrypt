@@ -4,7 +4,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 import claire.simplecrypt.ciphers.ceasar.CeasarKey;
-import claire.util.display.TableLayout;
+import claire.util.display.layout.TableLayout;
 import claire.util.encoding.Base10;
 import claire.util.memory.util.Pointer;
 
