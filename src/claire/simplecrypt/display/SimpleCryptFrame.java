@@ -11,12 +11,15 @@ import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.Border;
 
+import claire.simplecrypt.ciphers.CipherRegistry;
+import claire.simplecrypt.ciphers.UKey;
 import claire.simplecrypt.coders.IgnoreCoder;
 import claire.simplecrypt.standards.ICipher;
 import claire.simplecrypt.standards.ISecret;
 import claire.util.display.DisplayHelper;
 import claire.util.display.component.TablePane;
 import claire.util.display.display.BasicDisplay;
+import claire.util.display.message.ErrorMessage;
 
 public class SimpleCryptFrame 
 	   extends BasicDisplay
@@ -32,6 +35,7 @@ public class SimpleCryptFrame
 	private IgnoreCoder coder;
 	private ICipher<?> cip;
 	private ISecret<?> key;
+	private int cID;
 	
 	private boolean allow;
 
@@ -103,12 +107,30 @@ public class SimpleCryptFrame
 		}
 	}
 
-	public void setCipher(ICipher<?> cip)
+	public void setCipher(int ID)
 	{
-		this.cip = cip;
-		coder.setCipher(cip);
-		key = null;
+		this.cID = ID;
 		this.disallow();
+	}
+	
+	public void setKey(UKey key)
+	{
+		this.cID = key.getID();
+		this.key = key.getKey();
+		try {
+			this.cip = CipherRegistry.getCipher(this.key, this.cID);
+		} catch (Exception e) {
+			ErrorMessage m = new ErrorMessage(this.getOwner(), "Error Encountered: " + e.getMessage() );
+			DisplayHelper.center(m);
+			m.start();
+			e.printStackTrace();
+			this.dispose();
+		} 
+		if(this.coder == null)
+			coder = new IgnoreCoder(cip, 1000);
+		else
+			coder.setCipher(cip);
+		this.allow();
 	}
 
 }
