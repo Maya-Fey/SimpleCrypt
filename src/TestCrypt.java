@@ -1,18 +1,12 @@
-import javax.swing.JLabel;
-
 import claire.simplecrypt.ciphers.autokey.AutoKeyCipher;
 import claire.simplecrypt.ciphers.autokey.AutoKeyKey;
 import claire.simplecrypt.coders.IgnoreCoder;
 import claire.simplecrypt.data.Alphabet;
-import claire.simplecrypt.display.CeasarKeyCreator;
+import claire.simplecrypt.display.SimpleCryptFrame;
 import claire.simplecrypt.standards.ICharCoder;
 import claire.simplecrypt.standards.ICipher;
 import claire.simplecrypt.test.Test;
 import claire.util.crypto.rng.primitive.FastXorShift;
-import claire.util.display.DisplayHelper;
-import claire.util.display.display.SimpleDisplay;
-import claire.util.display.message.InformationCollectionMessage;
-import claire.util.display.message.InformationCollectionPanel;
 import claire.util.standards.IRandom;
 
 public final class TestCrypt {
@@ -39,17 +33,8 @@ public final class TestCrypt {
 		System.out.println(text);
 		coder.decode(text);
 		System.out.println(text);
-		InformationCollectionPanel panel = new CeasarKeyCreator();
-		JLabel label = new JLabel("Kek");
-		SimpleDisplay frame = new SimpleDisplay("Lol");
-		frame.add(label);
-		InformationCollectionMessage m = new InformationCollectionMessage(frame.getOwner(), panel, "Spies", true);
-		frame.setSize(300, 200);
-		DisplayHelper.center(frame);
-		frame.setVisible(true);
-		panel.initialize();
-		DisplayHelper.center(m);
-		m.start();
+		SimpleCryptFrame f = new SimpleCryptFrame();
+		f.start();
 		
 		
 	}
