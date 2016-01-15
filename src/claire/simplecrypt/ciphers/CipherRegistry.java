@@ -8,6 +8,7 @@ import claire.simplecrypt.display.CeasarKeyCreator;
 import claire.simplecrypt.display.KeyCreatorPanel;
 import claire.simplecrypt.standards.ICipher;
 import claire.simplecrypt.standards.ISecret;
+import claire.util.io.Factory;
 import claire.util.logging.Log;
 
 public final class CipherRegistry {
@@ -26,13 +27,13 @@ public final class CipherRegistry {
 	
 	private static final String[] names = new String[]
 		{
-			"CeasarCipher" 
+			"Ceasar Cipher" 
 		};
 	
 	static {
 		try {
 			args0[0] = CeasarKey.class;
-			factories[0] = new CipherFactory<CeasarCipher, CeasarKey, CeasarKeyCreator>(CeasarCipher.class.getConstructor(args0), CeasarKeyCreator.class.getConstructor(args1));
+			factories[0] = new CipherFactory<CeasarCipher, CeasarKey, CeasarKeyCreator>(CeasarCipher.class.getConstructor(args0), CeasarKeyCreator.class.getConstructor(args1), CeasarKey.factory);
 		} catch (Exception e) {
 			Log.err.println("Error: Problem instantiating Cipher Factories. Cipher Registry cannot be initialized.");
 			e.printStackTrace();
@@ -58,6 +59,11 @@ public final class CipherRegistry {
 	public static KeyCreatorPanel<?> getPanel(int ID) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException
 	{
 		return factories[ID].newPanel();
+	}
+	
+	public static Factory<? extends ISecret<?>> getFactory(int ID)
+	{
+		return factories[ID].getFactory();
 	}
 	
 }

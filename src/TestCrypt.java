@@ -2,7 +2,6 @@ import claire.simplecrypt.ciphers.autokey.AutoKeyCipher;
 import claire.simplecrypt.ciphers.autokey.AutoKeyKey;
 import claire.simplecrypt.coders.IgnoreCoder;
 import claire.simplecrypt.data.Alphabet;
-import claire.simplecrypt.display.SimpleCryptFrame;
 import claire.simplecrypt.standards.ICharCoder;
 import claire.simplecrypt.standards.ICipher;
 import claire.simplecrypt.test.Test;
@@ -33,10 +32,6 @@ public final class TestCrypt {
 		System.out.println(text);
 		coder.decode(text);
 		System.out.println(text);
-		SimpleCryptFrame f = new SimpleCryptFrame();
-		f.start();
-		
-		
 	}
 
 }

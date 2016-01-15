@@ -76,7 +76,7 @@ public class CeasarKey
 		return new CeasarKey(alphabet, 1 + rand.nextIntGood(alphabet.getLen() - 1));
 	}
 	
-	private static final CeasarKeyFactory factory = new CeasarKeyFactory();
+	public static final CeasarKeyFactory factory = new CeasarKeyFactory();
 	
 	private static final class CeasarKeyFactory extends Factory<CeasarKey>
 	{
