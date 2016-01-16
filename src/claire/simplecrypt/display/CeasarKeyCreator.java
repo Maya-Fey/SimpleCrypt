@@ -2,9 +2,10 @@ package claire.simplecrypt.display;
 
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import javax.swing.border.Border;
 
 import claire.simplecrypt.ciphers.ceasar.CeasarKey;
-import claire.util.display.layout.TableLayout;
+import claire.util.display.DisplayHelper;
 import claire.util.encoding.Base10;
 import claire.util.memory.util.Pointer;
 
@@ -16,18 +17,21 @@ public class CeasarKeyCreator
 	private static final String notNum = "Entered text is not a number";
 	private static final String outBounds = "Shift is must be less then the size of the alphabet.";
 	
-	private final JTextField field = new JTextField(8);
+	private final JTextField field = new JTextField(4);
 	private final JLabel size = new JLabel();
 	
 	public void initialize()
 	{
-		TableLayout layout = new TableLayout(this);
+		JLabel l1 = new JLabel("Enter Shift Value: ");
+		Border b = DisplayHelper.uniformBorder(6);
 		size.setText("Alphabet Size: " + this.getAlphabet().getLen());
-		layout.newRow();
-		layout.newCol(size, 2);
-		layout.newRow();
-		layout.newCol(new JLabel("Enter Shift Value: "));
-		layout.newCol(field);
+		DisplayHelper.addBorder(l1, b);
+		DisplayHelper.addBorder(size, b);
+		table.newRow();
+		table.newCol(size, 2);
+		table.newRow();
+		table.newCol(l1);
+		table.newCol(DisplayHelper.nestBorderWide(field, b));
 	}
 
 	public boolean error(Pointer<String> msg)
@@ -36,7 +40,7 @@ public class CeasarKeyCreator
 			msg.set(notNum);
 			return true;
 		}
-		if(Base10.stringToInt(field.getText()) > this.getAlphabet().getLen()) {
+		if(Base10.stringToInt(field.getText()) >= this.getAlphabet().getLen()) {
 			msg.set(outBounds);
 			return true;
 		}
@@ -51,6 +55,16 @@ public class CeasarKeyCreator
 	protected void alphabetChanged() 
 	{
 		size.setText("Alphabet Size: " + this.getAlphabet().getLen());
+	}
+	
+	public int requestedHeight()
+	{
+		return 243;
+	}
+	
+	public int requestedWidth()
+	{
+		return 432;
 	}
 
 }

@@ -127,6 +127,28 @@ public final class Alphabet
 			ADVANCED
 		};
 	
+	public static final String[] names = new String[]
+		{
+			"Simple Alphabet",
+			"Cased Alphabet",
+			"Simple Alphabet + Space",
+			"Cased Alphabet + Space",
+			"Simple Alphabet + Space + Numerals",
+			"Simple Alphabet + Space + Punctuation",
+			"Cased Alphabet + Space + Numerals",
+			"Cased Alphabet + Space + Punctuation",
+			"Cased Alphabet + Space + Numerals + Punctuation",
+			"Advanced Alphabet"
+		};
+	
+	public static final String[] alphastrings = new String[names.length];
+	
+	static 
+	{
+		for(int i = 0; i < alphabets.length; i++)
+			alphastrings[i] = "[" + new String(alphabets[i].getChars()) + "]";
+	}
+	
 	private static int CTR = 0;
 	
 	private final int ID;
@@ -245,6 +267,15 @@ public final class Alphabet
 	{
 		return alphabets[id];
 	}
-
+	
+	public static String nameFromID(int id)
+	{
+		return names[id];
+	}
+	
+	public static String repFromID(int id)
+	{
+		return alphastrings[id];
+	}
 
 }

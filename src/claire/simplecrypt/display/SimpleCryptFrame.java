@@ -41,7 +41,7 @@ public class SimpleCryptFrame
 	private ISecret<?> key;
 	private int cID = -1;
 	
-	private boolean allow;
+	private boolean allow = true;
 	
 	private CipherChoicePanel cpanel;
 
@@ -111,7 +111,9 @@ public class SimpleCryptFrame
 		}
 	}
 
-	
+	/**
+	 * TODO: A bit of spaghetti here, use a fork to clear it out.
+	 */
 	public void actionPerformed(ActionEvent arg0)
 	{
 		switch(arg0.getActionCommand())
@@ -155,7 +157,7 @@ public class SimpleCryptFrame
 						this.dispose();
 					} 
 					p.initialize();
-					m = new InformationCollectionMessage(this.getOwner(), p, "Select New Cipher", true);
+					m = new InformationCollectionMessage(this.getOwner(), p, "Create " + CipherRegistry.getName(cID) + " Key", true);
 					DisplayHelper.center(m);
 					m.start();
 					if(m.isOk()) {
