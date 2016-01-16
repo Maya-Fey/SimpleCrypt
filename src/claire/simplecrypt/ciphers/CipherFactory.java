@@ -8,7 +8,7 @@ import claire.simplecrypt.standards.ICipher;
 import claire.simplecrypt.standards.ISecret;
 import claire.util.io.Factory;
 
-public class CipherFactory<Cipher extends ICipher<Key>, Key extends ISecret<Key>, Panel extends KeyCreatorPanel<Key>> {
+public class CipherFactory<Cipher extends ICipher<Key>, Key extends ISecret<?>, Panel extends KeyCreatorPanel<Key>> {
 	
 	private final Constructor<Cipher> con0;
 	private final Constructor<Panel> con1;

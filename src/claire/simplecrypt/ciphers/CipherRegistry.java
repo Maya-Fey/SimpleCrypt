@@ -25,7 +25,7 @@ public final class CipherRegistry {
 	
 	private static final CipherFactory<?, ? extends ISecret<?>, ? extends KeyCreatorPanel<?>>[] factories = new CipherFactory<?, ?, ?>[1];
 	
-	private static final String[] names = new String[]
+	public static final String[] names = new String[]
 		{
 			"Ceasar Cipher" 
 		};
@@ -51,7 +51,7 @@ public final class CipherRegistry {
 		return names[ID];
 	}
 	
-	public static ICipher<?> getCipher(ISecret<?> key, int ID) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException
+	public static ICipher<? extends ISecret<?>> getCipher(ISecret<?> key, int ID) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException
 	{
 		return factories[ID].getCipher(key);
 	}

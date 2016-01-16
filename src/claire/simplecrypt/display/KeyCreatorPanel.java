@@ -5,7 +5,7 @@ import claire.simplecrypt.standards.ISecret;
 import claire.util.display.message.InformationCollectionPanel;
 import claire.util.memory.util.Pointer;
 
-public abstract class KeyCreatorPanel<Key extends ISecret<Key>> 
+public abstract class KeyCreatorPanel<Key extends ISecret<?>> 
 				extends InformationCollectionPanel {
 
 	private static final long serialVersionUID = 3382806189819718872L;
