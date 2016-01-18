@@ -2,14 +2,14 @@ package claire.simplecrypt.display.creators;
 
 import claire.simplecrypt.ciphers.iterative.IteratorKey;
 
-public class IteratorKeyCreator 
+public class IterativeKeyCreator 
 	   extends IntKeyCreator<IteratorKey> {
 
 	private static final long serialVersionUID = -5831483180721711993L;
 
-	public IteratorKeyCreator()
+	public IterativeKeyCreator()
 	{
-		super("Enter iterator size: ");
+		super("Enter initial position: ");
 	}
 	
 	public IteratorKey extract()

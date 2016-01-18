@@ -13,6 +13,7 @@ import claire.simplecrypt.ciphers.iterative.IteratorCipher;
 import claire.simplecrypt.ciphers.iterative.IteratorKey;
 import claire.simplecrypt.display.creators.AutoKeyKeyCreator;
 import claire.simplecrypt.display.creators.CeasarKeyCreator;
+import claire.simplecrypt.display.creators.IterativeKeyCreator;
 import claire.simplecrypt.display.creators.IteratorKeyCreator;
 import claire.simplecrypt.display.creators.KeyCreatorPanel;
 import claire.simplecrypt.display.creators.MultiCeasarKeyCreator;
@@ -53,7 +54,7 @@ public final class CipherRegistry {
 			args0[0] = AutoKeyKey.class;
 			factories[2] = new CipherFactory<AutoKeyCipher, AutoKeyKey, AutoKeyKeyCreator>(AutoKeyCipher.class.getConstructor(args0), AutoKeyKeyCreator.class.getConstructor(args1), AutoKeyKey.factory);
 			args0[0] = IteratorKey.class;
-			factories[3] = new CipherFactory<IterativeCipher, IteratorKey, IteratorKeyCreator>(IterativeCipher.class.getConstructor(args0), IteratorKeyCreator.class.getConstructor(args1), IteratorKey.factory);
+			factories[3] = new CipherFactory<IterativeCipher, IteratorKey, IterativeKeyCreator>(IterativeCipher.class.getConstructor(args0), IterativeKeyCreator.class.getConstructor(args1), IteratorKey.factory);
 			args0[0] = IteratorKey.class;
 			factories[4] = new CipherFactory<IteratorCipher, IteratorKey, IteratorKeyCreator>(IteratorCipher.class.getConstructor(args0), IteratorKeyCreator.class.getConstructor(args1), IteratorKey.factory);
 			
