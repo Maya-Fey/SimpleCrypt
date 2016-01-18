@@ -8,8 +8,11 @@ import claire.simplecrypt.ciphers.ceasar.CeasarCipher;
 import claire.simplecrypt.ciphers.ceasar.CeasarKey;
 import claire.simplecrypt.ciphers.ceasar.MultiCeasar;
 import claire.simplecrypt.ciphers.ceasar.MultiCeasarKey;
+import claire.simplecrypt.ciphers.iterative.IterativeCipher;
+import claire.simplecrypt.ciphers.iterative.IteratorKey;
 import claire.simplecrypt.display.creators.AutoKeyKeyCreator;
 import claire.simplecrypt.display.creators.CeasarKeyCreator;
+import claire.simplecrypt.display.creators.IteratorKeyCreator;
 import claire.simplecrypt.display.creators.KeyCreatorPanel;
 import claire.simplecrypt.display.creators.MultiCeasarKeyCreator;
 import claire.simplecrypt.standards.ICipher;
@@ -29,13 +32,14 @@ public final class CipherRegistry {
 		
 		};
 	
-	private static final CipherFactory<?, ? extends ISecret<?>, ? extends KeyCreatorPanel<?>>[] factories = new CipherFactory<?, ?, ?>[3];
+	private static final CipherFactory<?, ? extends ISecret<?>, ? extends KeyCreatorPanel<?>>[] factories = new CipherFactory<?, ?, ?>[4];
 	
 	public static final String[] names = new String[]
 		{
 			"Ceasar Cipher",
 			"Vigenere Cipher (Multi Ceasar)",
-			"Cipher AutoKey"
+			"Cipher AutoKey",
+			"Iterative Cipher"
 		};
 	
 	static {
@@ -46,6 +50,9 @@ public final class CipherRegistry {
 			factories[1] = new CipherFactory<MultiCeasar, MultiCeasarKey, MultiCeasarKeyCreator>(MultiCeasar.class.getConstructor(args0), MultiCeasarKeyCreator.class.getConstructor(args1), MultiCeasarKey.factory);
 			args0[0] = AutoKeyKey.class;
 			factories[2] = new CipherFactory<AutoKeyCipher, AutoKeyKey, AutoKeyKeyCreator>(AutoKeyCipher.class.getConstructor(args0), AutoKeyKeyCreator.class.getConstructor(args1), AutoKeyKey.factory);
+			args0[0] = IteratorKey.class;
+			factories[3] = new CipherFactory<IterativeCipher, IteratorKey, IteratorKeyCreator>(IterativeCipher.class.getConstructor(args0), IteratorKeyCreator.class.getConstructor(args1), IteratorKey.factory);
+			
 		} catch (Exception e) {
 			Log.err.println("Error: Problem instantiating Cipher Factories. Cipher Registry cannot be initialized.");
 			e.printStackTrace();

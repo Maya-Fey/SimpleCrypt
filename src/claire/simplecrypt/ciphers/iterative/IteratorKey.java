@@ -76,7 +76,7 @@ public class IteratorKey
 		return new IteratorKey(alphabet, 1 + rand.nextIntGood(alphabet.getLen() - 1));
 	}
 	
-	private static final IteratorKeyFactory factory = new IteratorKeyFactory();
+	public static final IteratorKeyFactory factory = new IteratorKeyFactory();
 	
 	private static final class IteratorKeyFactory extends Factory<IteratorKey>
 	{
