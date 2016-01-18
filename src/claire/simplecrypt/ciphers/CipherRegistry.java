@@ -2,13 +2,16 @@ package claire.simplecrypt.ciphers;
 
 import java.lang.reflect.InvocationTargetException;
 
+import claire.simplecrypt.ciphers.autokey.AutoKeyCipher;
+import claire.simplecrypt.ciphers.autokey.AutoKeyKey;
 import claire.simplecrypt.ciphers.ceasar.CeasarCipher;
 import claire.simplecrypt.ciphers.ceasar.CeasarKey;
 import claire.simplecrypt.ciphers.ceasar.MultiCeasar;
 import claire.simplecrypt.ciphers.ceasar.MultiCeasarKey;
-import claire.simplecrypt.display.CeasarKeyCreator;
-import claire.simplecrypt.display.KeyCreatorPanel;
-import claire.simplecrypt.display.MultiCeasarKeyCreator;
+import claire.simplecrypt.display.creators.AutoKeyKeyCreator;
+import claire.simplecrypt.display.creators.CeasarKeyCreator;
+import claire.simplecrypt.display.creators.KeyCreatorPanel;
+import claire.simplecrypt.display.creators.MultiCeasarKeyCreator;
 import claire.simplecrypt.standards.ICipher;
 import claire.simplecrypt.standards.ISecret;
 import claire.util.io.Factory;
@@ -26,12 +29,13 @@ public final class CipherRegistry {
 		
 		};
 	
-	private static final CipherFactory<?, ? extends ISecret<?>, ? extends KeyCreatorPanel<?>>[] factories = new CipherFactory<?, ?, ?>[2];
+	private static final CipherFactory<?, ? extends ISecret<?>, ? extends KeyCreatorPanel<?>>[] factories = new CipherFactory<?, ?, ?>[3];
 	
 	public static final String[] names = new String[]
 		{
 			"Ceasar Cipher",
-			"Vigenere Cipher (Multi Ceasar)"
+			"Vigenere Cipher (Multi Ceasar)",
+			"Cipher AutoKey"
 		};
 	
 	static {
@@ -40,7 +44,8 @@ public final class CipherRegistry {
 			factories[0] = new CipherFactory<CeasarCipher, CeasarKey, CeasarKeyCreator>(CeasarCipher.class.getConstructor(args0), CeasarKeyCreator.class.getConstructor(args1), CeasarKey.factory);
 			args0[0] = MultiCeasarKey.class;
 			factories[1] = new CipherFactory<MultiCeasar, MultiCeasarKey, MultiCeasarKeyCreator>(MultiCeasar.class.getConstructor(args0), MultiCeasarKeyCreator.class.getConstructor(args1), MultiCeasarKey.factory);
-			
+			args0[0] = AutoKeyKey.class;
+			factories[2] = new CipherFactory<AutoKeyCipher, AutoKeyKey, AutoKeyKeyCreator>(AutoKeyCipher.class.getConstructor(args0), AutoKeyKeyCreator.class.getConstructor(args1), AutoKeyKey.factory);
 		} catch (Exception e) {
 			Log.err.println("Error: Problem instantiating Cipher Factories. Cipher Registry cannot be initialized.");
 			e.printStackTrace();

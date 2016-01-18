@@ -1,8 +1,7 @@
-package claire.simplecrypt.display;
+package claire.simplecrypt.display.creators;
 
 import javax.swing.JLabel;
 import javax.swing.JTextField;
-import javax.swing.border.Border;
 
 import claire.simplecrypt.ciphers.ceasar.CeasarKey;
 import claire.util.display.DisplayHelper;
@@ -23,15 +22,14 @@ public class CeasarKeyCreator
 	public void initialize()
 	{
 		JLabel l1 = new JLabel("Enter Shift Value: ");
-		Border b = DisplayHelper.uniformBorder(6);
 		size.setText("Alphabet Size: " + this.getAlphabet().getLen());
-		DisplayHelper.addBorder(l1, b);
-		DisplayHelper.addBorder(size, b);
+		DisplayHelper.addBorder(l1, border);
+		DisplayHelper.addBorder(size, border);
 		table.newRow();
 		table.newCol(size, 2);
 		table.newRow();
 		table.newCol(l1);
-		table.newCol(DisplayHelper.nestBorderWide(field, b));
+		table.newCol(DisplayHelper.nestBorderWide(field, border));
 	}
 
 	public boolean error(Pointer<String> msg)

@@ -3,7 +3,7 @@ package claire.simplecrypt.ciphers;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
-import claire.simplecrypt.display.KeyCreatorPanel;
+import claire.simplecrypt.display.creators.KeyCreatorPanel;
 import claire.simplecrypt.standards.ICipher;
 import claire.simplecrypt.standards.ISecret;
 import claire.util.io.Factory;

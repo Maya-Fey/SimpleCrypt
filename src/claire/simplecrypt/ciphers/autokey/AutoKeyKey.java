@@ -98,7 +98,7 @@ public class AutoKeyKey
 		return new AutoKeyKey(alphabet, arr);
 	}
 	
-	private static final AutoKeyKeyFactory factory = new AutoKeyKeyFactory();
+	public static final AutoKeyKeyFactory factory = new AutoKeyKeyFactory();
 	
 	private static final class AutoKeyKeyFactory extends Factory<AutoKeyKey>
 	{

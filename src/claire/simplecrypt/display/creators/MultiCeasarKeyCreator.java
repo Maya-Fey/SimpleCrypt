@@ -1,4 +1,4 @@
-package claire.simplecrypt.display;
+package claire.simplecrypt.display.creators;
 
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;

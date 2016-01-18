@@ -16,6 +16,7 @@ import javax.swing.border.Border;
 import claire.simplecrypt.ciphers.CipherRegistry;
 import claire.simplecrypt.ciphers.UKey;
 import claire.simplecrypt.coders.IgnoreCoder;
+import claire.simplecrypt.display.creators.KeyCreatorPanel;
 import claire.simplecrypt.standards.ICipher;
 import claire.simplecrypt.standards.ISecret;
 import claire.util.display.DisplayHelper;
