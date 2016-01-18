@@ -14,7 +14,7 @@ public abstract class IntKeyCreator<Key extends ISecret<?>>
 	private static final long serialVersionUID = -5831483180721711993L;
 
 	private static final String notNum = "Entered text is not a number";
-	private static final String outBounds = "Shift is must be less then the size of the alphabet.";
+	private static final String outBounds = "Number is must be less then the size of the alphabet.";
 	
 	private final JTextField field = new JTextField(4);
 	private final JLabel size = new JLabel();
