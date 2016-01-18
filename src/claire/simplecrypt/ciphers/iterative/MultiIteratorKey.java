@@ -98,7 +98,7 @@ public class MultiIteratorKey
 		return new MultiIteratorKey(alphabet, arr);
 	}
 	
-	private static final MultiIteratorKeyFactory factory = new MultiIteratorKeyFactory();
+	public static final MultiIteratorKeyFactory factory = new MultiIteratorKeyFactory();
 	
 	private static final class MultiIteratorKeyFactory extends Factory<MultiIteratorKey>
 	{
