@@ -9,6 +9,7 @@ import claire.simplecrypt.ciphers.ceasar.CeasarKey;
 import claire.simplecrypt.ciphers.ceasar.MultiCeasar;
 import claire.simplecrypt.ciphers.ceasar.MultiCeasarKey;
 import claire.simplecrypt.ciphers.iterative.IterativeCipher;
+import claire.simplecrypt.ciphers.iterative.IteratorCipher;
 import claire.simplecrypt.ciphers.iterative.IteratorKey;
 import claire.simplecrypt.display.creators.AutoKeyKeyCreator;
 import claire.simplecrypt.display.creators.CeasarKeyCreator;
@@ -32,14 +33,15 @@ public final class CipherRegistry {
 		
 		};
 	
-	private static final CipherFactory<?, ? extends ISecret<?>, ? extends KeyCreatorPanel<?>>[] factories = new CipherFactory<?, ?, ?>[4];
+	private static final CipherFactory<?, ? extends ISecret<?>, ? extends KeyCreatorPanel<?>>[] factories = new CipherFactory<?, ?, ?>[5];
 	
 	public static final String[] names = new String[]
 		{
 			"Ceasar Cipher",
 			"Vigenere Cipher (Multi Ceasar)",
 			"Cipher AutoKey",
-			"Iterative Cipher"
+			"Iterative Cipher",
+			"Iterator Cipher"
 		};
 	
 	static {
@@ -52,6 +54,8 @@ public final class CipherRegistry {
 			factories[2] = new CipherFactory<AutoKeyCipher, AutoKeyKey, AutoKeyKeyCreator>(AutoKeyCipher.class.getConstructor(args0), AutoKeyKeyCreator.class.getConstructor(args1), AutoKeyKey.factory);
 			args0[0] = IteratorKey.class;
 			factories[3] = new CipherFactory<IterativeCipher, IteratorKey, IteratorKeyCreator>(IterativeCipher.class.getConstructor(args0), IteratorKeyCreator.class.getConstructor(args1), IteratorKey.factory);
+			args0[0] = IteratorKey.class;
+			factories[4] = new CipherFactory<IteratorCipher, IteratorKey, IteratorKeyCreator>(IteratorCipher.class.getConstructor(args0), IteratorKeyCreator.class.getConstructor(args1), IteratorKey.factory);
 			
 		} catch (Exception e) {
 			Log.err.println("Error: Problem instantiating Cipher Factories. Cipher Registry cannot be initialized.");
