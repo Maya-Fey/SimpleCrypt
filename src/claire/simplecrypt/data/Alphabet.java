@@ -221,6 +221,14 @@ public final class Alphabet
 			chars[start1++] = this.chars[rep[start0++]];
 	}
 	
+	public boolean contains(char c)
+	{
+		for(char c2 : chars)
+			if(c == c2)
+				return true;
+		return false;
+	}
+	
 	public void export(IOutgoingStream stream) throws IOException
 	{
 		stream.writeInt(ID);

@@ -98,7 +98,7 @@ public class MultiCeasarKey
 		return new MultiCeasarKey(alphabet, arr);
 	}
 	
-	private static final MultiCeasarKeyFactory factory = new MultiCeasarKeyFactory();
+	public static final MultiCeasarKeyFactory factory = new MultiCeasarKeyFactory();
 	
 	private static final class MultiCeasarKeyFactory extends Factory<MultiCeasarKey>
 	{

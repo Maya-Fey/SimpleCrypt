@@ -1,5 +1,6 @@
 package claire.simplecrypt.display;
 
+import java.awt.GridBagConstraints;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
@@ -21,6 +22,8 @@ public abstract class KeyCreatorPanel<Key extends ISecret<?>>
 				implements ItemListener {
 
 	private static final long serialVersionUID = 3382806189819718872L;
+	
+	protected static final Border border = DisplayHelper.uniformBorder(6);
 
 	protected final TableLayout table;
 	
@@ -31,16 +34,15 @@ public abstract class KeyCreatorPanel<Key extends ISecret<?>>
 	
 	public KeyCreatorPanel() 
 	{
-		TableLayout table = this.table = new TableLayout(this);
-		Border b = DisplayHelper.uniformBorder(6);
+		TableLayout table = this.table = new TableLayout(this, GridBagConstraints.BOTH);
 		ab = new WrappedLabel(Alphabet.repFromID(alphabet.getID()));
 		JLabel l1 = new JLabel("Alphabet: ");
 		JComboBox<String> combo = this.box = new JComboBox<String>(Alphabet.names);
 		combo.addItemListener(this);
 		
-		DisplayHelper.addBorder(ab, b);
-		DisplayHelper.addBorder(l1, b);
-		DisplayHelper.addBorder(combo, b);
+		DisplayHelper.addBorder(ab, border);
+		DisplayHelper.addBorder(l1, border);
+		DisplayHelper.addBorder(combo, border);
 		
 		table.newRow();
 		table.newCol(l1);

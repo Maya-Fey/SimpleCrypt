@@ -4,8 +4,11 @@ import java.lang.reflect.InvocationTargetException;
 
 import claire.simplecrypt.ciphers.ceasar.CeasarCipher;
 import claire.simplecrypt.ciphers.ceasar.CeasarKey;
+import claire.simplecrypt.ciphers.ceasar.MultiCeasar;
+import claire.simplecrypt.ciphers.ceasar.MultiCeasarKey;
 import claire.simplecrypt.display.CeasarKeyCreator;
 import claire.simplecrypt.display.KeyCreatorPanel;
+import claire.simplecrypt.display.MultiCeasarKeyCreator;
 import claire.simplecrypt.standards.ICipher;
 import claire.simplecrypt.standards.ISecret;
 import claire.util.io.Factory;
@@ -23,17 +26,21 @@ public final class CipherRegistry {
 		
 		};
 	
-	private static final CipherFactory<?, ? extends ISecret<?>, ? extends KeyCreatorPanel<?>>[] factories = new CipherFactory<?, ?, ?>[1];
+	private static final CipherFactory<?, ? extends ISecret<?>, ? extends KeyCreatorPanel<?>>[] factories = new CipherFactory<?, ?, ?>[2];
 	
 	public static final String[] names = new String[]
 		{
-			"Ceasar Cipher" 
+			"Ceasar Cipher",
+			"Vigenere Cipher (Multi Ceasar)"
 		};
 	
 	static {
 		try {
 			args0[0] = CeasarKey.class;
 			factories[0] = new CipherFactory<CeasarCipher, CeasarKey, CeasarKeyCreator>(CeasarCipher.class.getConstructor(args0), CeasarKeyCreator.class.getConstructor(args1), CeasarKey.factory);
+			args0[0] = MultiCeasarKey.class;
+			factories[1] = new CipherFactory<MultiCeasar, MultiCeasarKey, MultiCeasarKeyCreator>(MultiCeasar.class.getConstructor(args0), MultiCeasarKeyCreator.class.getConstructor(args1), MultiCeasarKey.factory);
+			
 		} catch (Exception e) {
 			Log.err.println("Error: Problem instantiating Cipher Factories. Cipher Registry cannot be initialized.");
 			e.printStackTrace();

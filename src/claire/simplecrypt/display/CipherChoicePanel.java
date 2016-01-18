@@ -35,4 +35,14 @@ public class CipherChoicePanel
 		return combo.getSelectedIndex();
 	}
 
+	public int requestedHeight()
+	{
+		return 100;
+	}
+	
+	public int requestedWidth()
+	{
+		return 240;
+	}
+	
 }

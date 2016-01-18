@@ -1,7 +1,5 @@
-import claire.simplecrypt.ciphers.UKey;
 import claire.simplecrypt.ciphers.autokey.AutoKeyCipher;
 import claire.simplecrypt.ciphers.autokey.AutoKeyKey;
-import claire.simplecrypt.ciphers.ceasar.CeasarKey;
 import claire.simplecrypt.coders.IgnoreCoder;
 import claire.simplecrypt.data.Alphabet;
 import claire.simplecrypt.display.SimpleCryptFrame;
