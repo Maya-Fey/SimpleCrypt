@@ -32,6 +32,8 @@ public class IgnoreCoder
 	{
 		if(temp == null || len > temp.length)
 			temp = new char[len];
+		if(buffer.length < cipher.plaintextSize(len))
+			buffer = new byte[cipher.plaintextSize(len)];
 		System.arraycopy(plaintext, start, temp, 0, len);
 		int i = 0,
 			pos = 0;
@@ -61,6 +63,8 @@ public class IgnoreCoder
 
 	public void decode(char[] plaintext, int start0, char[] codetext, int start1, int len)
 	{
+		if(buffer.length < cipher.plaintextSize(len))
+			buffer = new byte[cipher.plaintextSize(len)];
 		int pos = 0;
 		while(len-- > 0) 
 		{
@@ -95,6 +99,8 @@ public class IgnoreCoder
 	{
 		if(temp == null || len > temp.length)
 			temp = new char[len];
+		if(buffer.length < cipher.ciphertextSize(len))
+			buffer = new byte[cipher.ciphertextSize(len)];
 		System.arraycopy(plaintext, start, temp, 0, len);
 		int i = 0,
 			pos = 0;
@@ -124,6 +130,8 @@ public class IgnoreCoder
 	
 	public void encode(char[] plaintext, int start0, char[] codetext, int start1, int len)
 	{
+		if(buffer.length < cipher.ciphertextSize(len))
+			buffer = new byte[cipher.ciphertextSize(len)];
 		int pos = 0;
 		while(len-- > 0) 
 		{
