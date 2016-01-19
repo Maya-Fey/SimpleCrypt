@@ -35,6 +35,7 @@ public class SimpleCryptFrame
 	private final JTextArea cipher = new JTextArea();
 	private final JButton enc;
 	private final JButton dec;
+	private final JMenuItem rs;
 	
 	private IgnoreCoder coder;
 	
@@ -60,6 +61,11 @@ public class SimpleCryptFrame
 		nk.setActionCommand("3");
 		nk.addActionListener(this);
 		kbar.add(nk);
+		JMenu sbar = this.addMenu("State");
+		rs = new JMenuItem("Reset State");
+		rs.setActionCommand("4");
+		rs.addActionListener(this);
+		sbar.add(rs);
 		plain.setRows(3);
 		cipher.setRows(3);
 		plain.setLineWrap(true);
@@ -96,6 +102,7 @@ public class SimpleCryptFrame
 			cipher.setEnabled(true);
 			enc.setEnabled(true);
 			dec.setEnabled(true);
+			rs.setEnabled(true);
 			allow = true;
 		}
 	}
@@ -108,6 +115,7 @@ public class SimpleCryptFrame
 			cipher.setEnabled(false);
 			enc.setEnabled(false);
 			dec.setEnabled(false);
+			rs.setEnabled(false);
 			allow = false;
 		}
 	}
@@ -180,6 +188,9 @@ public class SimpleCryptFrame
 						this.allow();
 					}
 				}
+				break;
+			case "4":
+				cip.reset();
 				break;
 		}
 	}
