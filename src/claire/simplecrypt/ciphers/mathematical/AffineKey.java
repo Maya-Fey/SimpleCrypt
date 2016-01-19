@@ -107,7 +107,7 @@ public class AffineKey
 		return new AffineKey(alphabet, 1 + rand.nextIntGood(alphabet.getLen() - 1), mul, inv);
 	}
 	
-	private static final AffineKeyFactory factory = new AffineKeyFactory();
+	public static final AffineKeyFactory factory = new AffineKeyFactory();
 	
 	private static final class AffineKeyFactory extends Factory<AffineKey>
 	{
