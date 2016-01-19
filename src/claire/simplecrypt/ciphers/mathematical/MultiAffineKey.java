@@ -122,7 +122,7 @@ public class MultiAffineKey
 		return new MultiAffineKey(alphabet, add, mul, inv);
 	}
 	
-	private static final AffineKeyFactory factory = new AffineKeyFactory();
+	public static final AffineKeyFactory factory = new AffineKeyFactory();
 	
 	private static final class AffineKeyFactory extends Factory<MultiAffineKey>
 	{

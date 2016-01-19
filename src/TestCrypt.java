@@ -34,7 +34,6 @@ public final class TestCrypt {
 		coder.decode(text);
 		System.out.println(text);
 		SimpleCryptFrame disp = new SimpleCryptFrame();
-		//disp.setKey(new UKey(new CeasarKey(Alphabet.ADVANCED, 13), 0));
 		disp.start();
 	}
 

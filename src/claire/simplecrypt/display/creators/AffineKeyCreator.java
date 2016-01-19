@@ -14,9 +14,9 @@ public class AffineKeyCreator
 
 	private static final long serialVersionUID = -5831483180721711993L;
 
-	private static final String notNum = "Entered text in one or both fields is not a number";
+	private static final String notNum = "Entered text in one or both fields is not a number.";
 	private static final String outBounds = "Both numbers must be less then the size of the alphabet.";
-	private static final String coprime = "Multiplier must be coprime to alphabet length";
+	private static final String coprime = "Multiplier must be coprime to alphabet length.";
 	private final JTextField fieldm = new JTextField(4);
 	private final JTextField fields = new JTextField(4);
 	private final JLabel size = new JLabel();
