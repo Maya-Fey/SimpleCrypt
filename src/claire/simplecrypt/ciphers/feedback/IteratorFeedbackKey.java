@@ -1,4 +1,4 @@
-package claire.simplecrypt.ciphers.autokey;
+package claire.simplecrypt.ciphers.feedback;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -14,13 +14,13 @@ import claire.util.standards.IRandom;
 import claire.util.standards.io.IIncomingStream;
 import claire.util.standards.io.IOutgoingStream;
 
-public class AutoKeyKey
-	   implements ISecret<AutoKeyKey> {
+public class IteratorFeedbackKey
+	   implements ISecret<IteratorFeedbackKey> {
 
 	private Alphabet alphabet;
 	private int[] key;
 	
-	public AutoKeyKey(Alphabet alphabet, String key)
+	public IteratorFeedbackKey(Alphabet alphabet, String key)
 	{
 		this.alphabet = alphabet;
 		this.key = new int[key.length()];
@@ -35,7 +35,7 @@ public class AutoKeyKey
 		}
 	}
 	
-	public AutoKeyKey(Alphabet alphabet, int[] key)
+	public IteratorFeedbackKey(Alphabet alphabet, int[] key)
 	{
 		this.alphabet = alphabet;
 		this.key = key;
@@ -60,10 +60,10 @@ public class AutoKeyKey
 	
 	public int NAMESPACE()
 	{
-		return NamespaceKey.AUTOKEYKEY;
+		return NamespaceKey.ITERATORFEEDBACKKEY;
 	}
 	
-	public boolean sameAs(AutoKeyKey obj)
+	public boolean sameAs(IteratorFeedbackKey obj)
 	{
 		return this.alphabet.getID() == obj.alphabet.getID() && ArrayUtil.equals(this.key, obj.key);
 	}
@@ -85,43 +85,43 @@ public class AutoKeyKey
 		return 8 + (key.length * 4);
 	}
 
-	public Factory<AutoKeyKey> factory()
+	public Factory<IteratorFeedbackKey> factory()
 	{
 		return factory;
 	}
 	
-	public static AutoKeyKey random(Alphabet alphabet, int size, IRandom rand)
+	public static IteratorFeedbackKey random(Alphabet alphabet, int size, IRandom rand)
 	{
 		int[] arr = new int[size];
 		for(int i = 0; i < size; i++)
 			arr[i] = rand.nextIntGood(alphabet.getLen());
-		return new AutoKeyKey(alphabet, arr);
+		return new IteratorFeedbackKey(alphabet, arr);
 	}
 	
 	public static final AutoKeyKeyFactory factory = new AutoKeyKeyFactory();
 	
-	private static final class AutoKeyKeyFactory extends Factory<AutoKeyKey>
+	private static final class AutoKeyKeyFactory extends Factory<IteratorFeedbackKey>
 	{
 
 		protected AutoKeyKeyFactory() 
 		{
-			super(AutoKeyKey.class);
+			super(IteratorFeedbackKey.class);
 		}
 
-		public AutoKeyKey resurrect(byte[] data, int start) throws InstantiationException
+		public IteratorFeedbackKey resurrect(byte[] data, int start) throws InstantiationException
 		{
 			Alphabet ab = Alphabet.fromID(Bits.intFromBytes(data, start)); start += 4;
 			int[] key = new int[Bits.intFromBytes(data, start)]; start += 4;
 			Bits.bytesToInts(data, start, key, 0);
-			return new AutoKeyKey(ab, key);
+			return new IteratorFeedbackKey(ab, key);
 		}
 		
-		public AutoKeyKey resurrect(IIncomingStream stream) throws InstantiationException, IOException
+		public IteratorFeedbackKey resurrect(IIncomingStream stream) throws InstantiationException, IOException
 		{
 			Alphabet ab = stream.resurrect(Alphabet.factory);
 			int[] key = new int[stream.readInt()];
 			stream.readInts(key);
-			return new AutoKeyKey(ab, key);
+			return new IteratorFeedbackKey(ab, key);
 		}
 		
 	}
