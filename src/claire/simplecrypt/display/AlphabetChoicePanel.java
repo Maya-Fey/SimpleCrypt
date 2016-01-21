@@ -15,7 +15,7 @@ public class AlphabetChoicePanel
 	
 	public void initialize()
 	{
-		JComboBox<String> combo = new JComboBox<String>(Alphabet.alphastrings);
+		JComboBox<String> combo = new JComboBox<String>(Alphabet.names);
 		this.add(combo);
 		this.combo = combo;
 	}
@@ -37,12 +37,12 @@ public class AlphabetChoicePanel
 
 	public int requestedHeight()
 	{
-		return 100;
+		return 130;
 	}
 	
 	public int requestedWidth()
 	{
-		return 240;
+		return 340;
 	}
 	
 }

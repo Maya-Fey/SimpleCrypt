@@ -16,6 +16,7 @@ import javax.swing.border.Border;
 import claire.simplecrypt.ciphers.CipherRegistry;
 import claire.simplecrypt.ciphers.UKey;
 import claire.simplecrypt.coders.IgnoreCoder;
+import claire.simplecrypt.data.Alphabet;
 import claire.simplecrypt.display.creators.KeyCreatorPanel;
 import claire.simplecrypt.standards.ICipher;
 import claire.simplecrypt.standards.ISecret;
@@ -47,6 +48,7 @@ public class SimpleCryptFrame
 	private boolean allow = true;
 	
 	private CipherChoicePanel cpanel;
+	private AlphabetChoicePanel apanel;
 
 	public SimpleCryptFrame()
 	{
@@ -62,6 +64,10 @@ public class SimpleCryptFrame
 		nk.setActionCommand("3");
 		nk.addActionListener(this);
 		kbar.add(nk);
+		JMenuItem rk = new JMenuItem("Random Key");
+		rk.setActionCommand("5");
+		rk.addActionListener(this);
+		kbar.add(rk);
 		JMenu sbar = this.addMenu("State");
 		rs = new JMenuItem("Reset State");
 		rs.setActionCommand("4");
@@ -159,18 +165,18 @@ public class SimpleCryptFrame
 				}
 				break;
 			case "3":
-				if(key != null) {
-					ConfirmMessage c = new ConfirmMessage(this.getOwner(), "Are you sure?", "Creating a new key will destroy the current one in memory, make sure to save it to file if you want to keep the key for future communication. If you wish to save the cipher state, you should do that now aswell.");
-					DisplayHelper.center(c);
-					c.start();
-					if(!c.isOk())
-						break;
-				}
 				if(cID == -1) {
 					ErrorMessage e = new ErrorMessage(this.getOwner(), "No cipher selected! Use Cipher->Select Cipher to select a cipher.");
 					DisplayHelper.center(e);
 					e.start();
 				} else {
+					if(key != null) {
+						ConfirmMessage c = new ConfirmMessage(this.getOwner(), "Are you sure?", "Creating a new key will destroy the current one in memory, make sure to save it to file if you want to keep the key for future communication. If you wish to save the cipher state, you should do that now aswell.");
+						DisplayHelper.center(c);
+						c.start();
+						if(!c.isOk())
+							break;
+					}
 					KeyCreatorPanel<?> p = null;
 					try {
 						p = CipherRegistry.getPanel(cID);
@@ -207,6 +213,46 @@ public class SimpleCryptFrame
 				break;
 			case "4":
 				cip.reset();
+				break;
+			case "5":
+				if(cID == -1) {
+					ErrorMessage e = new ErrorMessage(this.getOwner(), "No cipher selected! Use Cipher->Select Cipher to select a cipher.");
+					DisplayHelper.center(e);
+					e.start();
+					break;
+				}
+				if(key != null) {
+					ConfirmMessage c = new ConfirmMessage(this.getOwner(), "Are you sure?", "Creating a new key will destroy the current one in memory, make sure to save it to file if you want to keep the key for future communication. If you wish to save the cipher state, you should do that now aswell.");
+					DisplayHelper.center(c);
+					c.start();
+					if(!c.isOk())
+						break;
+				}
+				if(apanel == null) {
+					apanel = new AlphabetChoicePanel();
+					apanel.initialize();
+				}
+				m = new InformationCollectionMessage(this.getOwner(), apanel, "Select Alphabet for Random Key", true);
+				DisplayHelper.center(m);
+				m.start();
+				if(m.isOk()) {
+					Alphabet a = Alphabet.fromID(apanel.getAlphabetID());
+					key = CipherRegistry.random(cID, a);
+					try {
+						this.cip = CipherRegistry.getCipher(key, cID);
+					} catch (Exception e) {
+						ErrorMessage m2 = new ErrorMessage(this.getOwner(), "Error Encountered: " + e.getMessage() );
+						DisplayHelper.center(m2);
+						m2.start();
+						e.printStackTrace();
+						this.dispose();
+					}
+					if(this.coder == null)
+						coder = new IgnoreCoder(cip, 1000);
+					else
+						coder.setCipher(cip);
+					this.allow();
+				}
 				break;
 		}
 	}
