@@ -3,6 +3,7 @@ package claire.simplecrypt.ciphers.ceasar;
 import java.io.IOException;
 import java.util.Arrays;
 
+import claire.simplecrypt.ciphers.KeyFactory;
 import claire.simplecrypt.data.Alphabet;
 import claire.simplecrypt.standards.ISecret;
 import claire.simplecrypt.standards.NamespaceKey;
@@ -100,7 +101,7 @@ public class MultiCeasarKey
 	
 	public static final MultiCeasarKeyFactory factory = new MultiCeasarKeyFactory();
 	
-	private static final class MultiCeasarKeyFactory extends Factory<MultiCeasarKey>
+	private static final class MultiCeasarKeyFactory extends KeyFactory<MultiCeasarKey>
 	{
 
 		protected MultiCeasarKeyFactory() 
@@ -122,6 +123,11 @@ public class MultiCeasarKey
 			int[] key = new int[stream.readInt()];
 			stream.readInts(key);
 			return new MultiCeasarKey(ab, key);
+		}
+		
+		public MultiCeasarKey random(Alphabet ab, IRandom rand)
+		{
+			return MultiCeasarKey.random(ab, 2 + rand.nextIntGood(7), rand);
 		}
 		
 	}

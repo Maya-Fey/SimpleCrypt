@@ -3,6 +3,7 @@ package claire.simplecrypt.ciphers.substitution;
 import java.io.IOException;
 import java.util.Arrays;
 
+import claire.simplecrypt.ciphers.KeyFactory;
 import claire.simplecrypt.data.Alphabet;
 import claire.simplecrypt.standards.ISecret;
 import claire.simplecrypt.standards.NamespaceKey;
@@ -91,9 +92,9 @@ public class SubstitutionKey
 		return factory;
 	}
 	
-	private static final Factory<SubstitutionKey> factory = new SubstitutionKeyFactory();
+	private static final SubstitutionKeyFactory factory = new SubstitutionKeyFactory();
 	
-	private static final class SubstitutionKeyFactory extends Factory<SubstitutionKey>
+	private static final class SubstitutionKeyFactory extends KeyFactory<SubstitutionKey>
 	{
 
 		protected SubstitutionKeyFactory()
@@ -117,6 +118,11 @@ public class SubstitutionKey
 			byte[] inv = stream.readByteArr();
 			Alphabet alphabet = stream.resurrect(Alphabet.factory);
 			return new SubstitutionKey(key, inv, alphabet);
+		}
+
+		public SubstitutionKey random(Alphabet ab, IRandom rand)
+		{
+			return SubstitutionKey.random(ab, rand);
 		}
 		
 	}

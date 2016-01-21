@@ -1,5 +1,6 @@
 package claire.simplecrypt.ciphers;
 
+import claire.simplecrypt.data.Alphabet;
 import claire.util.io.Factory;
 import claire.util.standards.IRandom;
 
@@ -10,6 +11,6 @@ public abstract class KeyFactory<Key> extends Factory<Key> {
 		super(class_);
 	}
 	
-	public abstract Key random(IRandom rand);
+	public abstract Key random(Alphabet ab, IRandom rand);
 
 }

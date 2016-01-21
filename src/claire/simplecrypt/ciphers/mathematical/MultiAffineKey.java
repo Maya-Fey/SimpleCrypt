@@ -3,6 +3,7 @@ package claire.simplecrypt.ciphers.mathematical;
 import java.io.IOException;
 import java.util.Arrays;
 
+import claire.simplecrypt.ciphers.KeyFactory;
 import claire.simplecrypt.data.Alphabet;
 import claire.simplecrypt.standards.ISecret;
 import claire.simplecrypt.standards.NamespaceKey;
@@ -122,12 +123,12 @@ public class MultiAffineKey
 		return new MultiAffineKey(alphabet, add, mul, inv);
 	}
 	
-	public static final AffineKeyFactory factory = new AffineKeyFactory();
+	public static final MultiAffineKeyFactory factory = new MultiAffineKeyFactory();
 	
-	private static final class AffineKeyFactory extends Factory<MultiAffineKey>
+	private static final class MultiAffineKeyFactory extends KeyFactory<MultiAffineKey>
 	{
 
-		protected AffineKeyFactory() 
+		protected MultiAffineKeyFactory() 
 		{
 			super(MultiAffineKey.class);
 		}
@@ -144,6 +145,11 @@ public class MultiAffineKey
 		public MultiAffineKey resurrect(IIncomingStream stream) throws InstantiationException, IOException
 		{
 			return new MultiAffineKey(stream.resurrect(Alphabet.factory), stream.readIntArr(), stream.readIntArr(), stream.readIntArr());
+		}
+
+		public MultiAffineKey random(Alphabet ab, IRandom rand)
+		{
+			return MultiAffineKey.random(ab, 2 + rand.nextIntGood(7), rand);
 		}
 		
 	}

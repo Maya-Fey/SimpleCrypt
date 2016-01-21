@@ -3,6 +3,7 @@ package claire.simplecrypt.ciphers.feedback;
 import java.io.IOException;
 import java.util.Arrays;
 
+import claire.simplecrypt.ciphers.KeyFactory;
 import claire.simplecrypt.data.Alphabet;
 import claire.simplecrypt.standards.ISecret;
 import claire.simplecrypt.standards.NamespaceKey;
@@ -98,12 +99,12 @@ public class IteratorFeedbackKey
 		return new IteratorFeedbackKey(alphabet, arr);
 	}
 	
-	public static final AutoKeyKeyFactory factory = new AutoKeyKeyFactory();
+	public static final IteratorFeedbackKeyFactory factory = new IteratorFeedbackKeyFactory();
 	
-	private static final class AutoKeyKeyFactory extends Factory<IteratorFeedbackKey>
+	private static final class IteratorFeedbackKeyFactory extends KeyFactory<IteratorFeedbackKey>
 	{
 
-		protected AutoKeyKeyFactory() 
+		protected IteratorFeedbackKeyFactory() 
 		{
 			super(IteratorFeedbackKey.class);
 		}
@@ -122,6 +123,11 @@ public class IteratorFeedbackKey
 			int[] key = new int[stream.readInt()];
 			stream.readInts(key);
 			return new IteratorFeedbackKey(ab, key);
+		}
+
+		public IteratorFeedbackKey random(Alphabet ab, IRandom rand)
+		{
+			return IteratorFeedbackKey.random(ab, 2 + rand.nextIntGood(7), rand);
 		}
 		
 	}

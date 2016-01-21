@@ -2,6 +2,7 @@ package claire.simplecrypt.ciphers.iterative;
 
 import java.io.IOException;
 
+import claire.simplecrypt.ciphers.KeyFactory;
 import claire.simplecrypt.data.Alphabet;
 import claire.simplecrypt.standards.ISecret;
 import claire.simplecrypt.standards.NamespaceKey;
@@ -78,7 +79,7 @@ public class IteratorKey
 	
 	public static final IteratorKeyFactory factory = new IteratorKeyFactory();
 	
-	private static final class IteratorKeyFactory extends Factory<IteratorKey>
+	private static final class IteratorKeyFactory extends KeyFactory<IteratorKey>
 	{
 
 		protected IteratorKeyFactory() 
@@ -95,6 +96,11 @@ public class IteratorKey
 		public IteratorKey resurrect(IIncomingStream stream) throws InstantiationException, IOException
 		{
 			return new IteratorKey(stream.resurrect(Alphabet.factory), stream.readInt());
+		}
+
+		public IteratorKey random(Alphabet ab, IRandom rand)
+		{
+			return IteratorKey.random(ab, rand);
 		}
 		
 	}

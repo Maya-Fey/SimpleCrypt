@@ -2,6 +2,7 @@ package claire.simplecrypt.ciphers.mathematical;
 
 import java.io.IOException;
 
+import claire.simplecrypt.ciphers.KeyFactory;
 import claire.simplecrypt.data.Alphabet;
 import claire.simplecrypt.standards.ISecret;
 import claire.simplecrypt.standards.NamespaceKey;
@@ -109,7 +110,7 @@ public class AffineKey
 	
 	public static final AffineKeyFactory factory = new AffineKeyFactory();
 	
-	private static final class AffineKeyFactory extends Factory<AffineKey>
+	private static final class AffineKeyFactory extends KeyFactory<AffineKey>
 	{
 
 		protected AffineKeyFactory() 
@@ -128,6 +129,11 @@ public class AffineKey
 		public AffineKey resurrect(IIncomingStream stream) throws InstantiationException, IOException
 		{
 			return new AffineKey(stream.resurrect(Alphabet.factory), stream.readInt(), stream.readInt(), stream.readInt());
+		}
+
+		public AffineKey random(Alphabet ab, IRandom rand)
+		{
+			return AffineKey.random(ab, rand);
 		}
 		
 	}

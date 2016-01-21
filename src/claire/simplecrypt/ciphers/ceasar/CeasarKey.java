@@ -2,6 +2,7 @@ package claire.simplecrypt.ciphers.ceasar;
 
 import java.io.IOException;
 
+import claire.simplecrypt.ciphers.KeyFactory;
 import claire.simplecrypt.data.Alphabet;
 import claire.simplecrypt.standards.ISecret;
 import claire.simplecrypt.standards.NamespaceKey;
@@ -78,7 +79,7 @@ public class CeasarKey
 	
 	public static final CeasarKeyFactory factory = new CeasarKeyFactory();
 	
-	private static final class CeasarKeyFactory extends Factory<CeasarKey>
+	private static final class CeasarKeyFactory extends KeyFactory<CeasarKey>
 	{
 
 		protected CeasarKeyFactory() 
@@ -95,6 +96,11 @@ public class CeasarKey
 		public CeasarKey resurrect(IIncomingStream stream) throws InstantiationException, IOException
 		{
 			return new CeasarKey(stream.resurrect(Alphabet.factory), stream.readInt());
+		}
+
+		public CeasarKey random(Alphabet ab, IRandom rand)
+		{
+			return CeasarKey.random(ab, rand);
 		}
 		
 	}
