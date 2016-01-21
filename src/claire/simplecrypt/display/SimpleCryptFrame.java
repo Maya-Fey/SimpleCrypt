@@ -22,6 +22,7 @@ import claire.simplecrypt.standards.ISecret;
 import claire.util.display.DisplayHelper;
 import claire.util.display.component.TablePane;
 import claire.util.display.display.BasicDisplay;
+import claire.util.display.message.ConfirmMessage;
 import claire.util.display.message.ErrorMessage;
 import claire.util.display.message.InformationCollectionMessage;
 
@@ -142,14 +143,29 @@ public class SimpleCryptFrame
 					cpanel = new CipherChoicePanel();
 					cpanel.initialize();
 				}
+				if(key != null) {
+					ConfirmMessage c = new ConfirmMessage(this.getOwner(), "Are you sure?", "Changing ciphers will destroy the current key in memory, make sure to save it to file if you want to keep the key for future communication. If you wish to save the cipher state, you should do that now aswell.");
+					DisplayHelper.center(c);
+					c.start();
+					if(!c.isOk())
+						break;
+				}
 				InformationCollectionMessage m = new InformationCollectionMessage(this.getOwner(), cpanel, "Select New Cipher", true);
 				DisplayHelper.center(m);
 				m.start();
 				if(m.isOk()) {
 					this.setCipher(cpanel.getCipherID());
+					key = null;
 				}
 				break;
 			case "3":
+				if(key != null) {
+					ConfirmMessage c = new ConfirmMessage(this.getOwner(), "Are you sure?", "Creating a new key will destroy the current one in memory, make sure to save it to file if you want to keep the key for future communication. If you wish to save the cipher state, you should do that now aswell.");
+					DisplayHelper.center(c);
+					c.start();
+					if(!c.isOk())
+						break;
+				}
 				if(cID == -1) {
 					ErrorMessage e = new ErrorMessage(this.getOwner(), "No cipher selected! Use Cipher->Select Cipher to select a cipher.");
 					DisplayHelper.center(e);
