@@ -18,6 +18,7 @@ import claire.simplecrypt.ciphers.mathematical.AffineCipher;
 import claire.simplecrypt.ciphers.mathematical.AffineKey;
 import claire.simplecrypt.ciphers.mathematical.MultiAffine;
 import claire.simplecrypt.ciphers.mathematical.MultiAffineKey;
+import claire.simplecrypt.data.Alphabet;
 import claire.simplecrypt.display.creators.AffineKeyCreator;
 import claire.simplecrypt.display.creators.AutoKeyKeyCreator;
 import claire.simplecrypt.display.creators.CeasarKeyCreator;
@@ -111,6 +112,11 @@ public final class CipherRegistry {
 	public static Factory<? extends ISecret<?>> getFactory(int ID)
 	{
 		return factories[ID].getFactory();
+	}
+	
+	public static ISecret<?> random(int ID, Alphabet ab)
+	{
+		return factories[ID].random(ab);
 	}
 	
 }

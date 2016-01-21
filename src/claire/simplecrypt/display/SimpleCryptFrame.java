@@ -144,7 +144,7 @@ public class SimpleCryptFrame
 					cpanel.initialize();
 				}
 				if(key != null) {
-					ConfirmMessage c = new ConfirmMessage(this.getOwner(), "Are you sure?", "Changing ciphers will destroy the current key in memory, make sure to save it to file if you want to keep the key for future communication. If you wish to save the cipher state, you should do that now aswell.");
+					ConfirmMessage c = new ConfirmMessage(this.getOwner(), "Are you sure?", "Changing ciphers will destroy the current k in memory, make sure to save it to file if you want to keep the key for future communication. If you wish to save the cipher state, you should do that now aswell.");
 					DisplayHelper.center(c);
 					c.start();
 					if(!c.isOk())
