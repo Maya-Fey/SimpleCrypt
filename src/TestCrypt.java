@@ -1,5 +1,5 @@
-import claire.simplecrypt.ciphers.feedback.IteratorFeedbackCipher;
-import claire.simplecrypt.ciphers.feedback.IteratorFeedbackKey;
+import claire.simplecrypt.ciphers.feedback.AffineFeedbackCipher;
+import claire.simplecrypt.ciphers.feedback.AffineFeedbackKey;
 import claire.simplecrypt.coders.IgnoreCoder;
 import claire.simplecrypt.data.Alphabet;
 import claire.simplecrypt.display.SimpleCryptFrame;
@@ -16,8 +16,8 @@ public final class TestCrypt {
 	{
 		Test.runTests();
 		IRandom rng = new FastXorShift(2312313);
-		IteratorFeedbackKey key = IteratorFeedbackKey.random(Alphabet.SIMPLELAB, 8, rng);
-		ICipher<?> cipher = new IteratorFeedbackCipher(key);
+		AffineFeedbackKey key = AffineFeedbackKey.random(Alphabet.SIMPLELAB, 8, rng);
+		ICipher<?> cipher = new AffineFeedbackCipher(key);
 		ICharCoder coder = new IgnoreCoder(cipher, 1000);
 		char[] text = "If P = NP, then the entire universe is highly likely to explode in 12 minutes - Samantha Carter".toCharArray();
 		System.out.println(text);

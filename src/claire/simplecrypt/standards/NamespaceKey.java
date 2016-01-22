@@ -12,4 +12,5 @@ public final class NamespaceKey {
 	public static final int MULTIITERATORKEY = 10007;
 	public static final int AUTOKEYKEY = 10008;
 	public static final int ITERATORFEEDBACKKEY = 10009;
+	public static final int AFFINEFEEDBACKKEY = 10010;
 }

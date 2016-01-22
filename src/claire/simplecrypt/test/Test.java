@@ -6,6 +6,8 @@ import claire.simplecrypt.ciphers.ceasar.CeasarCipher;
 import claire.simplecrypt.ciphers.ceasar.CeasarKey;
 import claire.simplecrypt.ciphers.ceasar.MultiCeasar;
 import claire.simplecrypt.ciphers.ceasar.MultiCeasarKey;
+import claire.simplecrypt.ciphers.feedback.AffineFeedbackCipher;
+import claire.simplecrypt.ciphers.feedback.AffineFeedbackKey;
 import claire.simplecrypt.ciphers.feedback.IteratorFeedbackCipher;
 import claire.simplecrypt.ciphers.feedback.IteratorFeedbackKey;
 import claire.simplecrypt.ciphers.iterative.IterativeCipher;
@@ -51,7 +53,8 @@ public final class Test {
 			new MultiIterative(MultiIteratorKey.random(Alphabet.ADVANCED, 8, rng)),
 			new MultiIterator(MultiIteratorKey.random(Alphabet.ADVANCED, 8, rng)),
 			new AutoKeyCipher(AutoKeyKey.random(Alphabet.ADVANCED, 8, rng)),
-			new IteratorFeedbackCipher(IteratorFeedbackKey.random(Alphabet.ADVANCED, 8, rng))
+			new IteratorFeedbackCipher(IteratorFeedbackKey.random(Alphabet.ADVANCED, 8, rng)),
+			new AffineFeedbackCipher(AffineFeedbackKey.random(Alphabet.ADVANCED, 8, rng))
 		};
 	
 	static ICharCoder[] coders = new ICharCoder[]
