@@ -160,11 +160,15 @@ public class SimpleCryptFrame
 				coder.encode(chars);
 				cipher.setText(new String(chars));
 				break;
+				
+				
 			case "1":
 				chars = cipher.getText().toCharArray();
 				coder.decode(chars);
 				plain.setText(new String(chars));
 				break;
+				
+				
 			case "2":
 				if(cpanel == null) {
 					cpanel = new CipherChoicePanel();
@@ -187,12 +191,12 @@ public class SimpleCryptFrame
 					key = null;
 				}
 				break;
+				
+				
 			case "3":
-				if(cID == -1) {
-					ErrorMessage e = new ErrorMessage(this.getOwner(), "No cipher selected! Use Cipher->Select Cipher to select a cipher.");
-					DisplayHelper.center(e);
-					e.start();
-				} else {
+				if(cID == -1) 
+					this.showError("No cipher selected! Use Cipher->Select Cipher to select a cipher.");
+				else {
 					if(key != null) {
 						ConfirmMessage c = new ConfirmMessage(this.getOwner(), "Are you sure?", "Creating a new key will destroy the current one in memory, make sure to save it to file if you want to keep the key for future communication. If you wish to save the cipher state, you should do that now aswell.");
 						DisplayHelper.center(c);
@@ -204,11 +208,9 @@ public class SimpleCryptFrame
 					try {
 						p = CipherRegistry.getPanel(cID);
 					} catch (Exception e) {
-						ErrorMessage m2 = new ErrorMessage(this.getOwner(), "Error Encountered: " + e.getMessage() );
-						DisplayHelper.center(m2);
-						m2.start();
 						e.printStackTrace();
-						this.dispose();
+						this.showErrorClose("Error Encountered: " + e.getMessage());
+						break;
 					} 
 					p.initialize();
 					m = new InformationCollectionMessage(this.getOwner(), p, "Create " + CipherRegistry.getName(cID) + " Key", true);
@@ -219,11 +221,8 @@ public class SimpleCryptFrame
 						try {
 							this.cip = CipherRegistry.getCipher(k, cID);
 						} catch (Exception e) {
-							ErrorMessage m2 = new ErrorMessage(this.getOwner(), "Error Encountered: " + e.getMessage() );
-							DisplayHelper.center(m2);
-							m2.start();
 							e.printStackTrace();
-							this.dispose();
+							this.showErrorClose("Error Encountered: " + e.getMessage());
 						}
 						this.key = k;
 						if(this.coder == null)
@@ -234,14 +233,16 @@ public class SimpleCryptFrame
 					}
 				}
 				break;
+				
+				
 			case "4":
 				cip.reset();
 				break;
+				
+				
 			case "5":
 				if(cID == -1) {
-					ErrorMessage e = new ErrorMessage(this.getOwner(), "No cipher selected! Use Cipher->Select Cipher to select a cipher.");
-					DisplayHelper.center(e);
-					e.start();
+					this.showError("No cipher selected! Use Cipher->Select Cipher to select a cipher.");
 					break;
 				}
 				if(key != null) {
@@ -261,15 +262,19 @@ public class SimpleCryptFrame
 				if(m.isOk()) {
 					Alphabet a = Alphabet.fromID(apanel.getAlphabetID());
 					key = CipherRegistry.random(cID, a);
+					
+					
 					try {
 						this.cip = CipherRegistry.getCipher(key, cID);
+						throw new Exception();
 					} catch (Exception e) {
-						ErrorMessage m2 = new ErrorMessage(this.getOwner(), "Error Encountered: " + e.getMessage() );
-						DisplayHelper.center(m2);
-						m2.start();
 						e.printStackTrace();
-						this.dispose();
+						this.showErrorClose("Error Encountered: " + e.getMessage());
+						System.out.println("Nigga... wut");
 					}
+					
+					
+					System.out.println("3spooky5me");
 					if(this.coder == null)
 						coder = new IgnoreCoder(cip, 1000);
 					else
@@ -277,6 +282,8 @@ public class SimpleCryptFrame
 					this.allow();
 				}
 				break;
+				
+				
 			case "6":
 				FileSelectionMessage s = FileSelectionMessage.saveFilePane(this.getOwner(), new File("/"), "Save " + CipherRegistry.getName(cID) + " Key", true);
 				DisplayHelper.center(s);
@@ -287,13 +294,13 @@ public class SimpleCryptFrame
 					try {
 						key.export(f);
 					} catch (IOException e) {
-						ErrorMessage m2 = new ErrorMessage(this.getOwner(), "I/O Exception encountered while attempting to save file: " + e.getMessage() );
-						DisplayHelper.center(m2);
-						m2.start();
+						this.showError("I/O Exception encountered while attempting to save file: " + e.getMessage());
 						e.printStackTrace();
 					}
 				}
 				break;
+				
+				
 			case "7":
 				s = FileSelectionMessage.openFilePane(this.getOwner(), new File("/"), "Open " + CipherRegistry.getName(cID) + " Key", true);
 				DisplayHelper.center(s);
@@ -301,30 +308,31 @@ public class SimpleCryptFrame
 				if(s.isOk()) {
 					File f = s.getFile();
 					UKey key;
+					
+					
 					try {
 						key = UKey.factory.resurrect(f);
 					} catch (Exception e) {
-						ErrorMessage m2 = new ErrorMessage(this.getOwner(), "Exception encountered while attempting to open key: " + e.getMessage() );
-						DisplayHelper.center(m2);
-						m2.start();
+						this.showError("Exception encountered while attempting to open key: " + e.getMessage());
 						e.printStackTrace();
 						break;
 					}
+					
+					
 					if(key.getID() != cID) {
-						ErrorMessage m2 = new ErrorMessage(this.getOwner(), "Wrong key type (" + CipherRegistry.getName(key.getID()) + " Key), expected " + CipherRegistry.getName(cID) + " Key.");
-						DisplayHelper.center(m2);
-						m2.start();
+						this.showError("Wrong key type (" + CipherRegistry.getName(key.getID()) + " Key), expected " + CipherRegistry.getName(cID) + " Key.");
 						break;
 					}
+					
+					
 					try {
 						this.cip = CipherRegistry.getCipher(key.getKey(), cID);
 					} catch (Exception e) {
-						ErrorMessage m2 = new ErrorMessage(this.getOwner(), "Error Encountered: " + e.getMessage() );
-						DisplayHelper.center(m2);
-						m2.start();
 						e.printStackTrace();
-						this.dispose();
+						this.showErrorClose("Error Encountered: " + e.getMessage());
 					}
+					
+					
 					if(this.coder == null)
 						coder = new IgnoreCoder(cip, 1000);
 					else
@@ -332,6 +340,8 @@ public class SimpleCryptFrame
 					this.allow();
 				}
 				break;
+				
+				
 			case "8":
 				s = FileSelectionMessage.openFilePane(this.getOwner(), new File("/"), "Open Key", true);
 				DisplayHelper.center(s);
@@ -339,24 +349,25 @@ public class SimpleCryptFrame
 				if(s.isOk()) {
 					File f = s.getFile();
 					UKey key;
+					
+					
 					try {
 						key = UKey.factory.resurrect(f);
 					} catch (Exception e) {
-						ErrorMessage m2 = new ErrorMessage(this.getOwner(), "Exception encountered while attempting to open key: " + e.getMessage() );
-						DisplayHelper.center(m2);
-						m2.start();
+						this.showError("Exception encountered while attempting to open key: " + e.getMessage());
 						e.printStackTrace();
 						break;
 					}
+					
+					
 					try {
 						this.cip = CipherRegistry.getCipher(key.getKey(), key.getID());
 					} catch (Exception e) {
-						ErrorMessage m2 = new ErrorMessage(this.getOwner(), "Error Encountered: " + e.getMessage() );
-						DisplayHelper.center(m2);
-						m2.start();
 						e.printStackTrace();
-						this.dispose();
+						this.showErrorClose("Error Encountered: " + e.getMessage());
 					}
+					
+					
 					if(cID == -1) 
 						kbar.setEnabled(true);
 					cID = key.getID();
@@ -369,31 +380,27 @@ public class SimpleCryptFrame
 				break;
 		}
 	}
+	
+	public void showError(String message)
+	{
+		ErrorMessage m2 = new ErrorMessage(this.getOwner(), message);
+		DisplayHelper.center(m2);
+		m2.start();
+	}
+	
+	public void showErrorClose(String message)
+	{
+		ErrorMessage m2 = new ErrorMessage(this.getOwner(), message);
+		DisplayHelper.center(m2);
+		m2.start();
+		this.dispose();
+		this.setVisible(false);
+	}
 
 	public void setCipher(int ID)
 	{
 		this.cID = ID;
 		this.disallow();
-	}
-	
-	public void setKey(UKey key)
-	{
-		this.cID = key.getID();
-		this.key = key.getKey();
-		try {
-			this.cip = CipherRegistry.getCipher(this.key, this.cID);
-		} catch (Exception e) {
-			ErrorMessage m = new ErrorMessage(this.getOwner(), "Error Encountered: " + e.getMessage() );
-			DisplayHelper.center(m);
-			m.start();
-			e.printStackTrace();
-			this.dispose();
-		} 
-		if(this.coder == null)
-			coder = new IgnoreCoder(cip, 1000);
-		else
-			coder.setCipher(cip);
-		this.allow();
 	}
 
 }
