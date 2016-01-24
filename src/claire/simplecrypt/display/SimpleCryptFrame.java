@@ -61,29 +61,33 @@ public class SimpleCryptFrame
 		super("SimpleCrypt");
 		DisplayHelper.center(this);
 		JMenu cbar = this.addMenu("Cipher");
-		JMenuItem sc = new JMenuItem("Load Cipher");
+		JMenuItem sc = new JMenuItem("New");
 		sc.setActionCommand("2");
 		sc.addActionListener(this);
 		cbar.add(sc);
+		JMenuItem lc = new JMenuItem("Load from Key");
+		lc.setActionCommand("8");
+		lc.addActionListener(this);
+		cbar.add(lc);
 		JMenu kbar = this.kbar = this.addMenu("Key");
-		JMenuItem nk = new JMenuItem("New Key");
+		JMenuItem nk = new JMenuItem("New");
 		nk.setActionCommand("3");
 		nk.addActionListener(this);
 		kbar.add(nk);
-		JMenuItem rk = new JMenuItem("Random Key");
+		JMenuItem rk = new JMenuItem("Random");
 		rk.setActionCommand("5");
 		rk.addActionListener(this);
 		kbar.add(rk);
-		JMenuItem sk = this.sk = new JMenuItem("Save Key to File");
+		JMenuItem sk = this.sk = new JMenuItem("Save");
 		sk.setActionCommand("6");
 		sk.addActionListener(this);
 		kbar.add(sk);
-		JMenuItem ok = new JMenuItem("Open Key from File");
+		JMenuItem ok = new JMenuItem("Open");
 		ok.setActionCommand("7");
 		ok.addActionListener(this);
 		kbar.add(ok);
 		JMenu sbar = this.sbar = this.addMenu("State");
-		JMenuItem rs = new JMenuItem("Reset State");
+		JMenuItem rs = new JMenuItem("Reset");
 		rs.setActionCommand("4");
 		rs.addActionListener(this);
 		sbar.add(rs);
@@ -177,9 +181,8 @@ public class SimpleCryptFrame
 				DisplayHelper.center(m);
 				m.start();
 				if(m.isOk()) {
-					if(cID == -1) {
+					if(cID == -1) 
 						kbar.setEnabled(true);
-					}
 					this.setCipher(cpanel.getCipherID());
 					key = null;
 				}
@@ -322,6 +325,41 @@ public class SimpleCryptFrame
 						e.printStackTrace();
 						this.dispose();
 					}
+					if(this.coder == null)
+						coder = new IgnoreCoder(cip, 1000);
+					else
+						coder.setCipher(cip);
+					this.allow();
+				}
+				break;
+			case "8":
+				s = FileSelectionMessage.openFilePane(this.getOwner(), new File("/"), "Open Key", true);
+				DisplayHelper.center(s);
+				s.start();
+				if(s.isOk()) {
+					File f = s.getFile();
+					UKey key;
+					try {
+						key = UKey.factory.resurrect(f);
+					} catch (Exception e) {
+						ErrorMessage m2 = new ErrorMessage(this.getOwner(), "Exception encountered while attempting to open key: " + e.getMessage() );
+						DisplayHelper.center(m2);
+						m2.start();
+						e.printStackTrace();
+						break;
+					}
+					try {
+						this.cip = CipherRegistry.getCipher(key.getKey(), key.getID());
+					} catch (Exception e) {
+						ErrorMessage m2 = new ErrorMessage(this.getOwner(), "Error Encountered: " + e.getMessage() );
+						DisplayHelper.center(m2);
+						m2.start();
+						e.printStackTrace();
+						this.dispose();
+					}
+					if(cID == -1) 
+						kbar.setEnabled(true);
+					cID = key.getID();
 					if(this.coder == null)
 						coder = new IgnoreCoder(cip, 1000);
 					else
