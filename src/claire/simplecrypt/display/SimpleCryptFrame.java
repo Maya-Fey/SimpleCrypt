@@ -4,6 +4,8 @@ import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JMenu;
@@ -25,6 +27,7 @@ import claire.util.display.component.TablePane;
 import claire.util.display.display.BasicDisplay;
 import claire.util.display.message.ConfirmMessage;
 import claire.util.display.message.ErrorMessage;
+import claire.util.display.message.FileSelectionMessage;
 import claire.util.display.message.InformationCollectionMessage;
 
 public class SimpleCryptFrame 
@@ -37,7 +40,10 @@ public class SimpleCryptFrame
 	private final JTextArea cipher = new JTextArea();
 	private final JButton enc;
 	private final JButton dec;
-	private final JMenuItem rs;
+	private final JMenu kbar;
+	private final JMenu sbar;
+	private final JMenuItem sk;
+
 	
 	private IgnoreCoder coder;
 	
@@ -59,7 +65,7 @@ public class SimpleCryptFrame
 		sc.setActionCommand("2");
 		sc.addActionListener(this);
 		cbar.add(sc);
-		JMenu kbar = this.addMenu("Key");
+		JMenu kbar = this.kbar = this.addMenu("Key");
 		JMenuItem nk = new JMenuItem("New Key");
 		nk.setActionCommand("3");
 		nk.addActionListener(this);
@@ -68,11 +74,20 @@ public class SimpleCryptFrame
 		rk.setActionCommand("5");
 		rk.addActionListener(this);
 		kbar.add(rk);
-		JMenu sbar = this.addMenu("State");
-		rs = new JMenuItem("Reset State");
+		JMenuItem sk = this.sk = new JMenuItem("Save Key to File");
+		sk.setActionCommand("6");
+		sk.addActionListener(this);
+		kbar.add(sk);
+		JMenuItem ok = new JMenuItem("Open Key from File");
+		ok.setActionCommand("7");
+		ok.addActionListener(this);
+		kbar.add(ok);
+		JMenu sbar = this.sbar = this.addMenu("State");
+		JMenuItem rs = new JMenuItem("Reset State");
 		rs.setActionCommand("4");
 		rs.addActionListener(this);
 		sbar.add(rs);
+		kbar.setEnabled(false);
 		plain.setRows(3);
 		cipher.setRows(3);
 		plain.setLineWrap(true);
@@ -109,7 +124,8 @@ public class SimpleCryptFrame
 			cipher.setEnabled(true);
 			enc.setEnabled(true);
 			dec.setEnabled(true);
-			rs.setEnabled(true);
+			sbar.setEnabled(true);
+			sk.setEnabled(true);
 			allow = true;
 		}
 	}
@@ -122,7 +138,8 @@ public class SimpleCryptFrame
 			cipher.setEnabled(false);
 			enc.setEnabled(false);
 			dec.setEnabled(false);
-			rs.setEnabled(false);
+			sbar.setEnabled(false);
+			sk.setEnabled(false);
 			allow = false;
 		}
 	}
@@ -160,6 +177,9 @@ public class SimpleCryptFrame
 				DisplayHelper.center(m);
 				m.start();
 				if(m.isOk()) {
+					if(cID == -1) {
+						kbar.setEnabled(true);
+					}
 					this.setCipher(cpanel.getCipherID());
 					key = null;
 				}
@@ -240,6 +260,61 @@ public class SimpleCryptFrame
 					key = CipherRegistry.random(cID, a);
 					try {
 						this.cip = CipherRegistry.getCipher(key, cID);
+					} catch (Exception e) {
+						ErrorMessage m2 = new ErrorMessage(this.getOwner(), "Error Encountered: " + e.getMessage() );
+						DisplayHelper.center(m2);
+						m2.start();
+						e.printStackTrace();
+						this.dispose();
+					}
+					if(this.coder == null)
+						coder = new IgnoreCoder(cip, 1000);
+					else
+						coder.setCipher(cip);
+					this.allow();
+				}
+				break;
+			case "6":
+				FileSelectionMessage s = FileSelectionMessage.saveFilePane(this.getOwner(), new File("/"), "Save " + CipherRegistry.getName(cID) + " Key", true);
+				DisplayHelper.center(s);
+				s.start();
+				if(s.isOk()) {
+					File f = s.getFile();
+					UKey key = new UKey(this.key, cID);
+					try {
+						key.export(f);
+					} catch (IOException e) {
+						ErrorMessage m2 = new ErrorMessage(this.getOwner(), "I/O Exception encountered while attempting to save file: " + e.getMessage() );
+						DisplayHelper.center(m2);
+						m2.start();
+						e.printStackTrace();
+					}
+				}
+				break;
+			case "7":
+				s = FileSelectionMessage.openFilePane(this.getOwner(), new File("/"), "Open " + CipherRegistry.getName(cID) + " Key", true);
+				DisplayHelper.center(s);
+				s.start();
+				if(s.isOk()) {
+					File f = s.getFile();
+					UKey key;
+					try {
+						key = UKey.factory.resurrect(f);
+					} catch (Exception e) {
+						ErrorMessage m2 = new ErrorMessage(this.getOwner(), "Exception encountered while attempting to open key: " + e.getMessage() );
+						DisplayHelper.center(m2);
+						m2.start();
+						e.printStackTrace();
+						break;
+					}
+					if(key.getID() != cID) {
+						ErrorMessage m2 = new ErrorMessage(this.getOwner(), "Wrong key type (" + CipherRegistry.getName(key.getID()) + " Key), expected " + CipherRegistry.getName(cID) + " Key.");
+						DisplayHelper.center(m2);
+						m2.start();
+						break;
+					}
+					try {
+						this.cip = CipherRegistry.getCipher(key.getKey(), cID);
 					} catch (Exception e) {
 						ErrorMessage m2 = new ErrorMessage(this.getOwner(), "Error Encountered: " + e.getMessage() );
 						DisplayHelper.center(m2);
