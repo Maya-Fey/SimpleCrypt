@@ -266,7 +266,6 @@ public class SimpleCryptFrame
 					
 					try {
 						this.cip = CipherRegistry.getCipher(key, cID);
-						throw new Exception();
 					} catch (Exception e) {
 						e.printStackTrace();
 						this.showErrorClose("Error Encountered: " + e.getMessage());
