@@ -18,6 +18,8 @@ import claire.simplecrypt.ciphers.mathematical.AffineCipher;
 import claire.simplecrypt.ciphers.mathematical.AffineKey;
 import claire.simplecrypt.ciphers.mathematical.MultiAffine;
 import claire.simplecrypt.ciphers.mathematical.MultiAffineKey;
+import claire.simplecrypt.ciphers.substitution.SubstitutionCipher;
+import claire.simplecrypt.ciphers.substitution.SubstitutionKey;
 import claire.simplecrypt.data.Alphabet;
 import claire.simplecrypt.display.creators.AffineKeyCreator;
 import claire.simplecrypt.display.creators.AutoKeyKeyCreator;
@@ -29,6 +31,7 @@ import claire.simplecrypt.display.creators.MultiAffineKeyCreator;
 import claire.simplecrypt.display.creators.MultiCeasarKeyCreator;
 import claire.simplecrypt.display.creators.MultiIterativeKeyCreator;
 import claire.simplecrypt.display.creators.MultiIteratorKeyCreator;
+import claire.simplecrypt.display.creators.SubstitutionKeyCreator;
 import claire.simplecrypt.standards.ICipher;
 import claire.simplecrypt.standards.ISecret;
 import claire.util.io.Factory;
@@ -46,7 +49,7 @@ public final class CipherRegistry {
 		
 		};
 	
-	private static final CipherFactory<?, ? extends ISecret<?>, ? extends KeyCreatorPanel<?>>[] factories = new CipherFactory<?, ?, ?>[9];
+	private static final CipherFactory<?, ? extends ISecret<?>, ? extends KeyCreatorPanel<?>>[] factories = new CipherFactory<?, ?, ?>[10];
 	
 	public static final String[] names = new String[]
 		{
@@ -58,7 +61,8 @@ public final class CipherRegistry {
 			"Multi Iterative Cipher",
 			"Multi Iterator Cipher",
 			"Affine Cipher",
-			"Multi Affine Cipher"
+			"Multi Affine Cipher",
+			"Substitution Cipher"
 		};
 	
 	static {
@@ -81,6 +85,8 @@ public final class CipherRegistry {
 			factories[7] = new CipherFactory<AffineCipher, AffineKey, AffineKeyCreator>(AffineCipher.class.getConstructor(args0), AffineKeyCreator.class.getConstructor(args1), AffineKey.factory);
 			args0[0] = MultiAffineKey.class;
 			factories[8] = new CipherFactory<MultiAffine, MultiAffineKey, MultiAffineKeyCreator>(MultiAffine.class.getConstructor(args0), MultiAffineKeyCreator.class.getConstructor(args1), MultiAffineKey.factory);
+			args0[0] = SubstitutionKey.class;
+			factories[9] = new CipherFactory<SubstitutionCipher, SubstitutionKey, SubstitutionKeyCreator>(SubstitutionCipher.class.getConstructor(args0), SubstitutionKeyCreator.class.getConstructor(args1), SubstitutionKey.factory);
 			
 		} catch (Exception e) {
 			Log.err.println("Error: Problem instantiating Cipher Factories. Cipher Registry cannot be initialized.");

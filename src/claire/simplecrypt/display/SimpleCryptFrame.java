@@ -269,11 +269,8 @@ public class SimpleCryptFrame
 					} catch (Exception e) {
 						e.printStackTrace();
 						this.showErrorClose("Error Encountered: " + e.getMessage());
-						System.out.println("Nigga... wut");
 					}
 					
-					
-					System.out.println("3spooky5me");
 					if(this.coder == null)
 						coder = new IgnoreCoder(cip, 1000);
 					else

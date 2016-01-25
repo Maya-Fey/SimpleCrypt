@@ -92,7 +92,7 @@ public class SubstitutionKey
 		return factory;
 	}
 	
-	private static final SubstitutionKeyFactory factory = new SubstitutionKeyFactory();
+	public static final SubstitutionKeyFactory factory = new SubstitutionKeyFactory();
 	
 	private static final class SubstitutionKeyFactory extends KeyFactory<SubstitutionKey>
 	{
@@ -143,6 +143,36 @@ public class SubstitutionKey
 			key[i] = (byte) i;
 		RandUtils.randomize(key, rng);
 		return new SubstitutionKey(key, alphabet);
+	}
+	
+	public static final byte[] fromChars(Alphabet ab, char[] chars)
+	{
+		byte[] bytes = new byte[chars.length];
+		for(int i = 0; i < ab.getLen(); i++)
+			bytes[i] = ab.convertTo(chars[i]);
+		return bytes;
+	}
+	
+	public static final byte[] fromChars(Alphabet ab, char[] chars, byte[] bytes)
+	{
+		for(int i = 0; i < ab.getLen(); i++)
+			bytes[i] = ab.convertTo(chars[i]);
+		return bytes;
+	}
+	
+	public static final byte[] fromChars(Alphabet ab, String s)
+	{
+		byte[] bytes = new byte[s.length()];
+		for(int i = 0; i < ab.getLen(); i++)
+			bytes[i] = ab.convertTo(s.charAt(i));
+		return bytes;
+	}
+	
+	public static final byte[] fromChars(Alphabet ab, String s, byte[] bytes)
+	{
+		for(int i = 0; i < ab.getLen(); i++)
+			bytes[i] = ab.convertTo(s.charAt(i));
+		return bytes;
 	}
 
 }
