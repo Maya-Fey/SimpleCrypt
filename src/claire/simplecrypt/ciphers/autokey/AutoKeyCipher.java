@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import claire.simplecrypt.data.Alphabet;
 import claire.simplecrypt.standards.ICipher;
+import claire.simplecrypt.standards.IState;
 
 public class AutoKeyCipher 
 	   implements ICipher<AutoKeyKey> {
@@ -133,6 +134,19 @@ public class AutoKeyCipher
 	public Alphabet getAlphabet()
 	{
 		return alphabet;
+	}
+	
+	private static final class AutoKeyState implements IState<AutoKeyState>
+	{
+		private final int[] ekey;
+		private final int[] dkey;
+		private final int epos;
+		private final int dpos;
+		
+		private AutoKeyState(AutoKeyCipher c)
+		{
+			
+		}
 	}
 
 }

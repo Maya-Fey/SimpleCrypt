@@ -34,6 +34,7 @@ import claire.simplecrypt.display.creators.MultiIteratorKeyCreator;
 import claire.simplecrypt.display.creators.SubstitutionKeyCreator;
 import claire.simplecrypt.standards.ICipher;
 import claire.simplecrypt.standards.ISecret;
+import claire.simplecrypt.standards.IState;
 import claire.util.io.Factory;
 import claire.util.logging.Log;
 
@@ -49,7 +50,7 @@ public final class CipherRegistry {
 		
 		};
 	
-	private static final CipherFactory<?, ? extends ISecret<?>, ? extends KeyCreatorPanel<?>>[] factories = new CipherFactory<?, ?, ?>[10];
+	private static final CipherFactory<?, ? extends ISecret<?>, ? extends KeyCreatorPanel<?>, ? extends IState<?>>[] factories = new CipherFactory<?, ?, ?, ?>[10];
 	
 	public static final String[] names = new String[]
 		{
@@ -118,6 +119,11 @@ public final class CipherRegistry {
 	public static Factory<? extends ISecret<?>> getFactory(int ID)
 	{
 		return factories[ID].getFactory();
+	}
+			
+	public static Factory<? extends IState<?>> getStateFactory(int ID)
+	{
+		return factories[ID].getStateFactory();
 	}
 	
 	public static ISecret<?> random(int ID, Alphabet ab)

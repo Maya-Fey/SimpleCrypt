@@ -7,23 +7,26 @@ import claire.simplecrypt.data.Alphabet;
 import claire.simplecrypt.display.creators.KeyCreatorPanel;
 import claire.simplecrypt.standards.ICipher;
 import claire.simplecrypt.standards.ISecret;
+import claire.simplecrypt.standards.IState;
 import claire.util.crypto.rng.primitive.JRandom;
 import claire.util.io.Factory;
 import claire.util.standards.IRandom;
 
-public class CipherFactory<Cipher extends ICipher<Key>, Key extends ISecret<?>, Panel extends KeyCreatorPanel<Key>> {
+public class CipherFactory<Cipher extends ICipher<Key>, Key extends ISecret<?>, Panel extends KeyCreatorPanel<Key>, State extends IState<?>> {
 	
 	private static final IRandom rand = new JRandom();
 	
 	private final Constructor<Cipher> con0;
 	private final Constructor<Panel> con1;
 	private final KeyFactory<Key> factory;
+	private final Factory<State> sf;
 	
-	public CipherFactory(Constructor<Cipher> con0, Constructor<Panel> con1, KeyFactory<Key> factory) 
+	public CipherFactory(Constructor<Cipher> con0, Constructor<Panel> con1, KeyFactory<Key> factory, Factory<State> sf) 
 	{
 		this.con0 = con0;
 		this.con1 = con1;
 		this.factory = factory;
+		this.sf = sf;
 	}
 	
 	public Cipher getCipher(ISecret<?> key) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException
@@ -39,6 +42,11 @@ public class CipherFactory<Cipher extends ICipher<Key>, Key extends ISecret<?>, 
 	public Factory<Key> getFactory()
 	{
 		return factory;
+	}
+	
+	public Factory<State> getStateFactory()
+	{
+		return this.sf;
 	}
 	
 	public Key random(Alphabet ab)
