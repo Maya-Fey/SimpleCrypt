@@ -2,9 +2,10 @@ package claire.simplecrypt.ciphers.ceasar;
 
 import claire.simplecrypt.data.Alphabet;
 import claire.simplecrypt.standards.ICipher;
+import claire.simplecrypt.standards.IState;
 
 public class CeasarCipher 
-	   implements ICipher<CeasarKey> {
+	   implements ICipher<CeasarKey, IState<?>> {
 	
 	private CeasarKey key;
 	private Alphabet alphabet;
@@ -90,6 +91,18 @@ public class CeasarCipher
 	public Alphabet getAlphabet()
 	{
 		return alphabet;
+	}
+
+	public void loadState(IState<?> state) {}
+
+	public IState<?> getState()
+	{
+		return null;
+	}
+
+	public boolean hasState()
+	{
+		return false;
 	}
 
 }
