@@ -36,11 +36,11 @@ import claire.util.standards.IRandom;
 
 public final class Test {
 	
-	static final ICipher<?> scipher = new AutoKeyCipher(new AutoKeyKey(Alphabet.SIMPLELAB, "KILT"));
+	static final ICipher<?, ?> scipher = new AutoKeyCipher(new AutoKeyKey(Alphabet.SIMPLELAB, "KILT"));
 	
 	static final IRandom rng = new JRandom();
 	
-	static ICipher<?>[] ciphers = new ICipher<?>[]
+	static ICipher<?, ?>[] ciphers = new ICipher<?, ?>[]
 		{
 			new CeasarCipher(CeasarKey.random(Alphabet.ADVANCED, rng)),
 			new MultiCeasar(MultiCeasarKey.random(Alphabet.ADVANCED, 8, rng)),

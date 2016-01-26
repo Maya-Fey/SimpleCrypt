@@ -106,7 +106,7 @@ public final class CipherRegistry {
 		return names[ID];
 	}
 	
-	public static ICipher<? extends ISecret<?>> getCipher(ISecret<?> key, int ID) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException
+	public static ICipher<? extends ISecret<?>, ? extends IState<?>> getCipher(ISecret<?> key, int ID) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException
 	{
 		return factories[ID].getCipher(key);
 	}

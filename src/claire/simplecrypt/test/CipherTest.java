@@ -18,7 +18,7 @@ final class CipherTest {
 		int fails = 0;
 		for(int i = 0; i < Test.ciphers.length; i++)
 		{
-			ICipher<?> cip = Test.ciphers[i];
+			ICipher<?, ?> cip = Test.ciphers[i];
 			coder.setCipher(cip);
 			Log.info.println("Testing " + cip.getClass().getSimpleName());
 			try {

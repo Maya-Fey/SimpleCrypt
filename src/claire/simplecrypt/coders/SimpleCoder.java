@@ -9,18 +9,18 @@ import claire.simplecrypt.standards.IEncipherer;
 public class SimpleCoder 
 	   implements ICharCoder {
 
-	private ICipher<?> cipher;
+	private ICipher<?, ?> cipher;
 	private Alphabet ab;
 	private byte[] buffer;
 	
-	public SimpleCoder(ICipher<?> cipher, byte[] buffer)
+	public SimpleCoder(ICipher<?, ?> cipher, byte[] buffer)
 	{
 		this.cipher = cipher;
 		this.ab = cipher.getAlphabet();
 		this.buffer = buffer;
 	}
 	
-	public SimpleCoder(ICipher<?> cipher, int start)
+	public SimpleCoder(ICipher<?, ?> cipher, int start)
 	{
 		this.cipher = cipher;
 		this.ab = cipher.getAlphabet();
@@ -41,7 +41,7 @@ public class SimpleCoder
 		ab.convertFrom(buffer, 0, codetext, start1, cipher.plaintextSize(len));
 	}
 
-	public IDecipherer<?> getDecipherer()
+	public IDecipherer<?, ?> getDecipherer()
 	{
 		return cipher;
 	}
@@ -60,17 +60,17 @@ public class SimpleCoder
 		ab.convertFrom(buffer, 0, codetext, start1, cipher.ciphertextSize(len));
 	}
  
-	public IEncipherer<?> getEncipherer()
+	public IEncipherer<?, ?> getEncipherer()
 	{
 		return cipher;
 	}
 
-	public ICipher<?> getCipher()
+	public ICipher<?, ?> getCipher()
 	{
 		return cipher;
 	}
 	
-	public void setCipher(ICipher<?> cipher)
+	public void setCipher(ICipher<?, ?> cipher)
 	{
 		this.cipher = cipher;
 		this.ab = cipher.getAlphabet();

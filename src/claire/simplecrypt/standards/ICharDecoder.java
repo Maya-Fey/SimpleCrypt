@@ -5,7 +5,7 @@ public interface ICharDecoder {
 	void decode(char[] codetext, int start, int len);
 	void decode(char[] codetext, int start0, char[] plaintext, int start1, int len);
 	
-	IDecipherer<?> getDecipherer();
+	IDecipherer<?, ?> getDecipherer();
 	
 	default void decode(char[] codetext)
 	{

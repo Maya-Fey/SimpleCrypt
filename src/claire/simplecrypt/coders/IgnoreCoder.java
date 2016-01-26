@@ -9,19 +9,19 @@ import claire.simplecrypt.standards.IEncipherer;
 public class IgnoreCoder 
 	   implements ICharCoder {
 
-	private ICipher<?> cipher;
+	private ICipher<?, ?> cipher;
 	private Alphabet ab;
 	private byte[] buffer;
 	private char[] temp;
 	
-	public IgnoreCoder(ICipher<?> cipher, byte[] buffer)
+	public IgnoreCoder(ICipher<?, ?> cipher, byte[] buffer)
 	{
 		this.cipher = cipher;
 		this.ab = cipher.getAlphabet();
 		this.buffer = buffer;
 	}
 	
-	public IgnoreCoder(ICipher<?> cipher, int start)
+	public IgnoreCoder(ICipher<?, ?> cipher, int start)
 	{
 		this.cipher = cipher;
 		this.ab = cipher.getAlphabet();
@@ -90,7 +90,7 @@ public class IgnoreCoder
 		}
 	}
 
-	public IDecipherer<?> getDecipherer()
+	public IDecipherer<?, ?> getDecipherer()
 	{
 		return cipher;
 	}
@@ -157,17 +157,17 @@ public class IgnoreCoder
 		}
 	}
  
-	public IEncipherer<?> getEncipherer()
+	public IEncipherer<?, ?> getEncipherer()
 	{
 		return cipher;
 	}
 
-	public ICipher<?> getCipher()
+	public ICipher<?, ?> getCipher()
 	{
 		return cipher;
 	}
 	
-	public void setCipher(ICipher<?> cipher)
+	public void setCipher(ICipher<?, ?> cipher)
 	{
 		this.cipher = cipher;
 		this.ab = cipher.getAlphabet();

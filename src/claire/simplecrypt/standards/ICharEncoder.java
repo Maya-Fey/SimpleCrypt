@@ -5,7 +5,7 @@ public interface ICharEncoder {
 	void encode(char[] plaintext, int start, int len);
 	void encode(char[] plaintext, int start0, char[] codetext, int start1, int len);
 	
-	IEncipherer<?> getEncipherer();
+	IEncipherer<?, ?> getEncipherer();
 	
 	default void encode(char[] plaintext)
 	{

@@ -47,7 +47,7 @@ public class SimpleCryptFrame
 	
 	private IgnoreCoder coder;
 	
-	private ICipher<?> cip;
+	private ICipher<?, ?> cip;
 	private ISecret<?> key;
 	private int cID = -1;
 	

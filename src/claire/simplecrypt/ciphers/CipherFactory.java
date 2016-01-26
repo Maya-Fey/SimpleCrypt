@@ -12,7 +12,7 @@ import claire.util.crypto.rng.primitive.JRandom;
 import claire.util.io.Factory;
 import claire.util.standards.IRandom;
 
-public class CipherFactory<Cipher extends ICipher<Key>, Key extends ISecret<?>, Panel extends KeyCreatorPanel<Key>, State extends IState<?>> {
+public class CipherFactory<Cipher extends ICipher<Key, State>, Key extends ISecret<?>, Panel extends KeyCreatorPanel<Key>, State extends IState<?>> {
 	
 	private static final IRandom rand = new JRandom();
 	
