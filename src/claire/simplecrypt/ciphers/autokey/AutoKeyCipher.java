@@ -1,13 +1,22 @@
 package claire.simplecrypt.ciphers.autokey;
 
+import java.io.IOException;
 import java.util.Arrays;
 
+import claire.simplecrypt.ciphers.autokey.AutoKeyCipher.AutoKeyState;
 import claire.simplecrypt.data.Alphabet;
 import claire.simplecrypt.standards.ICipher;
 import claire.simplecrypt.standards.IState;
+import claire.simplecrypt.standards.NamespaceKey;
+import claire.util.io.Factory;
+import claire.util.io.IOUtils;
+import claire.util.memory.Bits;
+import claire.util.memory.util.ArrayUtil;
+import claire.util.standards.io.IIncomingStream;
+import claire.util.standards.io.IOutgoingStream;
 
 public class AutoKeyCipher 
-	   implements ICipher<AutoKeyKey> {
+	   implements ICipher<AutoKeyKey, AutoKeyState> {
 	
 	private AutoKeyKey key;
 	private Alphabet alphabet;
@@ -136,17 +145,116 @@ public class AutoKeyCipher
 		return alphabet;
 	}
 	
-	private static final class AutoKeyState implements IState<AutoKeyState>
+	public boolean hasState()
+	{
+		return true;
+	}
+	
+	public void loadState(AutoKeyState state)
+	{
+		this.dpos = state.dpos;
+		this.epos = state.epos;
+		System.arraycopy(state.dkey, 0, dkey, 0, dkey.length);
+		System.arraycopy(state.ekey, 0, ekey, 0, ekey.length);
+	}
+
+	public AutoKeyState getState()
+	{
+		return new AutoKeyState(this);
+	}
+	
+	public static final Factory<AutoKeyState> sfactory = new AutoKeyStateFactory();
+	
+	public static final class AutoKeyState implements IState<AutoKeyState>
 	{
 		private final int[] ekey;
 		private final int[] dkey;
 		private final int epos;
 		private final int dpos;
 		
-		private AutoKeyState(AutoKeyCipher c)
+		private AutoKeyState(int epos, int dpos, int[] ekey, int[] dkey)
 		{
-			
+			this.epos = epos;
+			this.dpos = dpos;
+			this.ekey = ekey;
+			this.dkey = dkey;
 		}
+		
+		public AutoKeyState(AutoKeyCipher c)
+		{
+			this.ekey = c.ekey;
+			this.dkey = c.dkey;
+			this.epos = c.epos;
+			this.dpos = c.dpos;
+		}
+		
+		public int NAMESPACE()
+		{
+			return NamespaceKey.AUTOKEYSTATE;
+		}
+
+		public boolean sameAs(AutoKeyState obj)
+		{
+			return (epos == obj.dpos && obj.epos == obj.dpos) && (ArrayUtil.equals(ekey, obj.ekey) && ArrayUtil.equals(dkey, obj.dkey));
+		}
+
+		public void export(IOutgoingStream stream) throws IOException
+		{
+			stream.writeInt(epos);
+			stream.writeInt(dpos);
+			stream.writeInt(ekey.length);
+			stream.writeInts(ekey);
+			stream.writeInts(dkey);
+		}
+
+		public void export(byte[] bytes, int offset)
+		{
+			Bits.intToBytes(epos, bytes, offset); offset += 4;
+			Bits.intToBytes(dpos, bytes, offset); offset += 4;
+			Bits.intToBytes(ekey.length, bytes, offset); offset += 4;
+			offset = IOUtils.writeArr(ekey, bytes, offset);
+			IOUtils.writeArr(dkey, bytes, offset);
+		}
+
+		public int exportSize()
+		{
+			return 4 * ekey.length + 12;
+		}
+
+		public Factory<AutoKeyState> factory()
+		{
+			return sfactory;
+		}
+
+	}
+	
+	private static final class AutoKeyStateFactory extends Factory<AutoKeyState>
+	{
+
+		protected AutoKeyStateFactory() 
+		{
+			super(AutoKeyState.class);
+		}
+
+		public AutoKeyState resurrect(byte[] data, int start) throws InstantiationException
+		{
+			int ep = Bits.intFromBytes(data, start); start += 4;
+			int dp = Bits.intFromBytes(data, start); start += 4;
+			int len = Bits.intFromBytes(data, start); start += 4;
+			int[] ek = IOUtils.readIntArr(data, start); start += 4 * len;
+			int[] dk = IOUtils.readIntArr(data, start); 
+			return new AutoKeyState(ep, dp, ek, dk);
+		}
+
+		public AutoKeyState resurrect(IIncomingStream stream) throws InstantiationException, IOException
+		{
+			int ep = stream.readInt();
+			int dp = stream.readInt();
+			int[] ek = stream.readIntArr();
+			int[] dk = stream.readInts(ek.length);
+			return new AutoKeyState(ep, dp, ek, dk);
+		}
+		
 	}
 
 }

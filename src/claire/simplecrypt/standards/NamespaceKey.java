@@ -13,4 +13,6 @@ public final class NamespaceKey {
 	public static final int AUTOKEYKEY = 10008;
 	public static final int ITERATORFEEDBACKKEY = 10009;
 	public static final int AFFINEFEEDBACKKEY = 10010;
+	
+	public static final int AUTOKEYSTATE = 10100;
 }

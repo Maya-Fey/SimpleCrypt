@@ -9,5 +9,7 @@ public interface ICipherer<Key extends ISecret<?>, State extends IState<?>> {
 	
 	Key getKey();
 	State getState();
+	
+	boolean hasState();
 
 }
