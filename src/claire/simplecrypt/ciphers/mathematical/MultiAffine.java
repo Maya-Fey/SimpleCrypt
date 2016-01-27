@@ -1,10 +1,19 @@
 package claire.simplecrypt.ciphers.mathematical;
 
+import java.io.IOException;
+
+import claire.simplecrypt.ciphers.mathematical.MultiAffine.MultiAffineState;
 import claire.simplecrypt.data.Alphabet;
 import claire.simplecrypt.standards.ICipher;
+import claire.simplecrypt.standards.IState;
+import claire.simplecrypt.standards.NamespaceKey;
+import claire.util.io.Factory;
+import claire.util.memory.Bits;
+import claire.util.standards.io.IIncomingStream;
+import claire.util.standards.io.IOutgoingStream;
 
 public class MultiAffine 
-	   implements ICipher<MultiAffineKey> {
+	   implements ICipher<MultiAffineKey, MultiAffineState> {
 	
 	private MultiAffineKey key;
 	private Alphabet alphabet;
@@ -121,6 +130,102 @@ public class MultiAffine
 	public Alphabet getAlphabet()
 	{
 		return alphabet;
+	}
+	
+	public void loadState(MultiAffineState state)
+	{
+		this.epos = state.epos;
+		this.dpos = state.dpos;
+	}
+	
+	public void updateState(MultiAffineState state)
+	{
+		state.epos = this.epos;
+		state.dpos = this.dpos;
+	}
+
+	public MultiAffineState getState()
+	{
+		return new MultiAffineState(this);
+	}
+
+	public boolean hasState()
+	{
+		return true;
+	}
+	
+	public static final MultiAffineStateFactory sfactory = new MultiAffineStateFactory();
+	
+	protected static final class MultiAffineState implements IState<MultiAffineState>
+	{
+		private int epos;
+		private int dpos;
+		
+		public MultiAffineState(MultiAffine c)
+		{
+			epos = c.epos;
+			dpos = c.dpos;
+		}
+		
+		public MultiAffineState(int e, int d)
+		{
+			this.epos = e;
+			this.dpos = d;
+		}
+
+		public int NAMESPACE()
+		{
+			return NamespaceKey.MULTIAFFINESTATE;
+		}
+		
+		public boolean sameAs(MultiAffineState obj)
+		{
+			return epos == obj.epos && dpos == obj.dpos;
+		}
+		
+		public void export(IOutgoingStream stream) throws IOException
+		{
+			stream.writeInt(epos);
+			stream.writeInt(dpos);
+		}
+
+		public void export(byte[] bytes, int offset)
+		{
+			Bits.intToBytes(epos, bytes, offset); offset += 4;
+			Bits.intToBytes(dpos, bytes, offset);
+		}
+
+		public int exportSize()
+		{
+			return 8;
+		}
+
+		public Factory<MultiAffineState> factory()
+		{
+			return sfactory;
+		}
+		
+	}
+	
+	private static final class MultiAffineStateFactory extends Factory<MultiAffineState>
+	{
+
+		protected MultiAffineStateFactory() 
+		{
+			super(MultiAffineState.class);
+		}
+
+		public MultiAffineState resurrect(byte[] data, int start) throws InstantiationException
+		{
+			int e = Bits.intFromBytes(data, start); start += 4;
+			return new MultiAffineState(e, Bits.intFromBytes(data, start));
+		}
+
+		public MultiAffineState resurrect(IIncomingStream stream) throws InstantiationException, IOException
+		{
+			return new MultiAffineState(stream.readInt(), stream.readInt());
+		}
+		
 	}
 
 }

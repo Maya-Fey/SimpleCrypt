@@ -20,5 +20,6 @@ public final class NamespaceKey {
 	public static final int ITERATORFEEDBACKSTATE = 10103;
 	public static final int ITERATORSTATE = 10104;
 	public static final int MULTIITERATORSTATE = 10105;
+	public static final int MULTIAFFINESTATE = 10106;
 	
 }
