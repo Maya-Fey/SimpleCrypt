@@ -1,12 +1,22 @@
 package claire.simplecrypt.ciphers.feedback;
 
+import java.io.IOException;
 import java.util.Arrays;
 
+import claire.simplecrypt.ciphers.feedback.IteratorFeedbackCipher.IteratorFeedbackState;
 import claire.simplecrypt.data.Alphabet;
 import claire.simplecrypt.standards.ICipher;
+import claire.simplecrypt.standards.IState;
+import claire.simplecrypt.standards.NamespaceKey;
+import claire.util.io.Factory;
+import claire.util.io.IOUtils;
+import claire.util.memory.Bits;
+import claire.util.memory.util.ArrayUtil;
+import claire.util.standards.io.IIncomingStream;
+import claire.util.standards.io.IOutgoingStream;
 
 public class IteratorFeedbackCipher 
-	   implements ICipher<IteratorFeedbackKey> {
+	   implements ICipher<IteratorFeedbackKey, IteratorFeedbackState> {
 	
 	private IteratorFeedbackKey key;
 	private Alphabet alphabet;
@@ -147,4 +157,125 @@ public class IteratorFeedbackCipher
 		return alphabet;
 	}
 
+	public boolean hasState()
+	{
+		return true;
+	}
+	
+	public void loadState(IteratorFeedbackState state)
+	{
+		this.dpos = state.dpos;
+		this.epos = state.epos;
+		System.arraycopy(state.dkey, 0, dkey, 0, dkey.length);
+		System.arraycopy(state.ekey, 0, ekey, 0, ekey.length);
+	}
+	
+	public void updateState(IteratorFeedbackState state)
+	{
+		state.dpos = this.dpos;
+		state.epos = this.epos;
+		System.arraycopy(dkey, 0, state.dkey, 0, dkey.length);
+		System.arraycopy(ekey, 0, state.ekey, 0, ekey.length);
+	}
+
+	public IteratorFeedbackState getState()
+	{
+		return new IteratorFeedbackState(this);
+	}
+	
+	public static final Factory<IteratorFeedbackState> sfactory = new IteratorFeedbackStateFactory();
+	
+	public static final class IteratorFeedbackState implements IState<IteratorFeedbackState>
+	{
+		private final int[] ekey;
+		private final int[] dkey;
+		
+		private int epos;
+		private int dpos;
+		
+		private IteratorFeedbackState(int epos, int dpos, int[] ekey, int[] dkey)
+		{
+			this.epos = epos;
+			this.dpos = dpos;
+			this.ekey = ekey;
+			this.dkey = dkey;
+		}
+		
+		public IteratorFeedbackState(IteratorFeedbackCipher c)
+		{
+			this.ekey = c.ekey;
+			this.dkey = c.dkey;
+			this.epos = c.epos;
+			this.dpos = c.dpos;
+		}
+		
+		public int NAMESPACE()
+		{
+			return NamespaceKey.AFFINEFEEDBACKSTATE;
+		}
+
+		public boolean sameAs(IteratorFeedbackState obj)
+		{
+			return (epos == obj.dpos && obj.epos == obj.dpos) && (ArrayUtil.equals(ekey, obj.ekey) && ArrayUtil.equals(dkey, obj.dkey));
+		}
+
+		public void export(IOutgoingStream stream) throws IOException
+		{
+			stream.writeInt(epos);
+			stream.writeInt(dpos);
+			stream.writeInt(ekey.length);
+			stream.writeInts(ekey);
+			stream.writeInts(dkey);
+		}
+
+		public void export(byte[] bytes, int offset)
+		{
+			Bits.intToBytes(epos, bytes, offset); offset += 4;
+			Bits.intToBytes(dpos, bytes, offset); offset += 4;
+			Bits.intToBytes(ekey.length, bytes, offset); offset += 4;
+			offset = IOUtils.writeArr(ekey, bytes, offset);
+			IOUtils.writeArr(dkey, bytes, offset);
+		}
+
+		public int exportSize()
+		{
+			return 4 * ekey.length + 12;
+		}
+
+		public Factory<IteratorFeedbackState> factory()
+		{
+			return sfactory;
+		}
+
+	}
+	
+	private static final class IteratorFeedbackStateFactory extends Factory<IteratorFeedbackState>
+	{
+
+		protected IteratorFeedbackStateFactory() 
+		{
+			super(IteratorFeedbackState.class);
+		}
+
+		public IteratorFeedbackState resurrect(byte[] data, int start) throws InstantiationException
+		{
+			int ep = Bits.intFromBytes(data, start); start += 4;
+			int dp = Bits.intFromBytes(data, start); start += 4;
+			int len = Bits.intFromBytes(data, start); start += 4;
+			int[] ek = IOUtils.readIntArr(data, start); start += 4 * len;
+			int[] dk = IOUtils.readIntArr(data, start); 
+			return new IteratorFeedbackState(ep, dp, ek, dk);
+		}
+
+		public IteratorFeedbackState resurrect(IIncomingStream stream) throws InstantiationException, IOException
+		{
+			int ep = stream.readInt();
+			int dp = stream.readInt();
+			int[] ek = stream.readIntArr();
+			int[] dk = stream.readInts(ek.length);
+			return new IteratorFeedbackState(ep, dp, ek, dk);
+		}
+		
+	}
+	
 }
