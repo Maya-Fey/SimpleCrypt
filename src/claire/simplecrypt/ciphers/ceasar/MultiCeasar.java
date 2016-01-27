@@ -143,7 +143,7 @@ public class MultiCeasar
 	
 	public static final MultiCeasarStateFactory sfactory = new MultiCeasarStateFactory();
 	
-	protected static final class MultiCeasarState implements IState<MultiCeasarState>
+	public static final class MultiCeasarState implements IState<MultiCeasarState>
 	{
 		private int epos;
 		private int dpos;

@@ -156,7 +156,7 @@ public class MultiAffine
 	
 	public static final MultiAffineStateFactory sfactory = new MultiAffineStateFactory();
 	
-	protected static final class MultiAffineState implements IState<MultiAffineState>
+	public static final class MultiAffineState implements IState<MultiAffineState>
 	{
 		private int epos;
 		private int dpos;

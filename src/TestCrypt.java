@@ -17,7 +17,7 @@ public final class TestCrypt {
 		Test.runTests();
 		IRandom rng = new FastXorShift(2312313);
 		AffineFeedbackKey key = AffineFeedbackKey.random(Alphabet.SIMPLELAB, 8, rng);
-		ICipher<?> cipher = new AffineFeedbackCipher(key);
+		ICipher<?, ?> cipher = new AffineFeedbackCipher(key);
 		ICharCoder coder = new IgnoreCoder(cipher, 1000);
 		char[] text = "If P = NP, then the entire universe is highly likely to explode in 12 minutes - Samantha Carter".toCharArray();
 		System.out.println(text);
