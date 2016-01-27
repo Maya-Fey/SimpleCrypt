@@ -9,7 +9,6 @@ import claire.simplecrypt.standards.ICipher;
 import claire.simplecrypt.standards.IState;
 import claire.simplecrypt.standards.NamespaceKey;
 import claire.util.io.Factory;
-import claire.util.io.IOUtils;
 import claire.util.memory.Bits;
 import claire.util.memory.util.ArrayUtil;
 import claire.util.standards.io.IIncomingStream;
@@ -236,13 +235,13 @@ public class AffineFeedbackCipher
 			Bits.intToBytes(epos, bytes, offset); offset += 4;
 			Bits.intToBytes(dpos, bytes, offset); offset += 4;
 			Bits.intToBytes(ekey.length, bytes, offset); offset += 4;
-			offset = IOUtils.writeArr(ekey, bytes, offset);
-			IOUtils.writeArr(dkey, bytes, offset);
+			Bits.intsToBytes(ekey, 0, bytes, offset, ekey.length); offset += 4 * ekey.length;
+			Bits.intsToBytes(dkey, 0, bytes, offset, dkey.length);
 		}
 
 		public int exportSize()
 		{
-			return 4 * ekey.length + 12;
+			return 8 * ekey.length + 12;
 		}
 
 		public Factory<AffineFeedbackState> factory()
@@ -265,8 +264,10 @@ public class AffineFeedbackCipher
 			int ep = Bits.intFromBytes(data, start); start += 4;
 			int dp = Bits.intFromBytes(data, start); start += 4;
 			int len = Bits.intFromBytes(data, start); start += 4;
-			int[] ek = IOUtils.readIntArr(data, start); start += 4 * len;
-			int[] dk = IOUtils.readIntArr(data, start); 
+			int[] ek = new int[len];
+			int[] dk = new int[len];
+			Bits.bytesToInts(data, start, ek, 0, len); start += len * 4;
+			Bits.bytesToInts(data, start, dk, 0, len); 
 			return new AffineFeedbackState(ep, dp, ek, dk);
 		}
 

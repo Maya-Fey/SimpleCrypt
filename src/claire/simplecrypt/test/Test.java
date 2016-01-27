@@ -30,6 +30,7 @@ import claire.simplecrypt.data.Alphabet;
 import claire.simplecrypt.standards.ICharCoder;
 import claire.simplecrypt.standards.ICipher;
 import claire.simplecrypt.standards.ISecret;
+import claire.simplecrypt.standards.IState;
 import claire.util.crypto.rng.primitive.JRandom;
 import claire.util.logging.Log;
 import claire.util.standards.IRandom;
@@ -40,7 +41,7 @@ public final class Test {
 	
 	static final IRandom rng = new JRandom();
 	
-	static ICipher<?, ?>[] ciphers = new ICipher<?, ?>[]
+	static final ICipher<?, ?>[] ciphers = new ICipher<?, ?>[]
 		{
 			new CeasarCipher(CeasarKey.random(Alphabet.ADVANCED, rng)),
 			new MultiCeasar(MultiCeasarKey.random(Alphabet.ADVANCED, 8, rng)),
@@ -57,18 +58,29 @@ public final class Test {
 			new AffineFeedbackCipher(AffineFeedbackKey.random(Alphabet.ADVANCED, 8, rng))
 		};
 	
-	static ICharCoder[] coders = new ICharCoder[]
+	static final ICharCoder[] coders = new ICharCoder[]
 		{
 			new SimpleCoder(scipher, 1000),
 			new IgnoreCoder(scipher, 1000)
 		};
 	
-	static ISecret<?>[] keys = new ISecret<?>[ciphers.length];
+	static final ISecret<?>[] keys = new ISecret<?>[ciphers.length];
+	
+	static IState<?>[] states;
 	
 	static 
 	{
-		for(int i = 0; i < ciphers.length; i++)
+		int j = 0;
+		for(int i = 0; i < ciphers.length; i++) {
 			keys[i] = ciphers[i].getKey();
+			if(ciphers[i].hasState())
+				j++;
+		}
+		states = new IState<?>[j];
+		for(int i = 0; i < ciphers.length; i++) {
+			if(ciphers[i].hasState())
+				states[--j] = ciphers[i].getState();
+		}
 	}
 	
 	public static final void runTests()

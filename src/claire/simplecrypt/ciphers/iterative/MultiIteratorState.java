@@ -5,7 +5,6 @@ import java.io.IOException;
 import claire.simplecrypt.standards.IState;
 import claire.simplecrypt.standards.NamespaceKey;
 import claire.util.io.Factory;
-import claire.util.io.IOUtils;
 import claire.util.memory.Bits;
 import claire.util.memory.util.ArrayUtil;
 import claire.util.standards.io.IIncomingStream;
@@ -68,13 +67,13 @@ public class MultiIteratorState
 		Bits.intToBytes(epos, bytes, offset); offset += 4;
 		Bits.intToBytes(dpos, bytes, offset); offset += 4;
 		Bits.intToBytes(eadd.length, bytes, offset); offset += 4;
-		offset = IOUtils.writeArr(eadd, bytes, offset);
-		IOUtils.writeArr(dadd, bytes, offset);
+		Bits.intsToBytes(eadd, 0, bytes, offset, eadd.length); offset += 4 * eadd.length;
+		Bits.intsToBytes(dadd, 0, bytes, offset, dadd.length);
 	}
 
 	public int exportSize()
 	{
-		return 4 * eadd.length + 12;
+		return 8 * eadd.length + 12;
 	}
 
 	public Factory<MultiIteratorState> factory()
@@ -97,8 +96,10 @@ public class MultiIteratorState
 			int ep = Bits.intFromBytes(data, start); start += 4;
 			int dp = Bits.intFromBytes(data, start); start += 4;
 			int len = Bits.intFromBytes(data, start); start += 4;
-			int[] ek = IOUtils.readIntArr(data, start); start += 4 * len;
-			int[] dk = IOUtils.readIntArr(data, start); 
+			int[] ek = new int[len];
+			int[] dk = new int[len];
+			Bits.bytesToInts(data, start, ek, 0, len); start += len * 4;
+			Bits.bytesToInts(data, start, dk, 0, len); 
 			return new MultiIteratorState(ep, dp, ek, dk);
 		}
 
