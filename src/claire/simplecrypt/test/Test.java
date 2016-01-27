@@ -41,7 +41,8 @@ public final class Test {
 	
 	static final IRandom rng = new JRandom();
 	
-	static final ICipher<?, ?>[] ciphers = new ICipher<?, ?>[]
+	@SuppressWarnings("unchecked")
+	static final ICipher<?, IState<?>>[] ciphers = (ICipher<?, IState<?>>[]) new ICipher<?, ?>[]
 		{
 			new CeasarCipher(CeasarKey.random(Alphabet.ADVANCED, rng)),
 			new MultiCeasar(MultiCeasarKey.random(Alphabet.ADVANCED, 8, rng)),

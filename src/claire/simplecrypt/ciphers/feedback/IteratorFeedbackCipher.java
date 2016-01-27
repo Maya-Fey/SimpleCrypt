@@ -202,8 +202,8 @@ public class IteratorFeedbackCipher
 		
 		public IteratorFeedbackState(IteratorFeedbackCipher c)
 		{
-			this.ekey = c.ekey;
-			this.dkey = c.dkey;
+			this.ekey = ArrayUtil.copy(c.ekey);
+			this.dkey = ArrayUtil.copy(c.dkey);
 			this.epos = c.epos;
 			this.dpos = c.dpos;
 		}

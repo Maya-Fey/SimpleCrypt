@@ -3,12 +3,13 @@ package claire.simplecrypt.test;
 import claire.simplecrypt.coders.SimpleCoder;
 import claire.simplecrypt.data.Alphabet;
 import claire.simplecrypt.standards.ICipher;
+import claire.simplecrypt.standards.IState;
 import claire.util.logging.Log;
 import claire.util.memory.util.ArrayUtil;
 
 final class CipherTest {
 	
-	private static final SimpleCoder coder = new SimpleCoder(Test.ciphers[0], 80);
+	private static final SimpleCoder coder = new SimpleCoder(Test.ciphers[0], 81);
 	
 	public static final int runTest()
 	{
@@ -18,25 +19,25 @@ final class CipherTest {
 		int fails = 0;
 		for(int i = 0; i < Test.ciphers.length; i++)
 		{
-			ICipher<?, ?> cip = Test.ciphers[i];
+			ICipher<?, IState<?>> cip = Test.ciphers[i];
 			coder.setCipher(cip);
 			Log.info.println("Testing " + cip.getClass().getSimpleName());
 			try {
-				char[] plain = new char[80];
+				char[] plain = new char[81];
 				char[] ab = cip.getKey().getAlphabet().getChars();
 				if(cip.getKey().getAlphabet().getID() != Alphabet.ADVANCED.getID()) {
 					fails++;
 					Log.err.println("Cipher key did not report correct alphabet.");
 				}
-				for(int j = 0; j < 80; j++) 
+				for(int j = 0; j < 81; j++) 
 					plain[j] = ab[Test.rng.nextIntFast(ab.length)];
 				
 				char[] s1 = ArrayUtil.copy(plain);
-				char[] s2 = new char[80];
-				coder.encode(s1, 20, 60);
+				char[] s2 = new char[81];
+				coder.encode(s1, 20, 61);
 				cip.reset();
-				coder.encode(plain, 20, s2, 20, 60);
-				for(int j = 20; j < 80; j++) {
+				coder.encode(plain, 20, s2, 20, 61);
+				for(int j = 20; j < 81; j++) {
 					if(s1[j] != s2[j]) {
 						fails++;
 						Log.err.println("In-Place enciphering gives different results then copy enciphering for " + cip.getClass().getSimpleName());
@@ -45,11 +46,11 @@ final class CipherTest {
 						break;
 					}
 				}
-				char[] s3 = new char[80];
-				coder.decode(s1, 20, 60);
+				char[] s3 = new char[81];
+				coder.decode(s1, 20, 61);
 				cip.reset();
-				coder.decode(s2, 20, s3, 20, 60);
-				for(int j = 20; j < 80; j++) {
+				coder.decode(s2, 20, s3, 20, 61);
+				for(int j = 20; j < 81; j++) {
 					if(s1[j] != s3[j]) {
 						fails++;
 						Log.err.println("In-Place deciphering gives different results then copy enciphering for " + cip.getClass().getSimpleName());
@@ -58,7 +59,7 @@ final class CipherTest {
 						break;
 					}
 				}
-				for(int j = 20; j < 80; j++) {
+				for(int j = 20; j < 81; j++) {
 					if((s1[j] & s3[j]) != plain[j]) {
 						fails++;
 						Log.err.println("One or both deciphering methods did not return the original plaintext for " + cip.getClass().getSimpleName());
@@ -66,6 +67,32 @@ final class CipherTest {
 						Log.err.println(s1);
 						Log.err.println(s3);
 						break;
+					}
+				}
+				if(cip.hasState()) {
+					cip.reset();
+					coder.encode(s1);
+					IState<?> state = cip.getState();
+					System.arraycopy(plain, 0, s1, 0, 81);
+					System.arraycopy(plain, 0, s2, 0, 81);
+					System.arraycopy(plain, 0, s3, 0, 81);
+					coder.encode(s1);
+					cip.loadState(state);
+					coder.encode(s2);
+					if(!ArrayUtil.equals(s1, s2)) {
+						Log.err.println("Loading state did not work");
+						fails++;
+						continue;
+					}
+					cip.updateState(state);
+					coder.encode(s3);
+					cip.loadState(state);
+					System.arraycopy(plain, 0, s2, 0, 81);
+					coder.encode(s2);
+					if(!ArrayUtil.equals(s2, s3)) {
+						Log.err.println("Updating the state did not work");
+						fails++;
+						continue;
 					}
 				}
 			} catch(Exception e) {

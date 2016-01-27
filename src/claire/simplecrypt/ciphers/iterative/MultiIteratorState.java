@@ -29,16 +29,16 @@ public class MultiIteratorState
 		
 	public MultiIteratorState(MultiIterator c)
 	{
-		this.eadd = c.eadd;
-		this.dadd = c.dadd;
+		this.eadd = ArrayUtil.copy(c.eadd);
+		this.dadd = ArrayUtil.copy(c.dadd);
 		this.epos = c.epos;
 		this.dpos = c.dpos;
 	}
 	
 	public MultiIteratorState(MultiIterative c)
 	{
-		this.eadd = c.eadd;
-		this.dadd = c.dadd;
+		this.eadd = ArrayUtil.copy(c.eadd);
+		this.dadd = ArrayUtil.copy(c.dadd);
 		this.epos = c.epos;
 		this.dpos = c.dpos;
 	}
