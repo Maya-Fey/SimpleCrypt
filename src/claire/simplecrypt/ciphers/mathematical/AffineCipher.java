@@ -2,9 +2,10 @@ package claire.simplecrypt.ciphers.mathematical;
 
 import claire.simplecrypt.data.Alphabet;
 import claire.simplecrypt.standards.ICipher;
+import claire.simplecrypt.standards.IState;
 
 public class AffineCipher 
-	   implements ICipher<AffineKey> {
+	   implements ICipher<AffineKey, IState<?>> {
 	
 	private AffineKey key;
 	private Alphabet alphabet;
@@ -102,6 +103,19 @@ public class AffineCipher
 	public Alphabet getAlphabet()
 	{
 		return alphabet;
+	}
+
+	public void loadState(IState<?> state) {}
+	public void updateState(IState<?> state) {}
+	
+	public IState<?> getState()
+	{
+		return null;
+	}
+
+	public boolean hasState()
+	{
+		return false;
 	}
 
 }
