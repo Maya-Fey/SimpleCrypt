@@ -157,6 +157,14 @@ public class AutoKeyCipher
 		System.arraycopy(state.dkey, 0, dkey, 0, dkey.length);
 		System.arraycopy(state.ekey, 0, ekey, 0, ekey.length);
 	}
+	
+	public void updateState(AutoKeyState state)
+	{
+		state.dpos = this.dpos;
+		state.epos = this.epos;
+		System.arraycopy(dkey, 0, state.dkey, 0, dkey.length);
+		System.arraycopy(ekey, 0, state.ekey, 0, ekey.length);
+	}
 
 	public AutoKeyState getState()
 	{
@@ -169,8 +177,9 @@ public class AutoKeyCipher
 	{
 		private final int[] ekey;
 		private final int[] dkey;
-		private final int epos;
-		private final int dpos;
+		
+		private int epos;
+		private int dpos;
 		
 		private AutoKeyState(int epos, int dpos, int[] ekey, int[] dkey)
 		{

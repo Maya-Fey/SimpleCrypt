@@ -92,7 +92,8 @@ public class CeasarCipher
 	{
 		return alphabet;
 	}
-
+	
+	public void updateState(IState<?> state) {}
 	public void loadState(IState<?> state) {}
 
 	public IState<?> getState()

@@ -15,4 +15,5 @@ public final class NamespaceKey {
 	public static final int AFFINEFEEDBACKKEY = 10010;
 	
 	public static final int AUTOKEYSTATE = 10100;
+	public static final int MULTICEASARSTATE = 10101;
 }

@@ -6,6 +6,7 @@ public interface ICipherer<Key extends ISecret<?>, State extends IState<?>> {
 	void setKey(Key key);
 	void destroy();
 	void loadState(State state);
+	void updateState(State state);
 	
 	Key getKey();
 	State getState();
