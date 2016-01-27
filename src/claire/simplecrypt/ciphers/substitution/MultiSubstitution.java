@@ -1,11 +1,19 @@
 package claire.simplecrypt.ciphers.substitution;
 
+import java.io.IOException;
+
+import claire.simplecrypt.ciphers.substitution.MultiSubstitution.MultiSubstitutionState;
 import claire.simplecrypt.data.Alphabet;
 import claire.simplecrypt.standards.ICipher;
 import claire.simplecrypt.standards.IState;
+import claire.simplecrypt.standards.NamespaceKey;
+import claire.util.io.Factory;
+import claire.util.memory.Bits;
+import claire.util.standards.io.IIncomingStream;
+import claire.util.standards.io.IOutgoingStream;
 
 public class MultiSubstitution 
-	   implements ICipher<MultiSubstitutionKey> {
+	   implements ICipher<MultiSubstitutionKey, MultiSubstitutionState> {
 
 	private byte[][] key;
 	private byte[][] inv;
@@ -109,6 +117,102 @@ public class MultiSubstitution
 	public Alphabet getAlphabet()
 	{
 		return alphabet;
+	}
+	
+	public void loadState(MultiSubstitutionState state)
+	{
+		this.ekey = state.ekey;
+		this.dkey = state.dkey;
+	}
+	
+	public void updateState(MultiSubstitutionState state)
+	{
+		state.ekey = this.ekey;
+		state.dkey = this.dkey;
+	}
+
+	public MultiSubstitutionState getState()
+	{
+		return new MultiSubstitutionState(this);
+	}
+
+	public boolean hasState()
+	{
+		return true;
+	}
+	
+	public static final MultiSubstitutionStateFactory sfactory = new MultiSubstitutionStateFactory();
+	
+	protected static final class MultiSubstitutionState implements IState<MultiSubstitutionState>
+	{
+		private int ekey;
+		private int dkey;
+		
+		public MultiSubstitutionState(MultiSubstitution c)
+		{
+			ekey = c.ekey;
+			dkey = c.dkey;
+		}
+		
+		public MultiSubstitutionState(int e, int d)
+		{
+			this.ekey = e;
+			this.dkey = d;
+		}
+
+		public int NAMESPACE()
+		{
+			return NamespaceKey.MULTIAFFINESTATE;
+		}
+		
+		public boolean sameAs(MultiSubstitutionState obj)
+		{
+			return ekey == obj.ekey && dkey == obj.dkey;
+		}
+		
+		public void export(IOutgoingStream stream) throws IOException
+		{
+			stream.writeInt(ekey);
+			stream.writeInt(dkey);
+		}
+
+		public void export(byte[] bytes, int offset)
+		{
+			Bits.intToBytes(ekey, bytes, offset); offset += 4;
+			Bits.intToBytes(dkey, bytes, offset);
+		}
+
+		public int exportSize()
+		{
+			return 8;
+		}
+
+		public Factory<MultiSubstitutionState> factory()
+		{
+			return sfactory;
+		}
+		
+	}
+	
+	private static final class MultiSubstitutionStateFactory extends Factory<MultiSubstitutionState>
+	{
+
+		protected MultiSubstitutionStateFactory() 
+		{
+			super(MultiSubstitutionState.class);
+		}
+
+		public MultiSubstitutionState resurrect(byte[] data, int start) throws InstantiationException
+		{
+			int e = Bits.intFromBytes(data, start); start += 4;
+			return new MultiSubstitutionState(e, Bits.intFromBytes(data, start));
+		}
+
+		public MultiSubstitutionState resurrect(IIncomingStream stream) throws InstantiationException, IOException
+		{
+			return new MultiSubstitutionState(stream.readInt(), stream.readInt());
+		}
+		
 	}
 
 }
