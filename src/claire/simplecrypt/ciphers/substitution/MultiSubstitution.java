@@ -2,6 +2,7 @@ package claire.simplecrypt.ciphers.substitution;
 
 import claire.simplecrypt.data.Alphabet;
 import claire.simplecrypt.standards.ICipher;
+import claire.simplecrypt.standards.IState;
 
 public class MultiSubstitution 
 	   implements ICipher<MultiSubstitutionKey> {

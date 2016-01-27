@@ -2,9 +2,10 @@ package claire.simplecrypt.ciphers.substitution;
 
 import claire.simplecrypt.data.Alphabet;
 import claire.simplecrypt.standards.ICipher;
+import claire.simplecrypt.standards.IState;
 
 public class SubstitutionCipher 
-	   implements ICipher<SubstitutionKey> {
+	   implements ICipher<SubstitutionKey, IState<?>> {
 
 	private byte[] key;
 	private byte[] inv;
@@ -80,6 +81,19 @@ public class SubstitutionCipher
 	public Alphabet getAlphabet()
 	{
 		return alphabet;
+	}
+	
+	public void loadState(IState<?> state) {}
+	public void updateState(IState<?> state) {}
+	
+	public IState<?> getState()
+	{
+		return null;
+	}
+
+	public boolean hasState()
+	{
+		return false;
 	}
 
 }
