@@ -9,7 +9,8 @@ import claire.util.memory.Bits;
 import claire.util.standards.io.IIncomingStream;
 import claire.util.standards.io.IOutgoingStream;
 
-public class IteratorState implements IState<IteratorState> {
+public class IteratorState 
+	   implements IState<IteratorState> {
 
 	protected int dadd;
 	protected int eadd;

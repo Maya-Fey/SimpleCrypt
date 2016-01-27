@@ -6,15 +6,16 @@ import claire.simplecrypt.data.Alphabet;
 import claire.simplecrypt.standards.ICipher;
 
 public class MultiIterator 
-	   implements ICipher<MultiIteratorKey> {
+	   implements ICipher<MultiIteratorKey, MultiIteratorState> {
+	
+	protected int[] eadd;
+	protected int[] dadd;
+	protected int epos = 0;
+	protected int dpos = 0;
 
 	private MultiIteratorKey master;
 	private Alphabet ab;
 	private int[] iterator;
-	private int[] eadd;
-	private int[] dadd;
-	private int epos = 0;
-	private int dpos = 0;
 	
 	public MultiIterator(MultiIteratorKey key)
 	{
@@ -134,6 +135,32 @@ public class MultiIterator
 	public Alphabet getAlphabet()
 	{
 		return ab;
+	}
+	
+	public void loadState(MultiIteratorState state)
+	{
+		epos = state.epos;
+		dpos = state.dpos;
+		System.arraycopy(state.eadd, 0, eadd, 0, eadd.length);
+		System.arraycopy(state.dadd, 0, dadd, 0, dadd.length);
+	}
+
+	public void updateState(MultiIteratorState state)
+	{
+		state.epos = epos;
+		state.dpos = dpos;
+		System.arraycopy(eadd, 0, state.eadd, 0, eadd.length);
+		System.arraycopy(dadd, 0, state.dadd, 0, dadd.length);
+	}
+
+	public MultiIteratorState getState()
+	{
+		return new MultiIteratorState(this);
+	}
+
+	public boolean hasState()
+	{
+		return true;
 	}
 
 }
