@@ -1,12 +1,22 @@
 package claire.simplecrypt.ciphers.feedback;
 
+import java.io.IOException;
 import java.util.Arrays;
 
+import claire.simplecrypt.ciphers.feedback.AffineFeedbackCipher.AffineFeedbackState;
 import claire.simplecrypt.data.Alphabet;
 import claire.simplecrypt.standards.ICipher;
+import claire.simplecrypt.standards.IState;
+import claire.simplecrypt.standards.NamespaceKey;
+import claire.util.io.Factory;
+import claire.util.io.IOUtils;
+import claire.util.memory.Bits;
+import claire.util.memory.util.ArrayUtil;
+import claire.util.standards.io.IIncomingStream;
+import claire.util.standards.io.IOutgoingStream;
 
 public class AffineFeedbackCipher 
-	   implements ICipher<AffineFeedbackKey> {
+	   implements ICipher<AffineFeedbackKey, AffineFeedbackState> {
 	
 	private AffineFeedbackKey key;
 	private Alphabet alphabet;
@@ -148,6 +158,127 @@ public class AffineFeedbackCipher
 	public Alphabet getAlphabet()
 	{
 		return alphabet;
+	}
+	
+	public boolean hasState()
+	{
+		return true;
+	}
+	
+	public void loadState(AffineFeedbackState state)
+	{
+		this.dpos = state.dpos;
+		this.epos = state.epos;
+		System.arraycopy(state.dkey, 0, dkey, 0, dkey.length);
+		System.arraycopy(state.ekey, 0, ekey, 0, ekey.length);
+	}
+	
+	public void updateState(AffineFeedbackState state)
+	{
+		state.dpos = this.dpos;
+		state.epos = this.epos;
+		System.arraycopy(dkey, 0, state.dkey, 0, dkey.length);
+		System.arraycopy(ekey, 0, state.ekey, 0, ekey.length);
+	}
+
+	public AffineFeedbackState getState()
+	{
+		return new AffineFeedbackState(this);
+	}
+	
+	public static final Factory<AffineFeedbackState> sfactory = new AffineFeedbackStateFactory();
+	
+	public static final class AffineFeedbackState implements IState<AffineFeedbackState>
+	{
+		private final int[] ekey;
+		private final int[] dkey;
+		
+		private int epos;
+		private int dpos;
+		
+		private AffineFeedbackState(int epos, int dpos, int[] ekey, int[] dkey)
+		{
+			this.epos = epos;
+			this.dpos = dpos;
+			this.ekey = ekey;
+			this.dkey = dkey;
+		}
+		
+		public AffineFeedbackState(AffineFeedbackCipher c)
+		{
+			this.ekey = c.ekey;
+			this.dkey = c.dkey;
+			this.epos = c.epos;
+			this.dpos = c.dpos;
+		}
+		
+		public int NAMESPACE()
+		{
+			return NamespaceKey.AFFINEFEEDBACKSTATE;
+		}
+
+		public boolean sameAs(AffineFeedbackState obj)
+		{
+			return (epos == obj.dpos && obj.epos == obj.dpos) && (ArrayUtil.equals(ekey, obj.ekey) && ArrayUtil.equals(dkey, obj.dkey));
+		}
+
+		public void export(IOutgoingStream stream) throws IOException
+		{
+			stream.writeInt(epos);
+			stream.writeInt(dpos);
+			stream.writeInt(ekey.length);
+			stream.writeInts(ekey);
+			stream.writeInts(dkey);
+		}
+
+		public void export(byte[] bytes, int offset)
+		{
+			Bits.intToBytes(epos, bytes, offset); offset += 4;
+			Bits.intToBytes(dpos, bytes, offset); offset += 4;
+			Bits.intToBytes(ekey.length, bytes, offset); offset += 4;
+			offset = IOUtils.writeArr(ekey, bytes, offset);
+			IOUtils.writeArr(dkey, bytes, offset);
+		}
+
+		public int exportSize()
+		{
+			return 4 * ekey.length + 12;
+		}
+
+		public Factory<AffineFeedbackState> factory()
+		{
+			return sfactory;
+		}
+
+	}
+	
+	private static final class AffineFeedbackStateFactory extends Factory<AffineFeedbackState>
+	{
+
+		protected AffineFeedbackStateFactory() 
+		{
+			super(AffineFeedbackState.class);
+		}
+
+		public AffineFeedbackState resurrect(byte[] data, int start) throws InstantiationException
+		{
+			int ep = Bits.intFromBytes(data, start); start += 4;
+			int dp = Bits.intFromBytes(data, start); start += 4;
+			int len = Bits.intFromBytes(data, start); start += 4;
+			int[] ek = IOUtils.readIntArr(data, start); start += 4 * len;
+			int[] dk = IOUtils.readIntArr(data, start); 
+			return new AffineFeedbackState(ep, dp, ek, dk);
+		}
+
+		public AffineFeedbackState resurrect(IIncomingStream stream) throws InstantiationException, IOException
+		{
+			int ep = stream.readInt();
+			int dp = stream.readInt();
+			int[] ek = stream.readIntArr();
+			int[] dk = stream.readInts(ek.length);
+			return new AffineFeedbackState(ep, dp, ek, dk);
+		}
+		
 	}
 
 }
