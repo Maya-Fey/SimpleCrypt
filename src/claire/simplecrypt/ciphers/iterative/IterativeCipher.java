@@ -4,12 +4,13 @@ import claire.simplecrypt.data.Alphabet;
 import claire.simplecrypt.standards.ICipher;
 
 public class IterativeCipher 
-	   implements ICipher<IteratorKey> {
+	   implements ICipher<IteratorKey, IteratorState> {
+	
+	protected int eadd;
+	protected int dadd;
 
 	private IteratorKey master;
 	private Alphabet ab;
-	private int eadd;
-	private int dadd;
 	
 	public IterativeCipher(IteratorKey key)
 	{
@@ -103,6 +104,28 @@ public class IterativeCipher
 	public Alphabet getAlphabet()
 	{
 		return ab;
+	}
+
+	public void loadState(IteratorState state)
+	{
+		eadd = state.eadd;
+		dadd = state.dadd;
+	}
+
+	public void updateState(IteratorState state)
+	{
+		state.eadd = eadd;
+		state.dadd = dadd;
+	}
+
+	public IteratorState getState()
+	{
+		return new IteratorState(this);
+	}
+
+	public boolean hasState()
+	{
+		return true;
 	}
 
 }
