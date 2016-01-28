@@ -25,7 +25,7 @@ public class UState implements IPersistable<UState> {
 		return this.ID;
 	}
 	
-	public IState<?> getKey()
+	public IState<?> getState()
 	{
 		return this.state;
 	}

@@ -107,10 +107,10 @@ public class SimpleCryptFrame
 		sfs.setActionCommand("11");
 		sfs.addActionListener(this);
 		sbar.add(sfs);
-		/*JMenuItem lfs = new JMenuItem("Load from File");
+		JMenuItem lfs = new JMenuItem("Load from File");
 		lfs.setActionCommand("12");
 		lfs.addActionListener(this);
-		sbar.add(lfs);*/
+		sbar.add(lfs);
 		kbar.setEnabled(false);
 		plain.setRows(3);
 		cipher.setRows(3);
@@ -402,7 +402,47 @@ public class SimpleCryptFrame
 						e.printStackTrace();
 					}
 				}
-				
+				break;
+			
+			case "12":
+				if(state != null) {
+					ConfirmMessage c = new ConfirmMessage(this.getOwner(), "Question!", "There is currently a state in memory, this operation will replace that with the state you load from file, are you sure you want to do this?");
+					DisplayHelper.center(c);
+					c.start();
+					if(!c.isOk())
+						break;
+				}
+				s = FileSelectionMessage.openFilePane(this.getOwner(), new File("/"), "Open State", true);
+				DisplayHelper.center(s);
+				s.start();
+				if(s.isOk()) {
+					File f = s.getFile();
+					UState state;
+					
+					
+					try {
+						state = UState.factory.resurrect(f);
+					} catch (Exception e) {
+						this.showError("Exception encountered while attempting to open key: " + e.getMessage());
+						e.printStackTrace();
+						break;
+					}
+					
+					if(state.getID() != cID) {
+						this.showError("Wrong state type (" + CipherRegistry.getName(state.getID()) + " Key), expected " + CipherRegistry.getName(cID) + " Key.");
+						break;
+					}
+					
+					try {
+						this.state = state.getState();
+						cip.loadState(this.state);
+						ls.setEnabled(true);
+					} catch (Exception e) {
+						e.printStackTrace();
+						this.showErrorClose("Error Encountered: " + e.getMessage() + "\n\nThis could be due to the state belonging to another key.");
+					}
+				}
+				break;
 		}
 	}
 
