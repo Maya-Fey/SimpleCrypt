@@ -29,7 +29,7 @@ public class CipherFactory<Cipher extends ICipher<Key, State>, Key extends ISecr
 		this.sf = sf;
 	}
 	
-	public Cipher getCipher(ISecret<?> key) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException
+	public ICipher<Key, State> getCipher(ISecret<?> key) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException
 	{
 		return con0.newInstance(key);
 	}

@@ -1,14 +1,13 @@
 package claire.simplecrypt.ciphers;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 import claire.simplecrypt.ciphers.autokey.AutoKeyCipher;
-import claire.simplecrypt.ciphers.autokey.AutoKeyCipher.AutoKeyState;
 import claire.simplecrypt.ciphers.autokey.AutoKeyKey;
 import claire.simplecrypt.ciphers.ceasar.CeasarCipher;
 import claire.simplecrypt.ciphers.ceasar.CeasarKey;
 import claire.simplecrypt.ciphers.ceasar.MultiCeasar;
-import claire.simplecrypt.ciphers.ceasar.MultiCeasar.MultiCeasarState;
 import claire.simplecrypt.ciphers.ceasar.MultiCeasarKey;
 import claire.simplecrypt.ciphers.iterative.IterativeCipher;
 import claire.simplecrypt.ciphers.iterative.IteratorCipher;
@@ -21,7 +20,6 @@ import claire.simplecrypt.ciphers.iterative.MultiIteratorState;
 import claire.simplecrypt.ciphers.mathematical.AffineCipher;
 import claire.simplecrypt.ciphers.mathematical.AffineKey;
 import claire.simplecrypt.ciphers.mathematical.MultiAffine;
-import claire.simplecrypt.ciphers.mathematical.MultiAffine.MultiAffineState;
 import claire.simplecrypt.ciphers.mathematical.MultiAffineKey;
 import claire.simplecrypt.ciphers.substitution.SubstitutionCipher;
 import claire.simplecrypt.ciphers.substitution.SubstitutionKey;
@@ -42,8 +40,12 @@ import claire.simplecrypt.standards.ISecret;
 import claire.simplecrypt.standards.IState;
 import claire.util.io.Factory;
 import claire.util.logging.Log;
+import claire.util.memory.array.Registry;
 
+@SuppressWarnings("unchecked")
 public final class CipherRegistry {
+	
+	private static final int SIZE = 10;
 	
 	private static final Class<?>[] args0 = new Class<?>[] 
 		{
@@ -55,7 +57,17 @@ public final class CipherRegistry {
 		
 		};
 	
-	private static final CipherFactory<?, ? extends ISecret<?>, ? extends KeyCreatorPanel<?>, ? extends IState<?>>[] factories = new CipherFactory<?, ?, ?, ?>[10];
+	/*
+	 * Why? I cannot be assed. Every bit of code has its ugly spot where it
+	 * actually does work. Some try to act goodie-two-shoes by hiding it behind
+	 * 5 libraries (which do exactly what they didn't want to), sacrificing 
+	 * performance tenfold, having a method for every line of code, or a combination. 
+	 * This class is where the nitty gritty shit  happens, but it'll get the job
+	 * done and it's straightforward to add exactly what you're supposed to add: 
+	 * more ciphers.
+	 */
+	private static final CipherFactory<?, ? extends ISecret<?>, ? extends KeyCreatorPanel<?>, IState<?>>[] factories = (CipherFactory<?, ? extends ISecret<?>, ? extends KeyCreatorPanel<?>, IState<?>>[]) new CipherFactory<?, ?, ?, ?>[SIZE];
+	private static final Registry<CipherFactory<?, ? extends ISecret<?>, ? extends KeyCreatorPanel<?>, IState<?>>> reg = new Registry<CipherFactory<?, ? extends ISecret<?>, ? extends KeyCreatorPanel<?>, IState<?>>>(factories);
 	
 	public static final String[] names = new String[]
 		{
@@ -73,27 +85,17 @@ public final class CipherRegistry {
 	
 	static {
 		try {
-			args0[0] = CeasarKey.class;
-			factories[0] = new CipherFactory<CeasarCipher, CeasarKey, CeasarKeyCreator, IState<?>>(CeasarCipher.class.getConstructor(args0), CeasarKeyCreator.class.getConstructor(args1), CeasarKey.factory, null);
-			args0[0] = MultiCeasarKey.class;
-			factories[1] = new CipherFactory<MultiCeasar, MultiCeasarKey, MultiCeasarKeyCreator, MultiCeasarState>(MultiCeasar.class.getConstructor(args0), MultiCeasarKeyCreator.class.getConstructor(args1), MultiCeasarKey.factory, MultiCeasar.sfactory);
-			args0[0] = AutoKeyKey.class;
-			factories[2] = new CipherFactory<AutoKeyCipher, AutoKeyKey, AutoKeyKeyCreator, AutoKeyState>(AutoKeyCipher.class.getConstructor(args0), AutoKeyKeyCreator.class.getConstructor(args1), AutoKeyKey.factory, AutoKeyCipher.sfactory);
-			args0[0] = IteratorKey.class;
-			factories[3] = new CipherFactory<IterativeCipher, IteratorKey, IterativeKeyCreator, IteratorState>(IterativeCipher.class.getConstructor(args0), IterativeKeyCreator.class.getConstructor(args1), IteratorKey.factory, IteratorState.factory);
-			args0[0] = IteratorKey.class;
-			factories[4] = new CipherFactory<IteratorCipher, IteratorKey, IteratorKeyCreator, IteratorState>(IteratorCipher.class.getConstructor(args0), IteratorKeyCreator.class.getConstructor(args1), IteratorKey.factory, IteratorState.factory);
-			args0[0] = MultiIteratorKey.class;
-			factories[5] = new CipherFactory<MultiIterative, MultiIteratorKey, MultiIterativeKeyCreator, MultiIteratorState>(MultiIterative.class.getConstructor(args0), MultiIterativeKeyCreator.class.getConstructor(args1), MultiIteratorKey.factory, MultiIteratorState.sfactory);
-			args0[0] = MultiIteratorKey.class;
-			factories[6] = new CipherFactory<MultiIterator, MultiIteratorKey, MultiIteratorKeyCreator, MultiIteratorState>(MultiIterator.class.getConstructor(args0), MultiIteratorKeyCreator.class.getConstructor(args1), MultiIteratorKey.factory, MultiIteratorState.sfactory);
-			args0[0] = AffineKey.class;
-			factories[7] = new CipherFactory<AffineCipher, AffineKey, AffineKeyCreator, IState<?>>(AffineCipher.class.getConstructor(args0), AffineKeyCreator.class.getConstructor(args1), AffineKey.factory, null);
-			args0[0] = MultiAffineKey.class;
-			factories[8] = new CipherFactory<MultiAffine, MultiAffineKey, MultiAffineKeyCreator, MultiAffineState>(MultiAffine.class.getConstructor(args0), MultiAffineKeyCreator.class.getConstructor(args1), MultiAffineKey.factory, MultiAffine.sfactory);
-			args0[0] = SubstitutionKey.class;
-			factories[9] = new CipherFactory<SubstitutionCipher, SubstitutionKey, SubstitutionKeyCreator, IState<?>>(SubstitutionCipher.class.getConstructor(args0), SubstitutionKeyCreator.class.getConstructor(args1), SubstitutionKey.factory, null);
-			
+			add(CeasarKey.class, CeasarCipher.class, CeasarKeyCreator.class.getConstructor(args1), CeasarKey.factory, null);
+			add(MultiCeasarKey.class, MultiCeasar.class, MultiCeasarKeyCreator.class.getConstructor(args1), MultiCeasarKey.factory, MultiCeasar.sfactory);
+			add(AutoKeyKey.class, AutoKeyCipher.class, AutoKeyKeyCreator.class.getConstructor(args1), AutoKeyKey.factory, AutoKeyCipher.sfactory);
+			add(IteratorKey.class, IterativeCipher.class, IterativeKeyCreator.class.getConstructor(args1), IteratorKey.factory, IteratorState.factory);
+			add(IteratorKey.class, IteratorCipher.class, IteratorKeyCreator.class.getConstructor(args1), IteratorKey.factory, IteratorState.factory);
+			add(MultiIteratorKey.class, MultiIterative.class, MultiIterativeKeyCreator.class.getConstructor(args1), MultiIteratorKey.factory, MultiIteratorState.sfactory);
+			add(MultiIteratorKey.class, MultiIterator.class, MultiIteratorKeyCreator.class.getConstructor(args1), MultiIteratorKey.factory, MultiIteratorState.sfactory);
+			add(AffineKey.class, AffineCipher.class, AffineKeyCreator.class.getConstructor(args1), AffineKey.factory, null);
+			add(MultiAffineKey.class, MultiAffine.class, MultiAffineKeyCreator.class.getConstructor(args1), MultiAffineKey.factory, MultiAffine.sfactory);
+			add(SubstitutionKey.class, SubstitutionCipher.class, SubstitutionKeyCreator.class.getConstructor(args1), SubstitutionKey.factory, null);
+	
 		} catch (Exception e) {
 			Log.err.println("Error: Problem instantiating Cipher Factories. Cipher Registry cannot be initialized.");
 			e.printStackTrace();
@@ -101,9 +103,11 @@ public final class CipherRegistry {
 		}
 	}
 	
-	static void init() throws Exception
+	public static <Key extends ISecret<?>, Creator extends KeyCreatorPanel<Key>> void add(Class<Key> arg, Class<?> kcl, Constructor<Creator> pcon, KeyFactory<Key> kf, Object sfo) throws NoSuchMethodException, SecurityException
 	{
-		throw new Exception();
+		args0[0] = arg;
+		Object ccono = kcl.getConstructor(args0);
+		reg.add(new CipherFactory<ICipher<Key, IState<?>>, Key, Creator, IState<?>>((Constructor<ICipher<Key, IState<?>>>) ccono, pcon, kf, (Factory<IState<?>>) sfo));
 	}
 	
 	public static String getName(int ID)
@@ -111,7 +115,7 @@ public final class CipherRegistry {
 		return names[ID];
 	}
 	
-	public static ICipher<? extends ISecret<?>, ? extends IState<?>> getCipher(ISecret<?> key, int ID) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException
+	public static ICipher<? extends ISecret<?>, IState<?>> getCipher(ISecret<?> key, int ID) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException
 	{
 		return factories[ID].getCipher(key);
 	}

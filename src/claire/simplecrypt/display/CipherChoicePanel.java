@@ -15,9 +15,13 @@ public class CipherChoicePanel
 	
 	public void initialize()
 	{
-		JComboBox<String> combo = new JComboBox<String>(CipherRegistry.names);
+		try {
+			this.combo = new JComboBox<String>(CipherRegistry.names);
+		} catch(java.lang.ExceptionInInitializerError e) {
+			e.getCause().printStackTrace();
+			throw e;
+		}
 		this.add(combo);
-		this.combo = combo;
 	}
 
 	public boolean error(Pointer<String> msg)

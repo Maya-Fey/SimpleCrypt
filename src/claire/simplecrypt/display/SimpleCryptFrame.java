@@ -22,6 +22,7 @@ import claire.simplecrypt.data.Alphabet;
 import claire.simplecrypt.display.creators.KeyCreatorPanel;
 import claire.simplecrypt.standards.ICipher;
 import claire.simplecrypt.standards.ISecret;
+import claire.simplecrypt.standards.IState;
 import claire.util.display.DisplayHelper;
 import claire.util.display.component.TablePane;
 import claire.util.display.display.BasicDisplay;
@@ -43,12 +44,14 @@ public class SimpleCryptFrame
 	private final JMenu kbar;
 	private final JMenu sbar;
 	private final JMenuItem sk;
+	private final JMenuItem ls;
 
 	
 	private IgnoreCoder coder;
 	
-	private ICipher<?, ?> cip;
+	private ICipher<?, IState<?>> cip;
 	private ISecret<?> key;
+	private IState<?> state;
 	private int cID = -1;
 	
 	private boolean allow = true;
@@ -91,6 +94,14 @@ public class SimpleCryptFrame
 		rs.setActionCommand("4");
 		rs.addActionListener(this);
 		sbar.add(rs);
+		JMenuItem ss = new JMenuItem("Save State");
+		ss.setActionCommand("9");
+		ss.addActionListener(this);
+		sbar.add(ss);
+		JMenuItem ls = this.ls = new JMenuItem("Load State");
+		ls.setActionCommand("10");
+		ls.addActionListener(this);
+		sbar.add(ls);
 		kbar.setEnabled(false);
 		plain.setRows(3);
 		cipher.setRows(3);
@@ -128,7 +139,8 @@ public class SimpleCryptFrame
 			cipher.setEnabled(true);
 			enc.setEnabled(true);
 			dec.setEnabled(true);
-			sbar.setEnabled(true);
+			if(cip.hasState())
+				sbar.setEnabled(true);
 			sk.setEnabled(true);
 			allow = true;
 		}
@@ -144,6 +156,7 @@ public class SimpleCryptFrame
 			dec.setEnabled(false);
 			sbar.setEnabled(false);
 			sk.setEnabled(false);
+			ls.setEnabled(false);
 			allow = false;
 		}
 	}
@@ -216,21 +229,14 @@ public class SimpleCryptFrame
 					m = new InformationCollectionMessage(this.getOwner(), p, "Create " + CipherRegistry.getName(cID) + " Key", true);
 					DisplayHelper.center(m);
 					m.start();
-					if(m.isOk()) {
-						ISecret<?> k = p.extract();
+					if(m.isOk()) 
 						try {
-							this.cip = CipherRegistry.getCipher(k, cID);
+							this.setKey(p.extract());
 						} catch (Exception e) {
 							e.printStackTrace();
 							this.showErrorClose("Error Encountered: " + e.getMessage());
+							break;
 						}
-						this.key = k;
-						if(this.coder == null)
-							coder = new IgnoreCoder(cip, 1000);
-						else
-							coder.setCipher(cip);
-						this.allow();
-					}
 				}
 				break;
 				
@@ -261,21 +267,12 @@ public class SimpleCryptFrame
 				m.start();
 				if(m.isOk()) {
 					Alphabet a = Alphabet.fromID(apanel.getAlphabetID());
-					key = CipherRegistry.random(cID, a);
-					
-					
 					try {
-						this.cip = CipherRegistry.getCipher(key, cID);
+						this.setKey(CipherRegistry.random(cID, a));
 					} catch (Exception e) {
 						e.printStackTrace();
 						this.showErrorClose("Error Encountered: " + e.getMessage());
 					}
-					
-					if(this.coder == null)
-						coder = new IgnoreCoder(cip, 1000);
-					else
-						coder.setCipher(cip);
-					this.allow();
 				}
 				break;
 				
@@ -322,18 +319,11 @@ public class SimpleCryptFrame
 					
 					
 					try {
-						this.cip = CipherRegistry.getCipher(key.getKey(), cID);
+						this.setKey(key.getKey());
 					} catch (Exception e) {
 						e.printStackTrace();
 						this.showErrorClose("Error Encountered: " + e.getMessage());
 					}
-					
-					
-					if(this.coder == null)
-						coder = new IgnoreCoder(cip, 1000);
-					else
-						coder.setCipher(cip);
-					this.allow();
 				}
 				break;
 				
@@ -356,25 +346,49 @@ public class SimpleCryptFrame
 					}
 					
 					
+					if(cID == -1) 
+						kbar.setEnabled(true);
+					cID = key.getID();
+					
 					try {
-						this.cip = CipherRegistry.getCipher(key.getKey(), key.getID());
+						this.setKey(key.getKey());
 					} catch (Exception e) {
 						e.printStackTrace();
 						this.showErrorClose("Error Encountered: " + e.getMessage());
 					}
-					
-					
-					if(cID == -1) 
-						kbar.setEnabled(true);
-					cID = key.getID();
-					if(this.coder == null)
-						coder = new IgnoreCoder(cip, 1000);
-					else
-						coder.setCipher(cip);
-					this.allow();
 				}
 				break;
+			case "9":
+				if(state == null) {
+					state = cip.getState();
+					ls.setEnabled(true);
+				} else
+					cip.updateState(state);
+				break;
+				
+			case "10":
+				cip.loadState(state);
+				break;
 		}
+	}
+
+	protected void setKey(ISecret<?> key) throws Exception
+	{
+		try {
+			this.cip = CipherRegistry.getCipher(key, cID);
+		} catch (Exception e) {
+			e.printStackTrace();
+			this.showErrorClose("Error Encountered: " + e.getMessage());
+		}
+		this.key = key;
+		ls.setEnabled(false);
+		state = null;
+		
+		if(this.coder == null)
+			coder = new IgnoreCoder(cip, 1000);
+		else
+			coder.setCipher(cip);
+		this.allow();
 	}
 	
 	public void showError(String message)
