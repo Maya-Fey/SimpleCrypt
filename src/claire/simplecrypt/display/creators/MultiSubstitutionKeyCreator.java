@@ -18,7 +18,6 @@ import claire.simplecrypt.ciphers.substitution.SubstitutionKey;
 import claire.util.display.DisplayHelper;
 import claire.util.display.component.TablePane;
 import claire.util.display.component.TextBox;
-import claire.util.encoding.Hex;
 import claire.util.memory.array.Memory;
 import claire.util.memory.util.Pointer;
 
