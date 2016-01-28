@@ -17,6 +17,7 @@ import javax.swing.border.Border;
 
 import claire.simplecrypt.ciphers.CipherRegistry;
 import claire.simplecrypt.ciphers.UKey;
+import claire.simplecrypt.ciphers.UState;
 import claire.simplecrypt.coders.IgnoreCoder;
 import claire.simplecrypt.data.Alphabet;
 import claire.simplecrypt.display.creators.KeyCreatorPanel;
@@ -94,14 +95,22 @@ public class SimpleCryptFrame
 		rs.setActionCommand("4");
 		rs.addActionListener(this);
 		sbar.add(rs);
-		JMenuItem ss = new JMenuItem("Save State");
+		JMenuItem ss = new JMenuItem("Save");
 		ss.setActionCommand("9");
 		ss.addActionListener(this);
 		sbar.add(ss);
-		JMenuItem ls = this.ls = new JMenuItem("Load State");
+		JMenuItem ls = this.ls = new JMenuItem("Load");
 		ls.setActionCommand("10");
 		ls.addActionListener(this);
 		sbar.add(ls);
+		JMenuItem sfs = new JMenuItem("Save to File");
+		sfs.setActionCommand("11");
+		sfs.addActionListener(this);
+		sbar.add(sfs);
+		/*JMenuItem lfs = new JMenuItem("Load from File");
+		lfs.setActionCommand("12");
+		lfs.addActionListener(this);
+		sbar.add(lfs);*/
 		kbar.setEnabled(false);
 		plain.setRows(3);
 		cipher.setRows(3);
@@ -369,6 +378,31 @@ public class SimpleCryptFrame
 			case "10":
 				cip.loadState(state);
 				break;
+				
+			case "11":
+				if(state == null) {
+					ConfirmMessage c = new ConfirmMessage(this.getOwner(), "Are you sure?", "There is no state in memory, this means the program will save the current state of the cipher and put the saved state in memory also. Do you wish to do this?");
+					DisplayHelper.center(c);
+					c.start();
+					if(!c.isOk())
+						break;
+					state = cip.getState();
+					ls.setEnabled(true);
+				} 
+				s = FileSelectionMessage.saveFilePane(this.getOwner(), new File("/"), "Save " + CipherRegistry.getName(cID) + " Key", true);
+				DisplayHelper.center(s);
+				s.start();
+				if(s.isOk()) {
+					File f = s.getFile();
+					UState ns = new UState(state, cID);
+					try {
+						ns.export(f);
+					} catch (IOException e) {
+						this.showError("I/O Exception encountered while attempting to save file: " + e.getMessage());
+						e.printStackTrace();
+					}
+				}
+				
 		}
 	}
 
