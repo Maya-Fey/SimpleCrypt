@@ -21,6 +21,8 @@ import claire.simplecrypt.ciphers.mathematical.AffineCipher;
 import claire.simplecrypt.ciphers.mathematical.AffineKey;
 import claire.simplecrypt.ciphers.mathematical.MultiAffine;
 import claire.simplecrypt.ciphers.mathematical.MultiAffineKey;
+import claire.simplecrypt.ciphers.substitution.MultiSubstitution;
+import claire.simplecrypt.ciphers.substitution.MultiSubstitutionKey;
 import claire.simplecrypt.ciphers.substitution.SubstitutionCipher;
 import claire.simplecrypt.ciphers.substitution.SubstitutionKey;
 import claire.simplecrypt.data.Alphabet;
@@ -34,6 +36,7 @@ import claire.simplecrypt.display.creators.MultiAffineKeyCreator;
 import claire.simplecrypt.display.creators.MultiCeasarKeyCreator;
 import claire.simplecrypt.display.creators.MultiIterativeKeyCreator;
 import claire.simplecrypt.display.creators.MultiIteratorKeyCreator;
+import claire.simplecrypt.display.creators.MultiSubstitutionKeyCreator;
 import claire.simplecrypt.display.creators.SubstitutionKeyCreator;
 import claire.simplecrypt.standards.ICipher;
 import claire.simplecrypt.standards.ISecret;
@@ -45,7 +48,7 @@ import claire.util.memory.array.Registry;
 @SuppressWarnings("unchecked")
 public final class CipherRegistry {
 	
-	private static final int SIZE = 10;
+	private static final int SIZE = 11;
 	
 	private static final Class<?>[] args0 = new Class<?>[] 
 		{
@@ -80,7 +83,8 @@ public final class CipherRegistry {
 			"Multi Iterator Cipher",
 			"Affine Cipher",
 			"Multi Affine Cipher",
-			"Substitution Cipher"
+			"Substitution Cipher",
+			"Multi Substitution Cipher"
 		};
 	
 	static {
@@ -95,7 +99,8 @@ public final class CipherRegistry {
 			add(AffineKey.class, AffineCipher.class, AffineKeyCreator.class.getConstructor(args1), AffineKey.factory, null);
 			add(MultiAffineKey.class, MultiAffine.class, MultiAffineKeyCreator.class.getConstructor(args1), MultiAffineKey.factory, MultiAffine.sfactory);
 			add(SubstitutionKey.class, SubstitutionCipher.class, SubstitutionKeyCreator.class.getConstructor(args1), SubstitutionKey.factory, null);
-	
+			add(MultiSubstitutionKey.class, MultiSubstitution.class, MultiSubstitutionKeyCreator.class.getConstructor(args1), MultiSubstitutionKey.factory, MultiSubstitution.sfactory);
+			
 		} catch (Exception e) {
 			Log.err.println("Error: Problem instantiating Cipher Factories. Cipher Registry cannot be initialized.");
 			e.printStackTrace();

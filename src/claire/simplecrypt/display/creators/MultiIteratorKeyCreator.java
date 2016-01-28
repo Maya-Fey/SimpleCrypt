@@ -2,8 +2,8 @@ package claire.simplecrypt.display.creators;
 
 import claire.simplecrypt.ciphers.iterative.MultiIteratorKey;
 
-public class MultiIteratorKeyCreator extends
-		MultiIntKeyCreator<MultiIteratorKey> {
+public class MultiIteratorKeyCreator 
+	   extends MultiIntKeyCreator<MultiIteratorKey> {
 	
 	private static final long serialVersionUID = -7227474234234234234L;	
 	

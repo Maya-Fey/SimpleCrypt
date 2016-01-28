@@ -115,7 +115,7 @@ public class MultiSubstitutionKey
 		return factory;
 	}
 	
-	private static final MultiSubstitutionKeyFactory factory = new MultiSubstitutionKeyFactory();
+	public static final MultiSubstitutionKeyFactory factory = new MultiSubstitutionKeyFactory();
 	
 	private static final class MultiSubstitutionKeyFactory extends KeyFactory<MultiSubstitutionKey>
 	{
