@@ -116,8 +116,8 @@ public class SimpleCryptFrame
 		cipher.setRows(3);
 		plain.setLineWrap(true);
 		cipher.setLineWrap(true);
-		JScrollPane p = DisplayHelper.getScrollPane(plain, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		JScrollPane c = DisplayHelper.getScrollPane(cipher, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		JScrollPane p = new JScrollPane(plain, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		JScrollPane c = new JScrollPane(cipher, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		enc = new JButton("Encipher");
 		dec = new JButton("Decipher");
 		enc.setActionCommand("0");
@@ -405,13 +405,9 @@ public class SimpleCryptFrame
 				break;
 			
 			case "12":
-				if(state != null) {
-					ConfirmMessage c = new ConfirmMessage(this.getOwner(), "Question!", "There is currently a state in memory, this operation will replace that with the state you load from file, are you sure you want to do this?");
-					DisplayHelper.center(c);
-					c.start();
-					if(!c.isOk())
+				if(state != null) 
+					if(!DisplayHelper.confirm(this.getOwner(), "Question!", "There is currently a state in memory, this operation will replace that with the state you load from file, are you sure you want to do this?"))
 						break;
-				}
 				s = FileSelectionMessage.openFilePane(this.getOwner(), new File("/"), "Open State", true);
 				DisplayHelper.center(s);
 				s.start();
