@@ -10,6 +10,8 @@ import claire.simplecrypt.ciphers.feedback.AffineFeedbackCipher;
 import claire.simplecrypt.ciphers.feedback.AffineFeedbackKey;
 import claire.simplecrypt.ciphers.feedback.IteratorFeedbackCipher;
 import claire.simplecrypt.ciphers.feedback.IteratorFeedbackKey;
+import claire.simplecrypt.ciphers.fraction.PolybiusCipher;
+import claire.simplecrypt.ciphers.fraction.PolybiusKey;
 import claire.simplecrypt.ciphers.iterative.IterativeCipher;
 import claire.simplecrypt.ciphers.iterative.IteratorCipher;
 import claire.simplecrypt.ciphers.iterative.IteratorKey;
@@ -56,7 +58,8 @@ public final class Test {
 			new MultiIterator(MultiIteratorKey.random(Alphabet.ADVANCED, 8, rng)),
 			new AutoKeyCipher(AutoKeyKey.random(Alphabet.ADVANCED, 8, rng)),
 			new IteratorFeedbackCipher(IteratorFeedbackKey.random(Alphabet.ADVANCED, 8, rng)),
-			new AffineFeedbackCipher(AffineFeedbackKey.random(Alphabet.ADVANCED, 8, rng))
+			new AffineFeedbackCipher(AffineFeedbackKey.random(Alphabet.ADVANCED, 8, rng)),
+			new PolybiusCipher(PolybiusKey.random(Alphabet.ADVANCED, rng))
 		};
 	
 	static final ICharCoder[] coders = new ICharCoder[]

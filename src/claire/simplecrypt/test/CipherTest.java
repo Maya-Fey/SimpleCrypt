@@ -9,7 +9,7 @@ import claire.util.memory.util.ArrayUtil;
 
 final class CipherTest {
 	
-	private static final SimpleCoder coder = new SimpleCoder(Test.ciphers[0], 81);
+	private static final SimpleCoder coder = new SimpleCoder(Test.ciphers[0], 1000);
 	
 	public static final int runTest()
 	{
@@ -31,13 +31,14 @@ final class CipherTest {
 				}
 				for(int j = 0; j < 81; j++) 
 					plain[j] = ab[Test.rng.nextIntFast(ab.length)];
-				
-				char[] s1 = ArrayUtil.copy(plain);
-				char[] s2 = new char[81];
+				final int size = cip.ciphertextSize(61);
+				char[] s1 = new char[size + 20];
+				System.arraycopy(plain, 0, s1, 0, plain.length);
+				char[] s2 = new char[s1.length];
 				coder.encode(s1, 20, 61);
 				cip.reset();
 				coder.encode(plain, 20, s2, 20, 61);
-				for(int j = 20; j < 81; j++) {
+				for(int j = 20; j < s1.length; j++) {
 					if(s1[j] != s2[j]) {
 						fails++;
 						Log.err.println("In-Place enciphering gives different results then copy enciphering for " + cip.getClass().getSimpleName());
@@ -46,10 +47,10 @@ final class CipherTest {
 						break;
 					}
 				}
-				char[] s3 = new char[81];
-				coder.decode(s1, 20, 61);
+				char[] s3 = new char[s1.length];
+				coder.decode(s1, 20, size);
 				cip.reset();
-				coder.decode(s2, 20, s3, 20, 61);
+				coder.decode(s2, 20, s3, 20, size);
 				for(int j = 20; j < 81; j++) {
 					if(s1[j] != s3[j]) {
 						fails++;

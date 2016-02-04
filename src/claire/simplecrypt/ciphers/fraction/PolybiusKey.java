@@ -58,6 +58,9 @@ public class PolybiusKey
 	{
 		Arrays.fill(s2, (byte) 0);
 		Arrays.fill(s1, (byte) 0);
+		s1 = null;
+		s2 = null;
+		a = null;
 	}
 	
 	public int NAMESPACE()
@@ -72,11 +75,9 @@ public class PolybiusKey
 
 	public void export(IOutgoingStream stream) throws IOException
 	{
+		stream.persist(a);
 		stream.writeByteArr(s1);
 		stream.writeByteArr(s2);
-		s1 = null;
-		s2 = null;
-		a = null;
 	}
 
 	public void export(byte[] bytes, int offset)
@@ -88,7 +89,7 @@ public class PolybiusKey
 
 	public int exportSize()
 	{
-		return s1.length + s2.length + 4;
+		return s1.length + s2.length + 12;
 	}
 
 	public Factory<PolybiusKey> factory()
@@ -108,7 +109,7 @@ public class PolybiusKey
 		public PolybiusKey resurrect(final byte[] data, int start) throws InstantiationException
 		{
 			final Alphabet a = Alphabet.fromID(Bits.intFromBytes(data, start)); start += 4;
-			final byte[] s1 = IOUtils.readByteArr(data, start); start += s1.length;
+			final byte[] s1 = IOUtils.readByteArr(data, start); start += s1.length + 4;
 			return new PolybiusKey(a, s1, IOUtils.readByteArr(data, start));
 		}
 
