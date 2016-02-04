@@ -18,5 +18,12 @@ public interface ICharEncoder {
 		encode(plaintext, 0, codetext, 0, plaintext.length);
 		return codetext;
 	}
+	
+	int ciphertextSize(char[] text, int start, int len);
+	
+	default int ciphertextSize(char[] text)
+	{
+		return ciphertextSize(text, 0, text.length);
+	}
 
 }

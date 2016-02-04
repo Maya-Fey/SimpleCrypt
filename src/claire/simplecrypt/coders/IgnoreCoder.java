@@ -173,4 +173,28 @@ public class IgnoreCoder
 		this.ab = cipher.getAlphabet();
 	}
 
+	public int plaintextSize(char[] text, int start, int len)
+	{
+		int total = 0,
+			rem = 0;
+		while(len-- > 0) 
+			if(ab.contains(text[start++]))
+				total++;
+			else
+				rem++;
+		return cipher.plaintextSize(total) + rem;
+	}
+
+	public int ciphertextSize(char[] text, int start, int len)
+	{
+		int total = 0,
+				rem = 0;
+		while(len-- > 0) 
+			if(ab.contains(text[start++]))
+				total++;
+			else
+				rem++;
+		return cipher.ciphertextSize(total) + rem;
+	}
+
 }

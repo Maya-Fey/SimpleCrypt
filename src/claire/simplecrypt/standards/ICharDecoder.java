@@ -14,9 +14,16 @@ public interface ICharDecoder {
 	
 	default char[] decode_copy(char[] codetext)
 	{
-		char[] plaintext = new char[getDecipherer().plaintextSize(codetext.length)];
+		char[] plaintext = new char[this.plaintextSize(codetext)];
 		decode(codetext, 0, plaintext, 0, codetext.length);
 		return plaintext;
+	}
+	
+	int plaintextSize(char[] text, int start, int len);
+	
+	default int plaintextSize(char[] text)
+	{
+		return plaintextSize(text, 0, text.length);
 	}
 
 }

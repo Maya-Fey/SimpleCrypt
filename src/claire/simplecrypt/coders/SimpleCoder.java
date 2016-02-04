@@ -76,4 +76,14 @@ public class SimpleCoder
 		this.ab = cipher.getAlphabet();
 	}
 
+	public int plaintextSize(char[] text, int start, int len)
+	{
+		return cipher.plaintextSize(len);
+	}
+
+	public int ciphertextSize(char[] text, int start, int len)
+	{
+		return cipher.ciphertextSize(len);
+	}
+
 }
