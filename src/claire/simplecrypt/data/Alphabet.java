@@ -183,6 +183,22 @@ public final class Alphabet
 		return -1;
 	}
 	
+	public byte[] convertTo(char[] chars, int start, int len)
+	{
+		final byte[] rep = new byte[len];
+		int start1 = 0;
+		while(len-- > 0) {
+			for(int i = 0; i <= this.chars.length; i++) {
+				if(this.chars[i] == chars[start]) {
+					rep[start1++] = (byte) i;
+					break;
+				}
+			}
+			start++;
+		}
+		return rep;
+	}
+	
 	public void convertTo(char[] chars, int start0, byte[] rep, int start1, int len)
 	{
 		while(len-- > 0) {
@@ -221,12 +237,51 @@ public final class Alphabet
 			chars[start1++] = this.chars[rep[start0++]];
 	}
 	
+	public void convertFrom(byte[] rep, int start, int len)
+	{
+		final char[] chars = new char[len];
+		int start1 = 0;
+		while(len-- > 0) 
+			chars[start1++] = this.chars[rep[start++]];
+	}
+	
 	public boolean contains(char c)
 	{
 		for(char c2 : chars)
 			if(c == c2)
 				return true;
 		return false;
+	}
+	
+	public boolean containsOnly(char[] c)
+	{
+		for(char c1 : c) {
+			boolean b = true;
+			for(char c2 : chars)
+				if(c1 == c2) {
+					b = false;
+					break;
+				}
+			if(b)
+				return false;
+		}
+		return true;
+	}
+	
+	public boolean containsOnly(String s)
+	{
+		for(int i = 0; i < s.length(); i++) {
+			final char c1 = s.charAt(i);
+			boolean b = true;
+			for(char c2 : chars)
+				if(c1 == c2) {
+					b = false;
+					break;
+				}
+			if(b)
+				return false;
+		}
+		return true;
 	}
 	
 	public void export(IOutgoingStream stream) throws IOException

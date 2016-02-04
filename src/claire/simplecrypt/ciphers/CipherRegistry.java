@@ -13,6 +13,8 @@ import claire.simplecrypt.ciphers.feedback.AffineFeedbackCipher;
 import claire.simplecrypt.ciphers.feedback.AffineFeedbackKey;
 import claire.simplecrypt.ciphers.feedback.IteratorFeedbackCipher;
 import claire.simplecrypt.ciphers.feedback.IteratorFeedbackKey;
+import claire.simplecrypt.ciphers.fraction.PolybiusCipher;
+import claire.simplecrypt.ciphers.fraction.PolybiusKey;
 import claire.simplecrypt.ciphers.iterative.IterativeCipher;
 import claire.simplecrypt.ciphers.iterative.IteratorCipher;
 import claire.simplecrypt.ciphers.iterative.IteratorKey;
@@ -43,6 +45,7 @@ import claire.simplecrypt.display.creators.MultiCeasarKeyCreator;
 import claire.simplecrypt.display.creators.MultiIterativeKeyCreator;
 import claire.simplecrypt.display.creators.MultiIteratorKeyCreator;
 import claire.simplecrypt.display.creators.MultiSubstitutionKeyCreator;
+import claire.simplecrypt.display.creators.PolybiusKeyCreator;
 import claire.simplecrypt.display.creators.SubstitutionKeyCreator;
 import claire.simplecrypt.standards.ICipher;
 import claire.simplecrypt.standards.ISecret;
@@ -54,7 +57,7 @@ import claire.util.memory.array.Registry;
 @SuppressWarnings("unchecked")
 public final class CipherRegistry {
 	
-	private static final int SIZE = 13;
+	private static final int SIZE = 14;
 	
 	private static final Class<?>[] args0 = new Class<?>[] 
 		{
@@ -92,7 +95,8 @@ public final class CipherRegistry {
 			"Substitution Cipher",
 			"Multi Substitution Cipher",
 			"Iterator Feedback Cipher",
-			"Affine Feedback Cipher"
+			"Affine Feedback Cipher",
+			"Polybius Square Cipher"
 		};
 	
 	static {
@@ -110,6 +114,7 @@ public final class CipherRegistry {
 			add(MultiSubstitutionKey.class, MultiSubstitution.class, MultiSubstitutionKeyCreator.class.getConstructor(args1), MultiSubstitutionKey.factory, MultiSubstitution.sfactory);
 			add(IteratorFeedbackKey.class, IteratorFeedbackCipher.class, IteratorFeedbackKeyCreator.class.getConstructor(args1), IteratorFeedbackKey.factory, IteratorFeedbackCipher.sfactory);
 			add(AffineFeedbackKey.class, AffineFeedbackCipher.class, AffineFeedbackKeyCreator.class.getConstructor(args1), AffineFeedbackKey.factory, AffineFeedbackCipher.sfactory);
+			add(PolybiusKey.class, PolybiusCipher.class, PolybiusKeyCreator.class.getConstructor(args1), PolybiusKey.factory, null);
 			
 		} catch (Exception e) {
 			Log.err.println("Error: Problem instantiating Cipher Factories. Cipher Registry cannot be initialized.");

@@ -179,15 +179,29 @@ public class SimpleCryptFrame
 		{
 			case "0":
 				char[] chars = plain.getText().toCharArray();
-				coder.encode(chars);
-				cipher.setText(new String(chars));
+				int nlen = coder.ciphertextSize(chars);
+				if(nlen != chars.length) {
+					char[] nc = new char[nlen];
+					coder.encode(chars, 0, nc, 0, chars.length);
+					cipher.setText(new String(nc));
+				} else {
+					coder.encode(chars);
+					cipher.setText(new String(chars));
+				}
 				break;
 				
 				
 			case "1":
 				chars = cipher.getText().toCharArray();
-				coder.decode(chars);
-				plain.setText(new String(chars));
+				nlen = coder.ciphertextSize(chars);
+				if(nlen != chars.length) {
+					char[] nc = new char[nlen];
+					coder.decode(chars, 0, nc, 0, chars.length);
+					plain.setText(new String(nc));
+				} else {
+					coder.decode(chars);
+					plain.setText(new String(chars));
+				}
 				break;
 				
 				

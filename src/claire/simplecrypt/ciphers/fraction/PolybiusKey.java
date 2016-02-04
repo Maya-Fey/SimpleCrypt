@@ -173,5 +173,15 @@ public class PolybiusKey
 		}
 		return new PolybiusKey(ab, row, col);
 	}
+	
+	public static final int getRow(int ab)
+	{
+		return ROWLEN[ab];
+	}
+	
+	public static final int getCol(int ab)
+	{
+		return COLLEN[ab];
+	}
 
 }
