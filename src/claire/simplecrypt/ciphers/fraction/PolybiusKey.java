@@ -18,12 +18,12 @@ import claire.util.standards.io.IOutgoingStream;
 public class PolybiusKey 
 	   implements ISecret<PolybiusKey> {
 	
-	private static final int[] ROWLEN = new int[]
+	static final int[] ROWLEN = new int[]
 		{
 			6, 8, 6, 8, 7, 7, 8, 8, 9, 10
 		};
 	
-	private static final int[] COLLEN = new int[]
+	static final int[] COLLEN = new int[]
 		{
 			5, 7, 5, 7, 6, 6, 8, 8, 9, 9
 		};

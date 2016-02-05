@@ -47,7 +47,6 @@ public class SimpleCryptFrame
 	private final JMenuItem sk;
 	private final JMenuItem ls;
 
-	
 	private IgnoreCoder coder;
 	
 	private ICipher<?, IState<?>> cip;
