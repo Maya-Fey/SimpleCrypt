@@ -1,5 +1,7 @@
 package claire.simplecrypt.test;
 
+import java.util.Arrays;
+
 import claire.simplecrypt.coders.SimpleCoder;
 import claire.simplecrypt.data.Alphabet;
 import claire.simplecrypt.standards.ICipher;
@@ -32,7 +34,7 @@ final class CipherTest {
 				for(int j = 0; j < 81; j++) 
 					plain[j] = ab[Test.rng.nextIntFast(ab.length)];
 				final int size = cip.ciphertextSize(61);
-				char[] s1 = new char[size + 20];
+				char[] s1 = new char[cip.ciphertextSize(81)];
 				System.arraycopy(plain, 0, s1, 0, plain.length);
 				char[] s2 = new char[s1.length];
 				coder.encode(s1, 20, 61);
@@ -72,24 +74,28 @@ final class CipherTest {
 				}
 				if(cip.hasState()) {
 					cip.reset();
-					coder.encode(s1);
+					coder.encode(s1, 0, 81);
 					IState<?> state = cip.getState();
+					Arrays.fill(s1, (char) 0); 
+					Arrays.fill(s2, (char) 0); 
+					Arrays.fill(s3, (char) 0); 
 					System.arraycopy(plain, 0, s1, 0, 81);
 					System.arraycopy(plain, 0, s2, 0, 81);
 					System.arraycopy(plain, 0, s3, 0, 81);
-					coder.encode(s1);
+					coder.encode(s1, 0, 81);
 					cip.loadState(state);
-					coder.encode(s2);
+					coder.encode(s2, 0, 81);
 					if(!ArrayUtil.equals(s1, s2)) {
 						Log.err.println("Loading state did not work");
 						fails++;
 						continue;
 					}
 					cip.updateState(state);
-					coder.encode(s3);
+					coder.encode(s3, 0, 81);
 					cip.loadState(state);
+					Arrays.fill(s2, (char) 0); 
 					System.arraycopy(plain, 0, s2, 0, 81);
-					coder.encode(s2);
+					coder.encode(s2, 0, 81);
 					if(!ArrayUtil.equals(s2, s3)) {
 						Log.err.println("Updating the state did not work");
 						fails++;
@@ -98,6 +104,7 @@ final class CipherTest {
 				}
 			} catch(Exception e) {
 				fails++;
+				e.printStackTrace();
 				Log.err.println("Encountered unexpexted exception while testing " + cip.getClass().getSimpleName());
 				Log.err.println(e.getClass().getSimpleName() + ": " + e.getMessage());
 			}

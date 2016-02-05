@@ -1,11 +1,19 @@
 package claire.simplecrypt.ciphers.fraction;
 
+import java.io.IOException;
+
+import claire.simplecrypt.ciphers.fraction.MultiPolybius.MultiPolybiusState;
 import claire.simplecrypt.data.Alphabet;
 import claire.simplecrypt.standards.ICipher;
 import claire.simplecrypt.standards.IState;
+import claire.simplecrypt.standards.NamespaceKey;
+import claire.util.io.Factory;
+import claire.util.memory.Bits;
+import claire.util.standards.io.IIncomingStream;
+import claire.util.standards.io.IOutgoingStream;
 
 public class MultiPolybius 
-	   implements ICipher<MultiPolybiusKey, IState<?>> {
+	   implements ICipher<MultiPolybiusKey, MultiPolybiusState> {
 
 	private MultiPolybiusKey key;
 	private Alphabet ab;
@@ -134,8 +142,17 @@ public class MultiPolybius
 		epos = dpos = 0;
 	}
 
-	public void loadState(IState<?> state) {}
-	public void updateState(IState<?> state) {}
+	public void loadState(MultiPolybiusState state) 
+	{
+		this.epos = state.epos;
+		this.dpos = state.dpos;
+	}
+	
+	public void updateState(MultiPolybiusState state) 
+	{
+		state.epos = this.epos;
+		state.dpos = this.dpos;
+	}
 	
 	public MultiPolybiusKey getKey()
 	{
@@ -150,19 +167,93 @@ public class MultiPolybius
 		this.ab = key.getAlphabet();
 	}
 	
-	public IState<?> getState()
+	public MultiPolybiusState getState()
 	{
-		return null;
+		return new MultiPolybiusState(this);
 	}
 
 	public boolean hasState()
 	{
-		return false;
+		return true;
 	}
 
 	public Alphabet getAlphabet()
 	{
 		return this.ab;
+	}
+	
+	public static final MultiPolybiusStateFactory sfactory = new MultiPolybiusStateFactory();
+	
+	public static final class MultiPolybiusState implements IState<MultiPolybiusState>
+	{
+		private int epos;
+		private int dpos;
+		
+		public MultiPolybiusState(MultiPolybius c)
+		{
+			epos = c.epos;
+			dpos = c.dpos;
+		}
+		
+		public MultiPolybiusState(int e, int d)
+		{
+			this.epos = e;
+			this.dpos = d;
+		}
+
+		public int NAMESPACE()
+		{
+			return NamespaceKey.MULTICEASARSTATE;
+		}
+		
+		public boolean sameAs(MultiPolybiusState obj)
+		{
+			return epos == obj.epos && dpos == obj.dpos;
+		}
+		
+		public void export(IOutgoingStream stream) throws IOException
+		{
+			stream.writeInt(epos);
+			stream.writeInt(dpos);
+		}
+
+		public void export(byte[] bytes, int offset)
+		{
+			Bits.intToBytes(epos, bytes, offset); offset += 4;
+			Bits.intToBytes(dpos, bytes, offset);
+		}
+
+		public int exportSize()
+		{
+			return 8;
+		}
+
+		public Factory<MultiPolybiusState> factory()
+		{
+			return sfactory;
+		}
+		
+	}
+	
+	private static final class MultiPolybiusStateFactory extends Factory<MultiPolybiusState>
+	{
+
+		protected MultiPolybiusStateFactory() 
+		{
+			super(MultiPolybiusState.class);
+		}
+
+		public MultiPolybiusState resurrect(byte[] data, int start) throws InstantiationException
+		{
+			int e = Bits.intFromBytes(data, start); start += 4;
+			return new MultiPolybiusState(e, Bits.intFromBytes(data, start));
+		}
+
+		public MultiPolybiusState resurrect(IIncomingStream stream) throws InstantiationException, IOException
+		{
+			return new MultiPolybiusState(stream.readInt(), stream.readInt());
+		}
+		
 	}
 	
 }
