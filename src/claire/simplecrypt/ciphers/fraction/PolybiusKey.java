@@ -20,12 +20,12 @@ public class PolybiusKey
 	
 	static final int[] ROWLEN = new int[]
 		{
-			6, 8, 6, 8, 7, 7, 8, 8, 9, 10
+			6, 6, 8, 6, 8, 7, 7, 8, 8, 9, 10
 		};
 	
 	static final int[] COLLEN = new int[]
 		{
-			5, 7, 5, 7, 6, 6, 8, 8, 9, 9
+			5, 5, 7, 5, 7, 6, 6, 8, 8, 9, 9
 		};
 	
 	private Alphabet a;

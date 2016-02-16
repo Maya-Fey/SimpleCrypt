@@ -18,6 +18,13 @@ public final class Alphabet
 			'W', 'X', 'Y', 'Z'
 		};
 	
+	private static final char[] ASIMPLEABSP = new char[] 
+			{
+				' ', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
+				'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 
+				'V', 'W', 'X', 'Y', 'Z', '.'
+			};
+	
 	private static final char[] ASIMPLELAB = new char[]
 		{
 			'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 
@@ -103,6 +110,7 @@ public final class Alphabet
 		};	
 
 	public static final Alphabet SIMPLEAB        = new Alphabet(ASIMPLEAB);
+	public static final Alphabet SIMPLEABSP      = new Alphabet(ASIMPLEABSP);
 	public static final Alphabet SIMPLELAB       = new Alphabet(ASIMPLELAB);
 	public static final Alphabet SPACEDAB        = new Alphabet(ASPACEDAB);
 	public static final Alphabet SPACEDLAB       = new Alphabet(ASPACEDLAB);
@@ -116,6 +124,7 @@ public final class Alphabet
 	public static final Alphabet[] alphabets = new Alphabet[]
 		{
 			SIMPLEAB,
+			SIMPLEABSP,
 			SIMPLELAB,
 			SPACEDAB,
 			SPACEDLAB,
@@ -130,6 +139,7 @@ public final class Alphabet
 	public static final String[] names = new String[]
 		{
 			"Simple Alphabet",
+			"Simple Alphabet + SP",
 			"Cased Alphabet",
 			"Simple Alphabet + Space",
 			"Cased Alphabet + Space",
