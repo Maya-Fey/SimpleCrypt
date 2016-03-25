@@ -260,12 +260,13 @@ public final class Alphabet
 			chars[start1++] = this.chars[rep[start0++]];
 	}
 	
-	public void convertFrom(byte[] rep, int start, int len)
+	public char[] convertFrom(byte[] rep, int start, int len)
 	{
 		final char[] chars = new char[len];
 		int start1 = 0;
 		while(len-- > 0) 
 			chars[start1++] = this.chars[rep[start++]];
+		return chars;
 	}
 	
 	public boolean contains(char c)
