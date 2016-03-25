@@ -13,6 +13,8 @@ import claire.simplecrypt.ciphers.feedback.AffineFeedbackCipher;
 import claire.simplecrypt.ciphers.feedback.AffineFeedbackKey;
 import claire.simplecrypt.ciphers.feedback.IteratorFeedbackCipher;
 import claire.simplecrypt.ciphers.feedback.IteratorFeedbackKey;
+import claire.simplecrypt.ciphers.feistel.FeistelCipher;
+import claire.simplecrypt.ciphers.feistel.FeistelKey;
 import claire.simplecrypt.ciphers.fraction.MultiPolybius;
 import claire.simplecrypt.ciphers.fraction.MultiPolybiusKey;
 import claire.simplecrypt.ciphers.fraction.PolybiusCipher;
@@ -38,6 +40,7 @@ import claire.simplecrypt.display.creators.AffineFeedbackKeyCreator;
 import claire.simplecrypt.display.creators.AffineKeyCreator;
 import claire.simplecrypt.display.creators.AutoKeyKeyCreator;
 import claire.simplecrypt.display.creators.CeasarKeyCreator;
+import claire.simplecrypt.display.creators.FeistelKeyCreator;
 import claire.simplecrypt.display.creators.IterativeKeyCreator;
 import claire.simplecrypt.display.creators.IteratorFeedbackKeyCreator;
 import claire.simplecrypt.display.creators.IteratorKeyCreator;
@@ -60,7 +63,7 @@ import claire.util.memory.array.Registry;
 @SuppressWarnings("unchecked")
 public final class CipherRegistry {
 	
-	private static final int SIZE = 15;
+	private static final int SIZE = 16;
 	
 	private static final Class<?>[] args0 = new Class<?>[] 
 		{
@@ -72,15 +75,6 @@ public final class CipherRegistry {
 		
 		};
 	
-	/*
-	 * Why? I cannot be assed. Every bit of code has its ugly spot where it
-	 * actually does work. Some try to act goodie-two-shoes by hiding it behind
-	 * 5 libraries (which do exactly what they didn't want to), sacrificing 
-	 * performance tenfold, having a method for every line of code, or a combination. 
-	 * This class is where the nitty gritty shit  happens, but it'll get the job
-	 * done and it's straightforward to add exactly what you're supposed to add: 
-	 * more ciphers.
-	 */
 	private static final CipherFactory<?, ? extends ISecret<?>, ? extends KeyCreatorPanel<?>, IState<?>>[] factories = (CipherFactory<?, ? extends ISecret<?>, ? extends KeyCreatorPanel<?>, IState<?>>[]) new CipherFactory<?, ?, ?, ?>[SIZE];
 	private static final Registry<CipherFactory<?, ? extends ISecret<?>, ? extends KeyCreatorPanel<?>, IState<?>>> reg = new Registry<CipherFactory<?, ? extends ISecret<?>, ? extends KeyCreatorPanel<?>, IState<?>>>(factories);
 	
@@ -100,7 +94,8 @@ public final class CipherRegistry {
 			"Iterator Feedback Cipher",
 			"Affine Feedback Cipher",
 			"Polybius Square Cipher",
-			"Multi Polybius Cipher"
+			"Multi Polybius Cipher",
+			"Feistel Cipher"
 		};
 	
 	static {
@@ -120,7 +115,7 @@ public final class CipherRegistry {
 			add(AffineFeedbackKey.class, AffineFeedbackCipher.class, AffineFeedbackKeyCreator.class.getConstructor(args1), AffineFeedbackKey.factory, AffineFeedbackCipher.sfactory);
 			add(PolybiusKey.class, PolybiusCipher.class, PolybiusKeyCreator.class.getConstructor(args1), PolybiusKey.factory, null);
 			add(MultiPolybiusKey.class, MultiPolybius.class, MultiPolybiusKeyCreator.class.getConstructor(args1), MultiPolybiusKey.factory, MultiPolybius.sfactory);
-			
+			add(FeistelKey.class, FeistelCipher.class, FeistelKeyCreator.class.getConstructor(args1), FeistelKey.factory, null);
 		} catch (Exception e) {
 			Log.err.println("Error: Problem instantiating Cipher Factories. Cipher Registry cannot be initialized.");
 			e.printStackTrace();

@@ -7,7 +7,6 @@ import claire.simplecrypt.standards.ICharCoder;
 import claire.simplecrypt.standards.ICipher;
 import claire.simplecrypt.test.Test;
 import claire.util.crypto.rng.primitive.FastXorShift;
-import claire.util.encoding.Hex;
 import claire.util.memory.util.ArrayUtil;
 import claire.util.standards.IRandom;
 
@@ -39,7 +38,7 @@ public final class TestCrypt {
 		coder.decode(text);
 		System.out.println(text);
 		SimpleCryptFrame disp = new SimpleCryptFrame();
-		//disp.start();
+		disp.start();
 	}
 
 }
