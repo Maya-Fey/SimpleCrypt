@@ -1,5 +1,5 @@
-import claire.simplecrypt.ciphers.feistel.FeistelCipher;
 import claire.simplecrypt.ciphers.feistel.FeistelKey;
+import claire.simplecrypt.ciphers.feistel.IterativeFeistelCipher;
 import claire.simplecrypt.coders.IgnoreCoder;
 import claire.simplecrypt.data.Alphabet;
 import claire.simplecrypt.display.SimpleCryptFrame;
@@ -18,7 +18,7 @@ public final class TestCrypt {
 		Test.runTests();
 		IRandom rng = new FastXorShift(2312313);
 		FeistelKey key = new FeistelKey(Alphabet.ADVANCED, Alphabet.ADVANCED.convertTo(new String("Carter").toCharArray(), 0, 3));
-		ICipher<?, ?> cipher = new FeistelCipher(key);
+		ICipher<?, ?> cipher = new IterativeFeistelCipher(key);
 		ICharCoder coder = new IgnoreCoder(cipher, 1000);
 		char[] text = "If P = NP, then the entire universe is highly likely to explode in 12 minutes - Samantha Carter".toCharArray();
 		final int orig = text.length;

@@ -13,7 +13,7 @@ public class IterativeFeistelCipher
 	private byte[] key;
 	
 	private int epos = 0;
-	private int dpos = 0;
+	private int dpos = -1;
 	
 	public IterativeFeistelCipher(FeistelKey key)
 	{
@@ -41,7 +41,7 @@ public class IterativeFeistelCipher
 			for(int i = 0; i < len; i++)
 			{
 				if(len > 1)
-					plaintext[start] = (byte) ((plaintext[start] + plaintext[start + 1] + key[i] + epos) % ab.getLen());
+					plaintext[start] = (byte) ((plaintext[start] + plaintext[start + 1] + key[i] + epos++) % ab.getLen());
 				else
 					plaintext[start] = (byte) ((plaintext[start] + key[i]) % ab.getLen());
 				if(epos == ab.getLen())
@@ -62,11 +62,14 @@ public class IterativeFeistelCipher
 		while(len > key.length)
 		{
 			int base = start + key.length - 1;
+			int tpos = dpos += key.length;
+			if(dpos >= ab.getLen())
+				dpos -= ab.getLen();
 			for(int i = key.length; i > 0;)
 			{
-				ciphertext[base] = (byte) (ciphertext[base] - ((ciphertext[start] + key[--i] + dpos++) % ab.getLen()));
-				if(dpos == ab.getLen())
-					dpos = 0;
+				ciphertext[base] = (byte) (ciphertext[base] - ((ciphertext[start] + key[--i] + tpos--) % ab.getLen()));
+				if(tpos < 0)
+					tpos += ab.getLen();
 				if(ciphertext[base] < 0)
 					ciphertext[base] += ab.getLen();
 				Bits.rotateRight1(ciphertext, start, key.length);
@@ -77,14 +80,17 @@ public class IterativeFeistelCipher
 		if(len > 0)
 		{
 			int base = start + len - 1;
+			int tpos = dpos += len;
+			if(dpos >= ab.getLen())
+				dpos -= ab.getLen();
 			for(int i = len; i > 0;)
 			{
 				if(len > 1)
-					ciphertext[base] = (byte) (ciphertext[base] - ((ciphertext[start] + key[--i] + dpos++) % ab.getLen()));
+					ciphertext[base] = (byte) (ciphertext[base] - ((ciphertext[start] + key[--i] + tpos--) % ab.getLen()));
 				else
 					ciphertext[base] = (byte) (ciphertext[base] - key[--i]);
-				if(dpos == ab.getLen())
-					dpos = 0;
+				if(tpos < 0)
+					tpos += ab.getLen();
 				if(ciphertext[base] < 0)
 					ciphertext[base] += ab.getLen();
 				Bits.rotateRight1(ciphertext, start, len);
@@ -108,12 +114,14 @@ public class IterativeFeistelCipher
 		this.mkey = key;
 		this.ab = key.getAlphabet();
 		this.key = key.getKey();
-		epos = dpos = 0;
+		epos = 0;
+		dpos = -1;
 	}
 
 	public void reset() 
 	{
-		epos = dpos = 0;
+		epos = 0;
+		dpos = -1;
 	}
 	
 	public IState<?> getState() { return null; }
