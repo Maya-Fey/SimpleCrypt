@@ -12,6 +12,7 @@ import claire.simplecrypt.ciphers.feedback.IteratorFeedbackCipher;
 import claire.simplecrypt.ciphers.feedback.IteratorFeedbackKey;
 import claire.simplecrypt.ciphers.feistel.FeistelCipher;
 import claire.simplecrypt.ciphers.feistel.FeistelKey;
+import claire.simplecrypt.ciphers.feistel.IterativeFeistel;
 import claire.simplecrypt.ciphers.fraction.MultiPolybius;
 import claire.simplecrypt.ciphers.fraction.MultiPolybiusKey;
 import claire.simplecrypt.ciphers.fraction.PolybiusCipher;
@@ -65,7 +66,8 @@ public final class Test {
 			new AffineFeedbackCipher(AffineFeedbackKey.random(Alphabet.ADVANCED, 8, rng)),
 			new PolybiusCipher(PolybiusKey.random(Alphabet.ADVANCED, rng)),
 			new MultiPolybius(MultiPolybiusKey.random(Alphabet.ADVANCED, 8, rng)),
-			new FeistelCipher(FeistelKey.random(Alphabet.ADVANCED, rng))
+			new FeistelCipher(FeistelKey.random(Alphabet.ADVANCED, rng)),
+			new IterativeFeistel(FeistelKey.random(Alphabet.ADVANCED, rng))
 		};
 	
 	static final ICharCoder[] coders = new ICharCoder[]
