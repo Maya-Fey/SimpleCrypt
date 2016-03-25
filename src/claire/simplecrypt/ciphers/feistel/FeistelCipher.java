@@ -103,11 +103,7 @@ public class FeistelCipher
 	public IState<?> getState() { return null; }
 	public void loadState(IState<?> state) {}
 	public void updateState(IState<?> state) {}
-
-	public boolean hasState()
-	{
-		return true;
-	}
+	public boolean hasState() { return false; }
 
 	public int ciphertextSize(int plain)
 	{
