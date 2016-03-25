@@ -15,6 +15,7 @@ import claire.simplecrypt.ciphers.feedback.IteratorFeedbackCipher;
 import claire.simplecrypt.ciphers.feedback.IteratorFeedbackKey;
 import claire.simplecrypt.ciphers.feistel.FeistelCipher;
 import claire.simplecrypt.ciphers.feistel.FeistelKey;
+import claire.simplecrypt.ciphers.feistel.IterativeFeistel;
 import claire.simplecrypt.ciphers.fraction.MultiPolybius;
 import claire.simplecrypt.ciphers.fraction.MultiPolybiusKey;
 import claire.simplecrypt.ciphers.fraction.PolybiusCipher;
@@ -63,7 +64,7 @@ import claire.util.memory.array.Registry;
 @SuppressWarnings("unchecked")
 public final class CipherRegistry {
 	
-	private static final int SIZE = 16;
+	private static final int SIZE = 17;
 	
 	private static final Class<?>[] args0 = new Class<?>[] 
 		{
@@ -95,7 +96,8 @@ public final class CipherRegistry {
 			"Affine Feedback Cipher",
 			"Polybius Square Cipher",
 			"Multi Polybius Cipher",
-			"Feistel Cipher"
+			"Feistel Cipher",
+			"Iterative Feistel Cipher"
 		};
 	
 	static {
@@ -116,6 +118,7 @@ public final class CipherRegistry {
 			add(PolybiusKey.class, PolybiusCipher.class, PolybiusKeyCreator.class.getConstructor(args1), PolybiusKey.factory, null);
 			add(MultiPolybiusKey.class, MultiPolybius.class, MultiPolybiusKeyCreator.class.getConstructor(args1), MultiPolybiusKey.factory, MultiPolybius.sfactory);
 			add(FeistelKey.class, FeistelCipher.class, FeistelKeyCreator.class.getConstructor(args1), FeistelKey.factory, null);
+			add(FeistelKey.class, IterativeFeistel.class, FeistelKeyCreator.class.getConstructor(args1), FeistelKey.factory, IterativeFeistel.sfactory);
 		} catch (Exception e) {
 			Log.err.println("Error: Problem instantiating Cipher Factories. Cipher Registry cannot be initialized.");
 			e.printStackTrace();
