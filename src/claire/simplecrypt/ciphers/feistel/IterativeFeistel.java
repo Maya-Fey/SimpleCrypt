@@ -1,12 +1,19 @@
 package claire.simplecrypt.ciphers.feistel;
 
+import java.io.IOException;
+
+import claire.simplecrypt.ciphers.feistel.IterativeFeistel.IterativeFeistelState;
 import claire.simplecrypt.data.Alphabet;
 import claire.simplecrypt.standards.ICipher;
 import claire.simplecrypt.standards.IState;
+import claire.simplecrypt.standards.NamespaceKey;
+import claire.util.io.Factory;
 import claire.util.memory.Bits;
+import claire.util.standards.io.IIncomingStream;
+import claire.util.standards.io.IOutgoingStream;
 
-public class IterativeFeistelCipher 
-	   implements ICipher<FeistelKey, IState<?>> {
+public class IterativeFeistel
+	   implements ICipher<FeistelKey, IterativeFeistelState> {
 	
 	private FeistelKey mkey;
 	private Alphabet ab;
@@ -15,7 +22,7 @@ public class IterativeFeistelCipher
 	private int epos = 0;
 	private int dpos = -1;
 	
-	public IterativeFeistelCipher(FeistelKey key)
+	public IterativeFeistel(FeistelKey key)
 	{
 		this.mkey = key;
 		this.ab = key.getAlphabet();
@@ -124,10 +131,27 @@ public class IterativeFeistelCipher
 		dpos = -1;
 	}
 	
-	public IState<?> getState() { return null; }
-	public void loadState(IState<?> state) {}
-	public void updateState(IState<?> state) {}
-	public boolean hasState() { return false; }
+	public IterativeFeistelState getState() 
+	{ 
+		return new IterativeFeistelState(this); 
+	}
+	
+	public void loadState(IterativeFeistelState state) 
+	{
+		this.epos = state.epos;
+		this.dpos = state.dpos;
+	}
+	
+	public void updateState(IterativeFeistelState state) 
+	{
+		state.epos = this.epos;
+		state.dpos = this.dpos;
+	}
+	
+	public boolean hasState() 
+	{ 
+		return true; 
+	}
 
 	public int ciphertextSize(int plain)
 	{
@@ -149,6 +173,80 @@ public class IterativeFeistelCipher
 		this.mkey = null;
 		this.ab = null;
 		this.key = null;
+	}
+	
+	public static final IterativeFeistelStateFactory sfactory = new IterativeFeistelStateFactory();
+	
+	public static final class IterativeFeistelState implements IState<IterativeFeistelState>
+	{
+		private int epos;
+		private int dpos;
+		
+		public IterativeFeistelState(IterativeFeistel c)
+		{
+			epos = c.epos;
+			dpos = c.dpos;
+		}
+		
+		public IterativeFeistelState(int e, int d)
+		{
+			this.epos = e;
+			this.dpos = d;
+		}
+
+		public int NAMESPACE()
+		{
+			return NamespaceKey.ITERATIVEFEISTELSTATE;
+		}
+		
+		public boolean sameAs(IterativeFeistelState obj)
+		{
+			return epos == obj.epos && dpos == obj.dpos;
+		}
+		
+		public void export(IOutgoingStream stream) throws IOException
+		{
+			stream.writeInt(epos);
+			stream.writeInt(dpos);
+		}
+
+		public void export(byte[] bytes, int offset)
+		{
+			Bits.intToBytes(epos, bytes, offset); offset += 4;
+			Bits.intToBytes(dpos, bytes, offset);
+		}
+
+		public int exportSize()
+		{
+			return 8;
+		}
+
+		public Factory<IterativeFeistelState> factory()
+		{
+			return sfactory;
+		}
+		
+	}
+	
+	private static final class IterativeFeistelStateFactory extends Factory<IterativeFeistelState>
+	{
+
+		protected IterativeFeistelStateFactory() 
+		{
+			super(IterativeFeistelState.class);
+		}
+
+		public IterativeFeistelState resurrect(byte[] data, int start) throws InstantiationException
+		{
+			int e = Bits.intFromBytes(data, start); start += 4;
+			return new IterativeFeistelState(e, Bits.intFromBytes(data, start));
+		}
+
+		public IterativeFeistelState resurrect(IIncomingStream stream) throws InstantiationException, IOException
+		{
+			return new IterativeFeistelState(stream.readInt(), stream.readInt());
+		}
+		
 	}
 	
 }
