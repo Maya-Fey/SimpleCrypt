@@ -86,7 +86,7 @@ public class FeistelKey
 
 		public FeistelKey random(Alphabet ab, IRandom rand)
 		{
-			byte[] bytes = new byte[1 + rand.nextIntGood(8)];
+			byte[] bytes = new byte[2 + rand.nextIntGood(8)];
 			for(int i = 0; i < bytes.length; i++)
 				bytes[i] = (byte) rand.nextIntGood(ab.getLen());
 			return new FeistelKey(ab, bytes);
@@ -105,6 +105,14 @@ public class FeistelKey
 			return new FeistelKey(stream.resurrect(Alphabet.factory), stream.readByteArr());
 		}
 		
+	}
+	
+	public static final FeistelKey random(Alphabet ab, IRandom rand)
+	{
+		byte[] bytes = new byte[2 + rand.nextIntGood(8)];
+		for(int i = 0; i < bytes.length; i++)
+			bytes[i] = (byte) rand.nextIntGood(ab.getLen());
+		return new FeistelKey(ab, bytes);
 	}
 
 }

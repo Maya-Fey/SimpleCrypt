@@ -1,5 +1,5 @@
-import claire.simplecrypt.ciphers.fraction.PolybiusCipher;
-import claire.simplecrypt.ciphers.fraction.PolybiusKey;
+import claire.simplecrypt.ciphers.feistel.FeistelCipher;
+import claire.simplecrypt.ciphers.feistel.FeistelKey;
 import claire.simplecrypt.coders.IgnoreCoder;
 import claire.simplecrypt.data.Alphabet;
 import claire.simplecrypt.display.SimpleCryptFrame;
@@ -7,6 +7,7 @@ import claire.simplecrypt.standards.ICharCoder;
 import claire.simplecrypt.standards.ICipher;
 import claire.simplecrypt.test.Test;
 import claire.util.crypto.rng.primitive.FastXorShift;
+import claire.util.encoding.Hex;
 import claire.util.memory.util.ArrayUtil;
 import claire.util.standards.IRandom;
 
@@ -17,8 +18,8 @@ public final class TestCrypt {
 	{
 		Test.runTests();
 		IRandom rng = new FastXorShift(2312313);
-		PolybiusKey key = PolybiusKey.random(Alphabet.SIMPLELAB, rng);
-		ICipher<?, ?> cipher = new PolybiusCipher(key);
+		FeistelKey key = new FeistelKey(Alphabet.ADVANCED, Alphabet.ADVANCED.convertTo(new String("Carter").toCharArray(), 0, 3));
+		ICipher<?, ?> cipher = new FeistelCipher(key);
 		ICharCoder coder = new IgnoreCoder(cipher, 1000);
 		char[] text = "If P = NP, then the entire universe is highly likely to explode in 12 minutes - Samantha Carter".toCharArray();
 		final int orig = text.length;
@@ -38,7 +39,7 @@ public final class TestCrypt {
 		coder.decode(text);
 		System.out.println(text);
 		SimpleCryptFrame disp = new SimpleCryptFrame();
-		disp.start();
+		//disp.start();
 	}
 
 }
