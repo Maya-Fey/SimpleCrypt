@@ -11,7 +11,7 @@ import claire.util.io.Factory;
 import claire.util.io.IOUtils;
 import claire.util.memory.Bits;
 import claire.util.memory.util.ArrayUtil;
-import claire.util.standards.IRandom;
+import claire.util.standards.crypto.IRandom;
 import claire.util.standards.io.IIncomingStream;
 import claire.util.standards.io.IOutgoingStream;
 
@@ -87,7 +87,7 @@ public class AffineFeedbackKey
 		return factory;
 	}
 	
-	public static AffineFeedbackKey random(Alphabet alphabet, int size, IRandom rand)
+	public static AffineFeedbackKey random(Alphabet alphabet, int size, IRandom<?> rand)
 	{
 		final int mod = alphabet.getLen();
 		final int max = mod - 1;
@@ -125,7 +125,7 @@ public class AffineFeedbackKey
 			return new AffineFeedbackKey(stream.resurrect(Alphabet.factory), stream.readIntArr(), stream.readIntArr());
 		}
 
-		public AffineFeedbackKey random(Alphabet ab, IRandom rand)
+		public AffineFeedbackKey random(Alphabet ab, IRandom<?> rand)
 		{
 			return AffineFeedbackKey.random(ab, 2 + rand.nextIntGood(7), rand);
 		}

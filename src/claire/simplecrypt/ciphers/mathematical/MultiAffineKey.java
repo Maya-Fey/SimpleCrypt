@@ -12,7 +12,7 @@ import claire.util.io.IOUtils;
 import claire.util.math.MathHelper;
 import claire.util.memory.Bits;
 import claire.util.memory.util.ArrayUtil;
-import claire.util.standards.IRandom;
+import claire.util.standards.crypto.IRandom;
 import claire.util.standards.io.IIncomingStream;
 import claire.util.standards.io.IOutgoingStream;
 
@@ -99,7 +99,7 @@ public class MultiAffineKey
 		return factory;
 	}
 	
-	public static MultiAffineKey random(Alphabet alphabet, int size, IRandom rand)
+	public static MultiAffineKey random(Alphabet alphabet, int size, IRandom<?> rand)
 	{
 		final int mod = alphabet.getLen();
 		final int max = mod - 1;
@@ -147,7 +147,7 @@ public class MultiAffineKey
 			return new MultiAffineKey(stream.resurrect(Alphabet.factory), stream.readIntArr(), stream.readIntArr(), stream.readIntArr());
 		}
 
-		public MultiAffineKey random(Alphabet ab, IRandom rand)
+		public MultiAffineKey random(Alphabet ab, IRandom<?> rand)
 		{
 			return MultiAffineKey.random(ab, 2 + rand.nextIntGood(7), rand);
 		}

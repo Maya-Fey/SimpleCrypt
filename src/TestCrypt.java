@@ -8,7 +8,7 @@ import claire.simplecrypt.standards.ICipher;
 import claire.simplecrypt.test.Test;
 import claire.util.crypto.rng.primitive.FastXorShift;
 import claire.util.memory.util.ArrayUtil;
-import claire.util.standards.IRandom;
+import claire.util.standards.crypto.IRandom;
 
 public final class TestCrypt {
 
@@ -16,7 +16,7 @@ public final class TestCrypt {
 	public static void main(String[] args) throws Exception
 	{
 		Test.runTests();
-		IRandom rng = new FastXorShift(2312313);
+		IRandom<?> rng = new FastXorShift(2312313);
 		FeistelKey key = new FeistelKey(Alphabet.ADVANCED, Alphabet.ADVANCED.convertTo(new String("Carter").toCharArray(), 0, 3));
 		ICipher<?, ?> cipher = new IterativeFeistel(key);
 		ICharCoder coder = new IgnoreCoder(cipher, 1000);

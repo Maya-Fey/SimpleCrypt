@@ -11,7 +11,7 @@ import claire.util.crypto.rng.RandUtils;
 import claire.util.io.Factory;
 import claire.util.memory.Bits;
 import claire.util.memory.util.ArrayUtil;
-import claire.util.standards.IRandom;
+import claire.util.standards.crypto.IRandom;
 import claire.util.standards.io.IIncomingStream;
 import claire.util.standards.io.IOutgoingStream;
 
@@ -157,7 +157,7 @@ public class MultiSubstitutionKey
 			return new MultiSubstitutionKey(key, inv, alphabet);
 		}
 
-		public MultiSubstitutionKey random(Alphabet ab, IRandom rand)
+		public MultiSubstitutionKey random(Alphabet ab, IRandom<?> rand)
 		{
 			return MultiSubstitutionKey.random(ab, 2 + rand.nextIntGood(7), rand);
 		}
@@ -177,7 +177,7 @@ public class MultiSubstitutionKey
 		return inv;
 	}
 	
-	public static final MultiSubstitutionKey random(Alphabet alphabet, int size, IRandom rng)
+	public static final MultiSubstitutionKey random(Alphabet alphabet, int size, IRandom<?> rng)
 	{
 		byte[][] key = new byte[size][alphabet.getLen()];
 		for(int i = 0; i < size; i++) {

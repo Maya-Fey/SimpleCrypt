@@ -11,7 +11,7 @@ import claire.util.crypto.rng.RandUtils;
 import claire.util.io.Factory;
 import claire.util.io.IOUtils;
 import claire.util.memory.util.ArrayUtil;
-import claire.util.standards.IRandom;
+import claire.util.standards.crypto.IRandom;
 import claire.util.standards.io.IIncomingStream;
 import claire.util.standards.io.IOutgoingStream;
 
@@ -120,7 +120,7 @@ public class SubstitutionKey
 			return new SubstitutionKey(key, inv, alphabet);
 		}
 
-		public SubstitutionKey random(Alphabet ab, IRandom rand)
+		public SubstitutionKey random(Alphabet ab, IRandom<?> rand)
 		{
 			return SubstitutionKey.random(ab, rand);
 		}
@@ -136,7 +136,7 @@ public class SubstitutionKey
 		return inv;
 	}
 	
-	public static final SubstitutionKey random(Alphabet alphabet, IRandom rng)
+	public static final SubstitutionKey random(Alphabet alphabet, IRandom<?> rng)
 	{
 		byte[] key = new byte[alphabet.getLen()];
 		for(int i = 0; i < key.length; i++)

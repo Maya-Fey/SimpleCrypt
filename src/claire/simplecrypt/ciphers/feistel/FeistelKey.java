@@ -9,7 +9,7 @@ import claire.simplecrypt.standards.ISecret;
 import claire.simplecrypt.standards.NamespaceKey;
 import claire.util.memory.Bits;
 import claire.util.memory.util.ArrayUtil;
-import claire.util.standards.IRandom;
+import claire.util.standards.crypto.IRandom;
 import claire.util.standards.io.IIncomingStream;
 import claire.util.standards.io.IOutgoingStream;
 
@@ -84,7 +84,7 @@ public class FeistelKey
 			super(FeistelKey.class);
 		}
 
-		public FeistelKey random(Alphabet ab, IRandom rand)
+		public FeistelKey random(Alphabet ab, IRandom<?> rand)
 		{
 			byte[] bytes = new byte[2 + rand.nextIntGood(8)];
 			for(int i = 0; i < bytes.length; i++)
@@ -107,7 +107,7 @@ public class FeistelKey
 		
 	}
 	
-	public static final FeistelKey random(Alphabet ab, IRandom rand)
+	public static final FeistelKey random(Alphabet ab, IRandom<?> rand)
 	{
 		byte[] bytes = new byte[2 + rand.nextIntGood(8)];
 		for(int i = 0; i < bytes.length; i++)

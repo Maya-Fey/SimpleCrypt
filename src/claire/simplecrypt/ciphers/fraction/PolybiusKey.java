@@ -11,7 +11,7 @@ import claire.util.io.Factory;
 import claire.util.io.IOUtils;
 import claire.util.memory.Bits;
 import claire.util.memory.util.ArrayUtil;
-import claire.util.standards.IRandom;
+import claire.util.standards.crypto.IRandom;
 import claire.util.standards.io.IIncomingStream;
 import claire.util.standards.io.IOutgoingStream;
 
@@ -118,7 +118,7 @@ public class PolybiusKey
 			return new PolybiusKey(Alphabet.fromID(stream.readInt()), stream.readByteArr(), stream.readByteArr());
 		}
 
-		public PolybiusKey random(final Alphabet ab, final IRandom rand)
+		public PolybiusKey random(final Alphabet ab, final IRandom<?> rand)
 		{
 			final byte[] row = new byte[ROWLEN[ab.getID()]];
 			final byte[] col = new byte[COLLEN[ab.getID()]];
@@ -147,7 +147,7 @@ public class PolybiusKey
 		
 	}
 	
-	public static final PolybiusKey random(final Alphabet ab, final IRandom rand)
+	public static final PolybiusKey random(final Alphabet ab, final IRandom<?> rand)
 	{
 		final byte[] row = new byte[ROWLEN[ab.getID()]];
 		final byte[] col = new byte[COLLEN[ab.getID()]];
