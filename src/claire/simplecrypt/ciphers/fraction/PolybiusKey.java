@@ -118,7 +118,7 @@ public class PolybiusKey
 			return new PolybiusKey(Alphabet.fromID(stream.readInt()), stream.readByteArr(), stream.readByteArr());
 		}
 
-		public PolybiusKey random(final Alphabet ab, final IRandom<?> rand)
+		public PolybiusKey random(final Alphabet ab, final IRandom<?, ?> rand)
 		{
 			final byte[] row = new byte[ROWLEN[ab.getID()]];
 			final byte[] col = new byte[COLLEN[ab.getID()]];
@@ -147,7 +147,7 @@ public class PolybiusKey
 		
 	}
 	
-	public static final PolybiusKey random(final Alphabet ab, final IRandom<?> rand)
+	public static final PolybiusKey random(final Alphabet ab, final IRandom<?, ?> rand)
 	{
 		final byte[] row = new byte[ROWLEN[ab.getID()]];
 		final byte[] col = new byte[COLLEN[ab.getID()]];

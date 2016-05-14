@@ -72,7 +72,7 @@ public class IteratorKey
 		return factory;
 	}
 	
-	public static IteratorKey random(Alphabet alphabet, IRandom<?> rand)
+	public static IteratorKey random(Alphabet alphabet, IRandom<?, ?> rand)
 	{
 		return new IteratorKey(alphabet, 1 + rand.nextIntGood(alphabet.getLen() - 1));
 	}
@@ -98,7 +98,7 @@ public class IteratorKey
 			return new IteratorKey(stream.resurrect(Alphabet.factory), stream.readInt());
 		}
 
-		public IteratorKey random(Alphabet ab, IRandom<?> rand)
+		public IteratorKey random(Alphabet ab, IRandom<?, ?> rand)
 		{
 			return IteratorKey.random(ab, rand);
 		}

@@ -16,7 +16,7 @@ public final class TestCrypt {
 	public static void main(String[] args) throws Exception
 	{
 		Test.runTests();
-		IRandom<?> rng = new FastXorShift(2312313);
+		IRandom<?, ?> rng = new FastXorShift(2312313);
 		FeistelKey key = new FeistelKey(Alphabet.ADVANCED, Alphabet.ADVANCED.convertTo(new String("Carter").toCharArray(), 0, 3));
 		ICipher<?, ?> cipher = new IterativeFeistel(key);
 		ICharCoder coder = new IgnoreCoder(cipher, 1000);

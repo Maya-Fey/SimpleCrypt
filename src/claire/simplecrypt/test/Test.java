@@ -38,7 +38,7 @@ import claire.simplecrypt.standards.ICharCoder;
 import claire.simplecrypt.standards.ICipher;
 import claire.simplecrypt.standards.ISecret;
 import claire.simplecrypt.standards.IState;
-import claire.util.crypto.rng.primitive.JRandom;
+import claire.util.crypto.rng.primitive.XorShiftNG;
 import claire.util.logging.Log;
 import claire.util.standards.crypto.IRandom;
 
@@ -46,7 +46,7 @@ public final class Test {
 	
 	static final ICipher<?, ?> scipher = new AutoKeyCipher(new AutoKeyKey(Alphabet.SIMPLELAB, "KILT"));
 	
-	static final IRandom<?> rng = new JRandom();
+	static final IRandom<?, ?> rng = new XorShiftNG();
 	
 	@SuppressWarnings("unchecked")
 	static final ICipher<?, IState<?>>[] ciphers = (ICipher<?, IState<?>>[]) new ICipher<?, ?>[]

@@ -91,7 +91,7 @@ public class MultiCeasarKey
 		return factory;
 	}
 	
-	public static MultiCeasarKey random(Alphabet alphabet, int size, IRandom<?> rand)
+	public static MultiCeasarKey random(Alphabet alphabet, int size, IRandom<?, ?> rand)
 	{
 		int[] arr = new int[size];
 		for(int i = 0; i < size; i++)
@@ -125,7 +125,7 @@ public class MultiCeasarKey
 			return new MultiCeasarKey(ab, key);
 		}
 		
-		public MultiCeasarKey random(Alphabet ab, IRandom<?> rand)
+		public MultiCeasarKey random(Alphabet ab, IRandom<?, ?> rand)
 		{
 			return MultiCeasarKey.random(ab, 2 + rand.nextIntGood(7), rand);
 		}

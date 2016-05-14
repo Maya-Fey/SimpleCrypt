@@ -91,7 +91,7 @@ public class IteratorFeedbackKey
 		return factory;
 	}
 	
-	public static IteratorFeedbackKey random(Alphabet alphabet, int size, IRandom<?> rand)
+	public static IteratorFeedbackKey random(Alphabet alphabet, int size, IRandom<?, ?> rand)
 	{
 		int[] arr = new int[size];
 		for(int i = 0; i < size; i++)
@@ -125,7 +125,7 @@ public class IteratorFeedbackKey
 			return new IteratorFeedbackKey(ab, key);
 		}
 
-		public IteratorFeedbackKey random(Alphabet ab, IRandom<?> rand)
+		public IteratorFeedbackKey random(Alphabet ab, IRandom<?, ?> rand)
 		{
 			return IteratorFeedbackKey.random(ab, 2 + rand.nextIntGood(7), rand);
 		}

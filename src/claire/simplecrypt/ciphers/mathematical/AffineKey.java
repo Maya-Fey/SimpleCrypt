@@ -93,7 +93,7 @@ public class AffineKey
 		return factory;
 	}
 	
-	public static AffineKey random(Alphabet alphabet, IRandom<?> rand)
+	public static AffineKey random(Alphabet alphabet, IRandom<?, ?> rand)
 	{
 		final int mod = alphabet.getLen();
 		int mul;
@@ -131,7 +131,7 @@ public class AffineKey
 			return new AffineKey(stream.resurrect(Alphabet.factory), stream.readInt(), stream.readInt(), stream.readInt());
 		}
 
-		public AffineKey random(Alphabet ab, IRandom<?> rand)
+		public AffineKey random(Alphabet ab, IRandom<?, ?> rand)
 		{
 			return AffineKey.random(ab, rand);
 		}

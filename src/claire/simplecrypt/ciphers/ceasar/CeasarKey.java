@@ -72,7 +72,7 @@ public class CeasarKey
 		return factory;
 	}
 	
-	public static CeasarKey random(Alphabet alphabet, IRandom<?> rand)
+	public static CeasarKey random(Alphabet alphabet, IRandom<?, ?> rand)
 	{
 		return new CeasarKey(alphabet, 1 + rand.nextIntGood(alphabet.getLen() - 1));
 	}
@@ -98,7 +98,7 @@ public class CeasarKey
 			return new CeasarKey(stream.resurrect(Alphabet.factory), stream.readInt());
 		}
 
-		public CeasarKey random(Alphabet ab, IRandom<?> rand)
+		public CeasarKey random(Alphabet ab, IRandom<?, ?> rand)
 		{
 			return CeasarKey.random(ab, rand);
 		}

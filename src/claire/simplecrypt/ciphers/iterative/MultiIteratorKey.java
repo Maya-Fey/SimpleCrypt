@@ -91,7 +91,7 @@ public class MultiIteratorKey
 		return factory;
 	}
 	
-	public static MultiIteratorKey random(Alphabet alphabet, int size, IRandom<?> rand)
+	public static MultiIteratorKey random(Alphabet alphabet, int size, IRandom<?, ?> rand)
 	{
 		int[] arr = new int[size];
 		for(int i = 0; i < size; i++)
@@ -125,7 +125,7 @@ public class MultiIteratorKey
 			return new MultiIteratorKey(ab, key);
 		}
 
-		public MultiIteratorKey random(Alphabet ab, IRandom<?> rand)
+		public MultiIteratorKey random(Alphabet ab, IRandom<?, ?> rand)
 		{
 			return MultiIteratorKey.random(ab, 2 + rand.nextIntGood(7), rand);
 		}

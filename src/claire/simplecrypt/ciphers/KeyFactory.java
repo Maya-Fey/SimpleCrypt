@@ -11,6 +11,6 @@ public abstract class KeyFactory<Key> extends Factory<Key> {
 		super(class_);
 	}
 	
-	public abstract Key random(Alphabet ab, IRandom<?> rand);
+	public abstract Key random(Alphabet ab, IRandom<?, ?> rand);
 
 }

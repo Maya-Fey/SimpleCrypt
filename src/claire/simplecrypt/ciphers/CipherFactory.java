@@ -8,13 +8,13 @@ import claire.simplecrypt.display.creators.KeyCreatorPanel;
 import claire.simplecrypt.standards.ICipher;
 import claire.simplecrypt.standards.ISecret;
 import claire.simplecrypt.standards.IState;
-import claire.util.crypto.rng.primitive.JRandom;
+import claire.util.crypto.rng.primitive.FastXorShift;
 import claire.util.io.Factory;
 import claire.util.standards.crypto.IRandom;
 
 public class CipherFactory<Cipher extends ICipher<Key, State>, Key extends ISecret<?>, Panel extends KeyCreatorPanel<Key>, State extends IState<?>> {
 	
-	private static final IRandom<?> rand = new JRandom();
+	private static final IRandom<?, ?> rand = new FastXorShift();
 	
 	private final Constructor<Cipher> con0;
 	private final Constructor<Panel> con1;

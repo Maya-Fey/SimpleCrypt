@@ -153,7 +153,7 @@ public class MultiPolybiusKey
 			return new MultiPolybiusKey(ab, s1, s2);
 		}
 
-		public MultiPolybiusKey random(final Alphabet ab, final IRandom<?> rand)
+		public MultiPolybiusKey random(final Alphabet ab, final IRandom<?, ?> rand)
 		{
 			final int len = 1 + rand.nextIntFast(8);
 			final byte[][] rowt = new byte[len][PolybiusKey.ROWLEN[ab.getID()]];
@@ -189,7 +189,7 @@ public class MultiPolybiusKey
 		
 	}
 	
-	public static final MultiPolybiusKey random(final Alphabet ab, int len, final IRandom<?> rand)
+	public static final MultiPolybiusKey random(final Alphabet ab, int len, final IRandom<?, ?> rand)
 	{
 		final byte[][] rowt = new byte[len][PolybiusKey.ROWLEN[ab.getID()]];
 		final byte[][] colt = new byte[len][PolybiusKey.COLLEN[ab.getID()]];

@@ -91,7 +91,7 @@ public class AutoKeyKey
 		return factory;
 	}
 	
-	public static AutoKeyKey random(Alphabet alphabet, int size, IRandom<?> rand)
+	public static AutoKeyKey random(Alphabet alphabet, int size, IRandom<?, ?> rand)
 	{
 		int[] arr = new int[size];
 		for(int i = 0; i < size; i++)
@@ -125,7 +125,7 @@ public class AutoKeyKey
 			return new AutoKeyKey(ab, key);
 		}
 
-		public AutoKeyKey random(Alphabet ab, IRandom<?> rand)
+		public AutoKeyKey random(Alphabet ab, IRandom<?, ?> rand)
 		{
 			return AutoKeyKey.random(ab, 2 + rand.nextIntGood(7), rand);
 		}
